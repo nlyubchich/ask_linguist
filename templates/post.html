@@ -18,16 +18,25 @@
     {{ translate_form.language.label }} {{ translate_form.language(size=20) }}
     {{ translate_form.word.label }} {{ translate_form.word(size=20) }}
 
+  <button type="submit" class="btn btn-default">Insert</button>
+</form>
+
     <ul>
     {% for word in words %}
         <li>
             <p> {{ word.id }}</p>
             <p> {{ word.language }}</p>
             <p> {{ word.text }}</p>
+            <small>
+                {% for translate in word.translate %}
+
+                    <p> {{ translate }} </p>
+                {% endfor %}
+
+            </small>
         </li>
     {% endfor %}
     </ul>
-  <button type="submit" class="btn btn-default">Insert</button>
-</form>
+
 </body>
 </html>

@@ -19,18 +19,18 @@ def hello_world():
     if word_form.validate_on_submit() and word_form.validate_on_submit():
         translated_word = Word.query.filter_by(
             language=word_form.language.data.title(),
-            text=word_form.word.data.title()
+            text=word_form.word.data
         ).first() or Word(
             language=word_form.language.data.title(),
-            text=word_form.word.data.title()
+            text=word_form.word.data
         )
 
         translate = Word.query.filter_by(
             language=translate_form.language.data.title(),
-            text=translate_form.word.data.title()
+            text=translate_form.word.data
         ).first() or Word(
             language=translate_form.language.data.title(),
-            text=translate_form.word.data.title()
+            text=translate_form.word.data
         )
 
         translated_word.translate.append(translate)
