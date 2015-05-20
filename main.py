@@ -36,8 +36,9 @@ def hello_world():
         db.session.add(translated_word)
         db.session.add(translate)
         db.session.commit()
+        words = Word.query.all()
 
-    return render_template('post.html', word_form=word_form, translate_form=translate_form)
+    return render_template('post.html', word_form=word_form, translate_form=translate_form, words=words)
 
 
 if __name__ == '__main__':

@@ -17,6 +17,16 @@
     {{ translate_form.csrf_token }}
     {{ translate_form.language.label }} {{ translate_form.language(size=20) }}
     {{ translate_form.word.label }} {{ translate_form.word(size=20) }}
+
+    <ul>
+    {% for word in words %}
+        <li>
+            <p> {{ word.id }}</p>
+            <p> {{ word.language }}</p>
+            <p> {{ word.text }}</p>
+        </li>
+    {% endfor %}
+    </ul>
   <button type="submit" class="btn btn-default">Insert</button>
 </form>
 </body>
