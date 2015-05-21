@@ -22,8 +22,8 @@ def hello_world():
     word_form = WordForm(prefix="word")
     translate_form = WordForm(prefix="translate")
 
-    app.logger.info(str.join("Word form: ", (word_form.word, word_form.language)))
-    app.logger.info(str.join("Translate form: ", (translate_form.word, translate_form.language)))
+    app.logger.info("Word form: %s %s" % (word_form.word, word_form.language))
+    app.logger.info("Translate form: %s %s" % (translate_form.word, translate_form.language))
     if word_form.validate_on_submit() and translate_form.validate_on_submit():
         translated_word = Word.query.filter_by(
             language=word_form.language.data.title(),
