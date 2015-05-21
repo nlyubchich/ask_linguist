@@ -2,7 +2,12 @@ from flask import Flask, render_template
 from forms import WordForm
 from models import Word, db
 from flask.ext.heroku import Heroku
+import logging
 
+stream_handler = logging.StreamHandler()
+app.logger.addHandler(stream_handler)
+app.logger.setLevel(logging.INFO)
+app.logger.info('ask-linguist startup')
 
 app = Flask(__name__)
 app.secret_key = "really secret"
@@ -15,22 +20,25 @@ db.init_app(app)
 def hello_world():
     word_form = WordForm(prefix="word")
     translate_form = WordForm(prefix="translate")
+
+    app.logger.info("Word form: " + word_form)
+    app.logger.info("Translate form: " + translate_form)
     if word_form.validate_on_submit() and translate_form.validate_on_submit():
         translated_word = Word.query.filter_by(
             language=word_form.language.data.title(),
             text=word_form.word.data
-        ).first() or Word(
-            language=word_form.language.data.title(),
-            text=word_form.word.data
-        )
+        ).first()
+
+        if not translated_word:
+            translated_word = Word(language=word_form.language.data.title(), text=word_form.word.data)
 
         translate = Word.query.filter_by(
             language=translate_form.language.data.title(),
             text=translate_form.word.data
-        ).first() or Word(
-            language=translate_form.language.data.title(),
-            text=translate_form.word.data
-        )
+        ).first()
+
+        if not translate:
+            translate = Word(language=translate_form.language.data.title(), text=translate_form.word.data)
 
         translated_word.translate.append(translate)
         db.session.add(translated_word)
@@ -40,6 +48,8 @@ def hello_world():
     words = Word.query.order_by(Word.id.desc()).all()
 
     return render_template('post.html', word_form=word_form, translate_form=translate_form, words=words)
+
+
 
 
 if __name__ == '__main__':
