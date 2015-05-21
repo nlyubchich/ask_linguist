@@ -5,11 +5,12 @@ from flask.ext.heroku import Heroku
 import logging
 
 stream_handler = logging.StreamHandler()
+
+app = Flask(__name__)
 app.logger.addHandler(stream_handler)
 app.logger.setLevel(logging.INFO)
 app.logger.info('ask-linguist startup')
 
-app = Flask(__name__)
 app.secret_key = "really secret"
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 heroku = Heroku(app)
