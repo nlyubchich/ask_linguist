@@ -40,12 +40,7 @@ def hello_world():
         db.session.add(translated_word)
         db.session.add(translate)
         db.session.commit()
-        word_form, translate_form = WordForm(prefix="word",
-                                             language=word_form.language.data,
-                                             word=word_form.word.data), \
-                                    WordForm(prefix="translate",
-                                             language=translate_form.language.data,
-                                             word=translate_form.word.data)
+        word_form, translate_form = WordForm(prefix="word"), WordForm(prefix="translate")
 
     words = Word.query.order_by(Word.id.desc()).all()
     return render_template('post.html', word_form=word_form, translate_form=translate_form, words=words)
