@@ -16,7 +16,7 @@ def hello_world():
     word_form = WordForm(prefix="word")
     translate_form = WordForm(prefix="translate")
     words = Word.query.order_by(Word.id.desc()).all()
-    if word_form.validate_on_submit() and word_form.validate_on_submit():
+    if word_form.validate_on_submit() and translate_form.validate_on_submit():
         translated_word = Word.query.filter_by(
             language=word_form.language.data.title(),
             text=word_form.word.data
