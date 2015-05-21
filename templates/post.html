@@ -12,11 +12,11 @@
 
     {{ word_form.csrf_token }}
     {{ word_form.language.label }} {{ word_form.language(size=20) }}
-    {{ word_form.word.label }} {{ word_form.word(size=20) }}
+    {{ word_form.word.label }} {{ word_form.word(size=20, autocomplete="off") }}
 
     {{ translate_form.csrf_token }}
     {{ translate_form.language.label }} {{ translate_form.language(size=20) }}
-    {{ translate_form.word.label }} {{ translate_form.word(size=20) }}
+    {{ translate_form.word.label }} {{ translate_form.word(size=20, autocomplete="off") }}
 
   <button type="submit" class="btn btn-default">Insert</button>
 </form>
