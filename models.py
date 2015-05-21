@@ -10,8 +10,8 @@ translation = db.Table('translation',
 
 class Word(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    language = db.Column(db.String(80))
-    text = db.Column(db.String(80))
+    language = db.Column(db.Unicode(80))
+    text = db.Column(db.Unicode(80))
     translate = db.relationship('Word',
                                 secondary=translation,
                                 primaryjoin=(translation.c.word_id == id),
@@ -20,13 +20,11 @@ class Word(db.Model):
 
     def __init__(self, language, text):
         self.language = language.title()
-        self.text = text.title()
+        self.text = text
 
     def __repr__(self):
         return u'<Language %s, Text %s>' % (self.language, self.text)
 
-# db.create_all()
-#
 # darl_eng = Word(u"english", u"darling")
 # darl_fr = Word(u"french", u"chéri")
 #
