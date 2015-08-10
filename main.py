@@ -1,8 +1,13 @@
-from flask import Flask, render_template
+import json
+
+from flask import Flask, render_template, jsonify
+from sqlalchemy import and_
+from flask.ext.heroku import Heroku
+
 from forms import WordForm
 from models import Word, db
-from flask.ext.heroku import Heroku
-import logging
+
+
 
 # stream_handler = logging.StreamHandler()
 
@@ -12,10 +17,12 @@ app = Flask(__name__)
 # app.logger.info('ask-linguist startup')
 
 app.secret_key = "really secret"
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
-heroku = Heroku(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+# heroku = Heroku(app)
 
 db.init_app(app)
+
+
 # with app.app_context():
 #     db.create_all()
 #
@@ -29,12 +36,14 @@ def hello_world():
         translated_word = Word.query.filter_by(
             language=word_form.language.data,
             text=word_form.word.data
-        ).first() or Word(language=word_form.language.data, text=word_form.word.data)
+        ).first() or Word(language=word_form.language.data,
+                          text=word_form.word.data)
 
         translate = Word.query.filter_by(
             language=translate_form.language.data,
             text=translate_form.word.data
-        ).first() or Word(language=translate_form.language.data, text=translate_form.word.data)
+        ).first() or Word(language=translate_form.language.data,
+                          text=translate_form.word.data)
 
         translated_word.translate.append(translate)
         db.session.add(translated_word)
@@ -44,7 +53,32 @@ def hello_world():
         word_form.word.data, translate_form.word.data = "", ""
 
     words = Word.query.order_by(Word.id.desc()).all()
-    return render_template('post.html', word_form=word_form, translate_form=translate_form, words=words)
+    return render_template('post.html', word_form=word_form,
+                           translate_form=translate_form, words=words)
+
+@app.route('/guess')
+def guess():
+    return render_template("words.html")
+
+@app.route('/<lang_from>-<lang_to>', methods=['GET', 'POST'])
+def questionnaire(lang_from, lang_to):
+    words = Word.query.filter(
+        and_(
+            Word.language.is_(lang_from),
+            Word.translate.any(language=lang_to),
+        )
+    )
+    data = jsonify({"items":
+        [
+            {
+                "word": word.text,
+                "translation": word.translate[0].text,
+            }
+            for word in words
+        ]}
+    )
+
+    return data
 
 
 if __name__ == '__main__':

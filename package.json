@@ -1,0 +1,70 @@
+{
+  "name": "ask_linguist",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cybran111/ask_linguist.git"
+  },
+  "author": "cybran111",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/Cybran111/ask_linguist/issues"
+  },
+  "stylus": {
+    "includes": [
+      "./node_modules"
+    ]
+  },
+  "dist": {
+    "path": "./static/dist",
+    "styles": "/styles",
+    "fonts": "/fonts",
+    "js": "/js"
+  },
+  "assets": {
+    "bower": "./bower_components",
+    "node": "./node_modules",
+    "scripts": {
+      "entries": "./static/src/js/*.js",
+      "watches": [
+        "./project/static/src/js/**/*.js"
+      ],
+      "paths": [
+        "./node_modules",
+        "./project/static/src/js"
+      ]
+    },
+    "styles": {
+      "entries": [
+        "./project/static/src/css/main.styl"
+      ],
+      "watches": [
+        "./project/static/src/css/**/*.styl"
+      ]
+    }
+  },
+  "dependencies": {
+    "backbone": "~1.2.1",
+    "react": "~0.13.3",
+    "underscore": "~1.8.3",
+    "jquery": "~2.1.4"
+  },
+  "devDependencies": {
+    "gulp": "~3.9.0",
+    "browserify": "~11.0.1",
+    "event-stream": "~3.3.1",
+    "vinyl-buffer": "~1.0.0",
+    "gulp-rename": "~1.2.2",
+    "vinyl-source-stream": "~1.1.0",
+    "glob": "~5.0.14",
+    "gulp-util": "~3.0.6",
+    "gulp-uglify": "~1.2.0",
+    "gulp-stylus": "~2.0.6",
+    "path": "~0.11.14",
+    "del": "~1.2.0"
+  }
+}
