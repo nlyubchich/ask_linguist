@@ -1,0 +1,44 @@
+{
+  "name": "ask_linguist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cybran111/ask_linguist.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cybran111/ask_linguist/issues"
+  },
+  "homepage": "https://github.com/Cybran111/ask_linguist#readme",
+  "dependencies": {
+    "bootstrap": "^3.3.5",
+    "lodash": "^3.10.1",
+    "npm-zepto": "^1.1.7",
+    "react": "^0.13.3"
+  },
+  "devDependencies": {
+    "browserify": "^11.0.1",
+    "domready": "^1.0.8",
+    "event-stream": "^3.3.1",
+    "glob": "^5.0.14",
+    "gulp": "^3.9.0",
+    "gulp-rename": "^1.2.2",
+    "path": "^0.11.14",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "assets": {
+    "scripts": {
+      "entries": "./frontend/js/*.js"
+    },
+    "dist": {
+      "path": "./static"
+    }
+  }
+}
