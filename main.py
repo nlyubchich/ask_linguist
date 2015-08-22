@@ -51,7 +51,7 @@ def hello_world():
 @app.route("/<source>-<target>/")
 def questionnaire(source, target):
     my_words = Word.query.filter_by(language=target)
-
+    # lalala
     w = [
         {
             "source": [source.text for source in word.translated.filter_by(language=source)],
