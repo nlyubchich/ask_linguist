@@ -13,6 +13,7 @@ class Word(db.Model):
     language = db.Column(db.Unicode(80))
     text = db.Column(db.Unicode(80))
     translate = db.relationship('Word',
+                                lazy='dynamic',
                                 secondary=translation,
                                 primaryjoin=(translation.c.word_id == id),
                                 secondaryjoin=(translation.c.translated_id == id),

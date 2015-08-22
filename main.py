@@ -1,5 +1,7 @@
+from collections import namedtuple
+
 from flask import Flask, render_template, jsonify
-from flask.ext.heroku import Heroku
+
 from forms import WordForm
 from models import Word, db
 
@@ -11,8 +13,8 @@ app = Flask(__name__)
 # app.logger.info('ask-linguist startup')
 
 app.secret_key = "really secret"
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
-heroku = Heroku(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+# heroku = Heroku(app)
 
 db.init_app(app)
 
@@ -20,6 +22,16 @@ db.init_app(app)
 # with app.app_context():
 #     db.create_all()
 #
+
+class Hashabledict(dict):
+    def __key(self):
+        return tuple((k, self[k]) for k in sorted(self))
+
+    def __hash__(self):
+        return hash(self.__key())
+
+    def __eq__(self, other):
+        return self.__key() == other.__key()
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -51,15 +63,27 @@ def hello_world():
 @app.route("/<source>-<target>/")
 def questionnaire(source, target):
     my_words = Word.query.filter_by(language=target)
-    # lalala
+
     w = [
-        {
-            "source": [source.text for source in word.translated.filter_by(language=source)],
-            "target": word.text
-        }
+        Hashabledict(
+            source=tuple(source.text for source in word.translated.filter_by(language=source)),
+            target=word.text
+        )
         for word in my_words]
 
-    return jsonify(words=w)
+
+
+    my_d = Word.query.filter_by(language=source)
+    d = [
+        Hashabledict(
+            source=(word.text,),
+            target=word.translate.filter_by(language=target).one().text,
+        )
+        for word in my_d]
+    q = w+d
+    a = list(filter(lambda el: el["source"] and el["target"], set(q)))
+
+    return jsonify(words=a)
 
 
 @app.route("/words")
