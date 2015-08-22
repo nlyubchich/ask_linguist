@@ -1,9 +1,7 @@
 from flask import Flask, render_template, jsonify
-
+from flask.ext.heroku import Heroku
 from forms import WordForm
 from models import Word, db
-from flask.ext.heroku import Heroku
-import logging
 
 # stream_handler = logging.StreamHandler()
 
@@ -13,8 +11,8 @@ app = Flask(__name__)
 # app.logger.info('ask-linguist startup')
 
 app.secret_key = "really secret"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
-# heroku = Heroku(app)
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+heroku = Heroku(app)
 
 db.init_app(app)
 
@@ -52,19 +50,22 @@ def hello_world():
 
 @app.route("/<source>-<target>/")
 def questionnaire(source, target):
-    words = Word.query \
-        .filter(Word.language == source) \
-        .filter(Word.translate.any(Word.language == target))
+    my_words = Word.query.filter_by(language=target)
 
-    word_list = [{"source": word.text, "target": word.translate[0].text} for word in words]
-    print(word_list)
+    w = [
+        {
+            "source": [source.text for source in word.translated.filter_by(language=source)],
+            "target": word.text
+        }
+        for word in my_words]
 
-    return jsonify(words=word_list)
+    return jsonify(words=w)
 
 
 @app.route("/words")
 def words():
     return render_template('question.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
