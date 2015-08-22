@@ -1,6 +1,5 @@
-from collections import namedtuple
-
 from flask import Flask, render_template, jsonify
+from flask.ext.heroku import Heroku
 
 from forms import WordForm
 from models import Word, db
@@ -13,8 +12,8 @@ app = Flask(__name__)
 # app.logger.info('ask-linguist startup')
 
 app.secret_key = "really secret"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
-# heroku = Heroku(app)
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+heroku = Heroku(app)
 
 db.init_app(app)
 
