@@ -80,8 +80,12 @@ def questionnaire(source, target):
         )
         for word in my_d]
 
-    print("w: "+str(my_words))
-    print("d: " +str(my_d))
+    for wa in my_words:
+        print("w: " + str(wa))
+
+    for da in my_d:
+        print("d: " + str(da))
+
     q = w+d
     a = list(filter(lambda el: el["source"] and el["target"], set(q)))
     print("a: " +str(a))
