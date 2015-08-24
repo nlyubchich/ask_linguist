@@ -79,8 +79,12 @@ def questionnaire(source, target):
             target=word.translate.filter_by(language=target).first().text if word.translate.filter_by(language=target).first() else None,
         )
         for word in my_d]
+
+    print("w: "+str(w))
+    print("d: " +str(d))
     q = w+d
     a = list(filter(lambda el: el["source"] and el["target"], set(q)))
+    print("a: " +str(a))
 
     return jsonify(words=a)
 
