@@ -76,7 +76,7 @@ def questionnaire(source, target):
     d = [
         Hashabledict(
             source=(word.text,),
-            target=word.translate.filter_by(language=target).one().text,
+            target=word.translate.filter_by(language=target).first().text,
         )
         for word in my_d]
     q = w+d
