@@ -18,27 +18,31 @@ require("domready")(function () {
         getInitialState: function () {
             var words = this.props.initialWords.slice();
             var currentElement = _.sample(words);
-            return {words: words, currentEl: currentElement, status: "testing"}
+            return {words: words, currentEl: currentElement, status: "", ifFail: false}
         },
 
         checkWord: function () {
             if (React.findDOMNode(this.refs.guessInput).value === this.state.currentEl.target) {
                 _.pull(this.state.words, this.state.currentEl);
                 if (this.state.words.length !== 0){
-                    this.setState({status: "OK"});
                     this.changeCurrentWord();
-                    console.log("success")
+                    console.log("success");
+                    React.findDOMNode(this.refs.guessInput).value = ""
                 } else {
                     this.setState({status: "Finished!"})
                 }
             } else {
-                this.setState({status: "FAIL! Word: "+this.getSource(this.state.currentEl.source)+" Expected:"+this.state.currentEl.target+"; Actual: "+React.findDOMNode(this.refs.guessInput).value});
-                this.changeCurrentWord();
+                if (this.state.ifFail === true) {
+                    this.setState({status: "", ifFail: false});
+                    this.changeCurrentWord();
+                    React.findDOMNode(this.refs.guessInput).value = ""
+                } else {
+                    this.setState({status: this.state.currentEl.target, ifFail: true});
+                }
                 console.log("fail")
             }
-            React.findDOMNode(this.refs.guessInput).value = ""
         },
-        
+
         inputKeyPress: function (e) {
             if (e.which == '13'){ // enter
                 this.checkWord();
@@ -48,10 +52,10 @@ require("domready")(function () {
         render: function () {
             return React.DOM.div(null,
                 React.DOM.p(null, "Remaining: "+this.state.words.length),
-                React.DOM.p(null, this.state.status),
                 React.DOM.p(null, this.getSource(this.state.currentEl.source)),
                 React.DOM.input({type: "text", ref: "guessInput", onKeyPress: this.inputKeyPress}),
-                React.DOM.button({onClick: this.checkWord}, "Guess")
+                React.DOM.button({onClick: this.checkWord}, "Guess"),
+                React.DOM.p(null, this.state.status)
             )
         }
     });
