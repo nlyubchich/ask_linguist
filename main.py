@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.secret_key = "really secret"
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 heroku = Heroku(app)
-
+app.config["DEBUG"] = True
 db.init_app(app)
 
 
