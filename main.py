@@ -25,10 +25,8 @@ db.init_app(app)
 class Hashabledict(dict):
     def __key(self):
         return tuple((k, self[k]) for k in sorted(self))
-
     def __hash__(self):
         return hash(self.__key())
-
     def __eq__(self, other):
         return self.__key() == other.__key()
 
@@ -68,7 +66,9 @@ def questionnaire(source, target):
             source=tuple(source.text for source in word.translated.filter_by(language=source)),
             target=word.text
         )
-        for word in my_words]
+        for word in my_words
+        if word.translated.filter_by(language=source).first()
+        ]
 
 
 
@@ -76,9 +76,10 @@ def questionnaire(source, target):
     d = [
         Hashabledict(
             source=(word.text,),
-            target=word.translate.filter_by(language=target).first().text if word.translate.filter_by(language=target).first() else None,
+            target=word.translated.filter_by(language=target).first().text,
         )
-        for word in my_d]
+        for word in my_d
+        if word.translated.filter_by(language=target).first()]
 
     for wa in my_words:
         print("w: " + str(wa))
