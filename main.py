@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify
 from flask.ext.heroku import Heroku
 
-from forms import WordForm
+from forms import WordForm, EditWordForm, DeleteWordForm
 from models import Word, db
 
 # stream_handler = logging.StreamHandler()
@@ -12,8 +12,8 @@ app = Flask(__name__)
 # app.logger.info('ask-linguist startup')
 
 app.secret_key = "really secret"
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
-heroku = Heroku(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+# heroku = Heroku(app)
 app.config["DEBUG"] = True
 db.init_app(app)
 
@@ -29,6 +29,13 @@ class Hashabledict(dict):
         return hash(self.__key())
     def __eq__(self, other):
         return self.__key() == other.__key()
+
+
+@app.route('/list')
+def word_list():
+    words = Word.query.order_by(Word.id.desc()).all()
+    dicted_words = [{"id": word.id, "text": word.text} for word in words]
+    return jsonify(words=dicted_words)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -71,7 +78,6 @@ def questionnaire(source, target):
         ]
 
 
-
     my_d = Word.query.filter_by(language=source)
     d = [
         Hashabledict(
@@ -92,6 +98,33 @@ def questionnaire(source, target):
 def words():
     return render_template('question.html')
 
+
+@app.route("/edit/", methods=["POST"])
+def editword(target_id):
+    form = EditWordForm()
+    if form.validate_on_submit():
+        word = Word.query.filter_by(id=form.target_id.data)
+        word.text = form.word.data
+        db.session.commit()
+        return jsonify(status="OK")
+    return jsonify(status="not OK")
+
+
+@app.route("/delete/", methods=["POST"])
+def deleteword():
+    form = DeleteWordForm()
+    if form.validate_on_submit():
+        word = Word.query.get(form.target_id.data)
+        for translate in word.translate:
+            db.session.delete(translate)
+
+        for translated in word.translated:
+            db.session.delete(translated)
+
+        db.session.delete(word)
+        db.session.commit()
+        return jsonify(status="OK")
+    return jsonify(status="not OK")
 
 if __name__ == '__main__':
     app.run(debug=True)

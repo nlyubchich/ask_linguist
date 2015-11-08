@@ -12,12 +12,14 @@ class Word(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     language = db.Column(db.Unicode(80))
     text = db.Column(db.Unicode(80))
-    translate = db.relationship('Word',
-                                lazy='dynamic',
-                                secondary=translation,
-                                primaryjoin=(translation.c.word_id == id),
-                                secondaryjoin=(translation.c.translated_id == id),
-                                backref=db.backref('translated', lazy='dynamic'))
+    translate = db.relationship(
+        'Word',
+        lazy='dynamic',
+        secondary=translation,
+        primaryjoin=(translation.c.word_id == id),
+        secondaryjoin=(translation.c.translated_id == id),
+        backref=db.backref('translated', lazy='dynamic'),
+    )
 
     def __init__(self, language, text):
         self.language = language.title()
