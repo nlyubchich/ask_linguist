@@ -1,34 +1,10 @@
-from flask import Flask, render_template, jsonify
-from flask.ext.heroku import Heroku
+from flask import jsonify, render_template
 
-from forms import WordForm, EditWordForm, DeleteWordForm
-from models import Word, db
-
-# stream_handler = logging.StreamHandler()
-
-app = Flask(__name__)
-# app.logger.addHandler(stream_handler)
-# app.logger.setLevel(logging.INFO)
-# app.logger.info('ask-linguist startup')
-
-app.secret_key = "really secret"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
-# heroku = Heroku(app)
-app.config["DEBUG"] = True
-db.init_app(app)
-
-
-# with app.app_context():
-#     db.create_all()
-#
-
-class Hashabledict(dict):
-    def __key(self):
-        return tuple((k, self[k]) for k in sorted(self))
-    def __hash__(self):
-        return hash(self.__key())
-    def __eq__(self, other):
-        return self.__key() == other.__key()
+from project import app, bl
+from project.extensions import db
+from project.forms import WordForm, EditWordForm, DeleteWordForm
+from project.models import Word
+from project.utils import Hashabledict
 
 
 @app.route('/list')
@@ -77,7 +53,6 @@ def questionnaire(source, target):
         if word.translated.filter_by(language=source).first()
         ]
 
-
     my_d = Word.query.filter_by(language=source)
     d = [
         Hashabledict(
@@ -114,17 +89,15 @@ def editword(target_id):
 def deleteword():
     form = DeleteWordForm()
     if form.validate_on_submit():
-        word = Word.query.get(form.target_id.data)
-        for translate in word.translate:
-            db.session.delete(translate)
-
-        for translated in word.translated:
-            db.session.delete(translated)
-
-        db.session.delete(word)
-        db.session.commit()
+        bl.delete_word(form.target_id.data)
+        # word = Word.query.get(form.target_id.data)
+        # for translate in word.translate:
+        #     db.session.delete(translate)
+        #
+        # for translated in word.translated:
+        #     db.session.delete(translated)
+        #
+        # db.session.delete(word)
+        # db.session.commit()
         return jsonify(status="OK")
-    return jsonify(status="not OK")
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    return jsonify(status="not OK", errors=form.errors)

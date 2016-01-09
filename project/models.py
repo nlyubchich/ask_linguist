@@ -1,15 +1,21 @@
 # coding=utf-8
-from flask.ext.sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from enum import Enum, unique
+from project.extensions import db
 
 translation = db.Table('translation',
                        db.Column('word_id', db.Integer, db.ForeignKey('word.id')),
                        db.Column('translated_id', db.Integer, db.ForeignKey('word.id')))
 
 
+@unique
+class WordStatus(Enum):
+    visible = 0
+    deleted = 1
+
+
 class Word(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.Integer, default=WordStatus.visible)
     language = db.Column(db.Unicode(80))
     text = db.Column(db.Unicode(80))
     translate = db.relationship(
@@ -26,14 +32,4 @@ class Word(db.Model):
         self.text = text
 
     def __repr__(self):
-        return u'<Language %s, Text %s>' % (self.language, self.text)
-
-# darl_eng = Word(u"english", u"darling")
-# darl_fr = Word(u"french", u"chéri")
-#
-#
-# darl_eng.translate.append(darl_fr)
-#
-# db.session.add(darl_eng)
-# db.session.add(darl_fr)
-# db.session.commit()
+        return '<Language %s, Text %s>' % (self.language, self.text)

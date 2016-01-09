@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ask Linguist</title>
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.%s.css' % config.STATIC_ASSETS_HASH) }}">
+    {% block scripts %}{% endblock %}
+</head>
+<body>
+    {% block header %}{% endblock %}
+    {% block content %}{% endblock %}
+
+    {% block footer %}
+    {% endblock %}
+</body>
+</html>

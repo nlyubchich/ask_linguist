@@ -1,11 +1,10 @@
 var React = require("react");
 var $ = require("npm-zepto");
 var _ = require("lodash");
+let ReactDOM = require('react-dom');
 
 
 var Asker = React.createClass({
-    displayName: "Asker",
-
     getSource: function (sourceList) {
         return sourceList.join(", ")
     },
@@ -21,12 +20,12 @@ var Asker = React.createClass({
     },
 
     checkWord: function () {
-        if (React.findDOMNode(this.refs.guessInput).value === this.state.currentEl.target) {
+        if (ReactDOM.findDOMNode(this.refs.guessInput).value === this.state.currentEl.target) {
             _.pull(this.state.words, this.state.currentEl);
             if (this.state.words.length !== 0){
                 this.changeCurrentWord();
                 console.log("success");
-                React.findDOMNode(this.refs.guessInput).value = ""
+                ReactDOM.findDOMNode(this.refs.guessInput).value = ""
             } else {
                 this.setState({status: "Finished!"})
             }
@@ -34,7 +33,7 @@ var Asker = React.createClass({
             if (this.state.ifFail === true) {
                 this.setState({status: "", ifFail: false});
                 this.changeCurrentWord();
-                React.findDOMNode(this.refs.guessInput).value = ""
+                ReactDOM.findDOMNode(this.refs.guessInput).value = ""
             } else {
                 this.setState({status: this.state.currentEl.target, ifFail: true});
             }
@@ -49,19 +48,23 @@ var Asker = React.createClass({
     },
 
     render: function () {
-        return React.DOM.div(null,
-            React.DOM.p(null, "Remaining: "+this.state.words.length),
-            React.DOM.p(null, this.getSource(this.state.currentEl.source)),
-            React.DOM.input({type: "text", ref: "guessInput", onKeyPress: this.inputKeyPress}),
-            React.DOM.button({onClick: this.checkWord}, "Guess"),
-            React.DOM.p(null, this.state.status)
+        return (
+            <div>
+                <p>{"Remaining: "+this.state.words.length}</p>
+                <p> {this.getSource(this.state.currentEl.source)}</p>
+                <input type="text" ref="guessInput" onKeyPress={this.inputKeyPress} />
+                <button onClick={this.checkWord}>"Guess"</button>
+                <p>{this.state.status}</p>
+            </div>
         )
     }
 });
 
 
 $.get("/English-French/", function (result) {
-        React.render(React.createElement(Asker, {initialWords: result.words}),
-            document.getElementById("test"));
+        ReactDOM.render(
+            <Asker initialWords={result.words}/>,
+            document.getElementById("test")
+        );
     }
 );
