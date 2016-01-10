@@ -9,8 +9,13 @@ from project.utils import Hashabledict
 
 @app.route('/list')
 def word_list():
-    words = Word.query.order_by(Word.id.desc()).all()
-    dicted_words = [{"id": word.id, "text": word.text} for word in words]
+    words = Word.query.order_by(Word.id.desc())
+    dicted_words = [{
+                        "id": word.id,
+                        "text": word.text,
+                        "language": word.language,
+                        "translate": tuple(map(lambda w: w.text, word.translate))
+                    } for word in words]
     return jsonify(words=dicted_words)
 
 
@@ -75,14 +80,12 @@ def words():
 
 
 @app.route("/edit/", methods=["POST"])
-def editword(target_id):
+def editword():
     form = EditWordForm()
     if form.validate_on_submit():
-        word = Word.query.filter_by(id=form.target_id.data)
-        word.text = form.word.data
-        db.session.commit()
+        bl.edit_word_text(form.target_id.data, form.text.data)
         return jsonify(status="OK")
-    return jsonify(status="not OK")
+    return jsonify(status="not OK", errors=form.errors)
 
 
 @app.route("/delete/", methods=["POST"])
@@ -90,14 +93,5 @@ def deleteword():
     form = DeleteWordForm()
     if form.validate_on_submit():
         bl.delete_word(form.target_id.data)
-        # word = Word.query.get(form.target_id.data)
-        # for translate in word.translate:
-        #     db.session.delete(translate)
-        #
-        # for translated in word.translated:
-        #     db.session.delete(translated)
-        #
-        # db.session.delete(word)
-        # db.session.commit()
         return jsonify(status="OK")
     return jsonify(status="not OK", errors=form.errors)

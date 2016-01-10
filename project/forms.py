@@ -10,7 +10,7 @@ class WordForm(Form):
 
 class EditWordForm(Form):
     target_id = IntegerField('target_id', validators=[DataRequired()])
-    word = StringField('Word', validators=[DataRequired()])
+    text = StringField('Text', validators=[DataRequired()])
 
 
 class DeleteWordForm(Form):

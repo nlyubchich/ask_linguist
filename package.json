@@ -30,6 +30,7 @@
     "file-loader": "^0.8.5",
     "image-webpack-loader": "^1.6.2",
     "jquery": "^2.2.0",
+    "keycode": "^2.1.0",
     "react": "^0.14.6",
     "react-dom": "^0.14.6",
     "stats-webpack-plugin": "^0.2.2",

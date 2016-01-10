@@ -1,6 +1,6 @@
 import $ from "jquery";
+import _ from "lodash"
 import {actionIs, filter, debounce} from 'tanok/helpers.js';
-
 
 let csrftoken = document.querySelector('meta[name=csrf-token]').getAttribute('content');
 
@@ -9,27 +9,54 @@ export let update = [
         return [state];
     }],
     [[actionIs('remove_word')], (params, state) => {
-        //state.count += 1;
+        let wordId = params.payload.wordId;
+        _.remove(state.words, (word) => word.id == wordId);
+        return [state, ajaxRemoveWord.bind(null, wordId)]
+    }],
+    [[actionIs('edit_word')], (params, state) => {
+        let wordId = params.payload.wordId;
+        let wordIndex = _.findIndex(state.words, (word) => word.id == wordId);
+        state.words[wordIndex].isEdit = true;
+        return [state]
+    }],
+    [[actionIs('working_on_word')], (params, state) => {
+        let {wordId, text} = params.payload;
+        let wordIndex = _.findIndex(state.words, (word) => word.id == wordId);
+        state.words[wordIndex].text = text;
+        return [state]
+    }],
+    [[actionIs('save_word')], (params, state) => {
+        let {wordId} = params.payload;
+        let wordIndex = _.findIndex(state.words, (word) => word.id == wordId);
+        state.words[wordIndex].isEdit = false;
+        return [state, ajaxEditWord.bind(null, params.payload.wordId)]
+    }]
+];
+
+function ajaxRemoveWord(wordId, state, es) {
+    return Rx.Observable.just(1).do(function () {
         $.ajax({
             url: '/delete/',
             type: 'POST',
             headers: {
                 "X-CSRFToken": csrftoken
             },
-            data: {"target_id": params.payload.wordId}
+            data: {"target_id": wordId}
         });
-        return [state]
-    }]
-    //[[actionIs('dec')], (params, state) => {
-    //  state.count -= 1;
-    //  return [state, wowEffect]
-    //}],
-    //[[actionIs('wow'), debounce(1000)], (params, state) => {
-    //  state.history.push(state.count);
-    //  return [state]
-    //}]
-];
+    })
+}
 
-//function removeWord(wordId) {
-//    "use strict";
-//}
+function ajaxEditWord(wordId, state, es) {
+    return Rx.Observable.just(1).do(function () {
+        let word = _.find(state.words, (word) => word.id == wordId);
+
+        $.ajax({
+            url: '/edit/',
+            type: 'POST',
+            headers: {
+                "X-CSRFToken": csrftoken
+            },
+            data: {"target_id": wordId, "text": word.text}
+        });
+    })
+}
