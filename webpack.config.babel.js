@@ -47,10 +47,6 @@ module.exports = {
     ]
   },
   resolve: {
-    alias: {
-      jquery: "npm-zepto",
-      ckeditor: "../vendor/ckeditor.js"
-    },
     extensions: ['', '.coffee', '.js', '.styl', '.css'],
     modulesDirectories: ['node_modules', 'scripts']
   },

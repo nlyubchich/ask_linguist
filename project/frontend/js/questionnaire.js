@@ -1,5 +1,5 @@
 var React = require("react");
-var $ = require("npm-zepto");
+var $ = require("jquery");
 var _ = require("lodash");
 let ReactDOM = require('react-dom');
 

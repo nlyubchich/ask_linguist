@@ -16,6 +16,7 @@ def word_list():
 
 @app.route('/', methods=['GET', 'POST'])
 def hello_world():
+    0/0
     word_form = WordForm(prefix="word")
     translate_form = WordForm(prefix="translate")
     if word_form.validate_on_submit() and translate_form.validate_on_submit():

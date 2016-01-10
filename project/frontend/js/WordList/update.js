@@ -1,8 +1,4 @@
-/*
- UPDATE
- */
-
-import $ from "npm-zepto";
+import $ from "jquery";
 import {actionIs, filter, debounce} from 'tanok/helpers.js';
 
 

@@ -1,46 +1,8 @@
-let ReactDOM = require('react-dom');
 let _ = require("lodash");
 
 import React from 'react'
 import TanokWrapper from 'tanok/component.js';
 import {actionIs, filter, debounce} from 'tanok/helpers.js';
-
-
-
-
-
-
-
-//function wowEffect (state, es) {
-//  return Rx.Observable.just(1).do(function(){
-//    es.send('wow')
-//  })
-//}
-
-/*
-  VIEW
-*/
-//class Counter extends React.Component {
-//  onPlusClick() {
-//    this.send('inc')
-//  }
-//  onMinusClick() {
-//    this.send('dec')
-//  }
-//  render() {
-//        return <div>
-//        <button onClick={this.onPlusClick.bind(this)}>+</button>
-//        <span>{this.props.count}</span>
-//        <button onClick={this.onMinusClick.bind(this)}>-</button>
-//        History: [{this.props.history.join(', ')}]
-//        </div>
-//    }
-//}
-
-//let TCounter = TanokWrapper(Counter)
-
-//export {TCounter as Counter};
-
 
 
 class WordItem extends React.Component {
@@ -98,15 +60,5 @@ class WordList extends React.Component {
         )
     }
 }
-
-//$.get("/list", function (result) {
-//        console.log(result);
-//        ReactDOM.render(
-//            <WordList words={result.words}/>,
-//            document.getElementById("list")
-//        )
-//    }
-//);
-
 
 export let TWordList = TanokWrapper(WordList);

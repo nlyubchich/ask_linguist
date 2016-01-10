@@ -12,6 +12,7 @@ except FileNotFoundError:
 class Config:
     DEBUG = False
     TESTING = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     SECRET_KEY = 'really secret'
 
@@ -59,6 +60,7 @@ class DevelopmentConfig(Config):
     # Flask
     DEBUG = True
     DEVELOPMENT = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     # Database
     SQLALCHEMY_DATABASE_URI = 'sqlite:///../db.sqlite3'
