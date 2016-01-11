@@ -15,7 +15,7 @@ class WordStatus(Enum):
 
 class Word(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.Integer, default=WordStatus.visible)
+    status = db.Column(db.Integer, default=WordStatus.visible.value)
     language = db.Column(db.Unicode(80))
     text = db.Column(db.Unicode(80))
     translate = db.relationship(
