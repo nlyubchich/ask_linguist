@@ -2,91 +2,97 @@ import keycode from 'keycode'
 import React from 'react'
 import TanokWrapper from 'tanok/component.js';
 import {actionIs, filter, debounce} from 'tanok/helpers.js';
+import classSet from "classnames";
 
 
 class WordItem extends React.Component {
 
     working_on_word(event) {
-        let {eventStream, wordId} = this.props;
-        eventStream.send(
-            "working_on_word",
-            {
-                wordId,
-                text: event.target.value
-            }
-        );
+        let {eventStream} = this.props;
+        eventStream.send("working_on_word", {text: event.target.value});
     }
 
     edit_word() {
-        let {eventStream, wordId} = this.props;
-        eventStream.send("edit_word", {wordId})
+        let {eventStream, id} = this.props;
+        eventStream.send("edit_word", {wordId: id})
     }
 
     save_word() {
-        let {eventStream, wordId} = this.props;
-        eventStream.send("save_word", {wordId})
+        let {eventStream} = this.props;
+        eventStream.send("save_word")
     }
 
     remove_word() {
-        let {eventStream, wordId} = this.props;
-        eventStream.send('remove_word', {wordId})
+        let {eventStream} = this.props;
+        eventStream.send('remove_word')
     }
 
     inputKeyPressHandler(e) {
-        if (keycode(e.which) === 'enter') {
+        if (keycode(e.which) == 'enter') {
             this.save_word()
         }
     }
 
     render() {
-        let {wordId, text, language, isEdit, translate} = this.props;
+        let {id, text, language, isActive, translate} = this.props;
         let textElement, editElement;
 
 
-        if (isEdit) {
+        if (isActive) {
             textElement = <input
                 onChange={this.working_on_word.bind(this)}
                 defaultValue={text}
                 onKeyPress={this.inputKeyPressHandler.bind(this)}
             />;
-            editElement = <input
-                className="btn btn-success"
-                type="button"
-                value="Save"
-                onClick={this.save_word.bind(this)}
-            />
+            editElement = (
+                <td>
+                    <input
+                        className="btn btn-success"
+                        type="button"
+                        value="Save"
+                        onClick={this.save_word.bind(this)}
+                    />
+                    <input
+                        className="btn btn-danger"
+                        type="button"
+                        value="Delete"
+                        onClick={this.remove_word.bind(this)}
+                    />
+                </td>
+            )
         } else {
             textElement = text;
-            editElement = <input
-                className="btn btn-info"
-                type="button"
-                value="Edit"
-                onClick={this.edit_word.bind(this)}
-            />
+            editElement = (
+                <td>
+                    <input
+                        className="btn btn-info"
+                        type="button"
+                        value="Edit"
+                        onClick={this.edit_word.bind(this)}
+                    />
+                </td>
+            )
         }
 
-        return <tr>
-            <td>{wordId}</td>
-            <td>{language}</td>
-            <td>{textElement}</td>
-            <td>{translate.join(', ')}</td>
-            <td>
+        return (
+            <tr
+                className={classSet({
+                    "active": isActive
+                })}>
+                <td>{id}</td>
+                <td>{language}</td>
+                <td>{textElement}</td>
+                <td>{translate.join(', ')}</td>
                 {editElement}
-                <input
-                    className="btn btn-danger"
-                    type="button"
-                    value="Delete"
-                    onClick={this.remove_word.bind(this)}
-                />
-            </td>
-        </tr>
+            </tr>
+        )
     }
 }
 
 class WordList extends React.Component {
     render() {
         return  (
-            <table className="table table-striped">
+            <table className="table table-hover">
                 <tbody>
                     <tr>
                         <th>ID</th>
@@ -99,12 +105,9 @@ class WordList extends React.Component {
                         this.props.words.map(
                             (word, i) => <WordItem
                                 eventStream={this.props.eventStream}
-                                wordId={word.id}
-                                text={word.text}
-                                language={word.language}
-                                isEdit={word.isEdit}
-                                translate={word.translate}
-                                key={i}
+                                key={word.id}
+                                isActive={word.id == this.props.activeWord}
+                                {...word}
                             />
                         )
                     }

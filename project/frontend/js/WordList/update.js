@@ -9,31 +9,29 @@ export let update = [
         return [state];
     }],
     [[actionIs('remove_word')], (params, state) => {
-        let wordId = params.payload.wordId;
+        let wordId = state.activeWord;
+        state.activeWord = null;
         _.remove(state.words, (word) => word.id == wordId);
         return [state, ajaxRemoveWord.bind(null, wordId)]
     }],
     [[actionIs('edit_word')], (params, state) => {
-        let wordId = params.payload.wordId;
-        let wordIndex = _.findIndex(state.words, (word) => word.id == wordId);
-        state.words[wordIndex].isEdit = true;
+        state.activeWord = params.payload.wordId;
         return [state]
     }],
     [[actionIs('working_on_word')], (params, state) => {
-        let {wordId, text} = params.payload;
-        let wordIndex = _.findIndex(state.words, (word) => word.id == wordId);
+        let {text} = params.payload;
+        let wordIndex = _.findIndex(state.words, (word) => word.id == state.activeWord);
         state.words[wordIndex].text = text;
         return [state]
     }],
     [[actionIs('save_word')], (params, state) => {
-        let {wordId} = params.payload;
-        let wordIndex = _.findIndex(state.words, (word) => word.id == wordId);
-        state.words[wordIndex].isEdit = false;
-        return [state, ajaxEditWord.bind(null, params.payload.wordId)]
+        let wordId = state.activeWord;
+        state.activeWord = null;
+        return [state, ajaxEditWord.bind(null, wordId)]
     }]
 ];
 
-function ajaxRemoveWord(wordId, state, es) {
+function ajaxRemoveWord(wordId) {
     return Rx.Observable.just(1).do(function () {
         $.ajax({
             url: '/delete/',
@@ -46,7 +44,7 @@ function ajaxRemoveWord(wordId, state, es) {
     })
 }
 
-function ajaxEditWord(wordId, state, es) {
+function ajaxEditWord(wordId, state) {
     return Rx.Observable.just(1).do(function () {
         let word = _.find(state.words, (word) => word.id == wordId);
 

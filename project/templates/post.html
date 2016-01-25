@@ -14,22 +14,6 @@
       <button type="submit" class="btn btn-default">Insert</button>
     </form>
     <div id="list">
-        <ul>
-        {% for word in words %}
-            <li>
-                <p> {{ word.id }}</p>
-                <p> {{ word.language }}</p>
-                <p> {{ word.text }}</p>
-                <small>
-                    {% for translate in word.translate %}
-
-                        <p> {{ translate }} </p>
-                    {% endfor %}
-
-                </small>
-            </li>
-        {% endfor %}
-        </ul>
     </div>
     <script src="{{ url_for('static', filename='list.%s.js' % config.STATIC_ASSETS_HASH) }}"></script>
 {% endblock %}
