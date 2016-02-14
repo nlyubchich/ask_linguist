@@ -67,7 +67,6 @@ def questionnaire(source, target):
 
     q = w+d
     a = list(filter(lambda el: el["source"] and el["target"], set(q)))
-    print("a: " +str(a))
 
     return jsonify(words=a)
 
