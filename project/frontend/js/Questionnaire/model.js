@@ -12,7 +12,5 @@ class Model {
 }
 
 export function init(payload) {
-    return new Model ({
-        words: payload.words
-    })
+    return new Model (payload)
 }
