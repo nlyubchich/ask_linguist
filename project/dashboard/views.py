@@ -1,10 +1,10 @@
 from flask import jsonify, render_template
 
-from project import app, bl
+from project.blueprints import dashboard_app as app
 from project.extensions import db
-from project.forms import WordForm, EditWordForm, DeleteWordForm
 from project.models import Word
-from project.utils import Hashabledict
+from project import bl
+from .forms import WordForm, EditWordForm, DeleteWordForm
 
 
 @app.route('/list')
@@ -40,40 +40,7 @@ def hello_world():
         db.session.commit()
 
         word_form.word.data, translate_form.word.data = "", ""
-    return render_template('post.html', word_form=word_form, translate_form=translate_form, words=words)
-
-
-@app.route("/<source>-<target>/")
-def questionnaire(source, target):
-    my_words = Word.query.filter_by(language=target)
-
-    w = [
-        Hashabledict(
-            source=tuple(source.text for source in word.translated.filter_by(language=source)),
-            target=word.text
-        )
-        for word in my_words
-        if word.translated.filter_by(language=source).first()
-        ]
-
-    my_d = Word.query.filter_by(language=source)
-    d = [
-        Hashabledict(
-            source=(word.text,),
-            target=word.translated.filter_by(language=target).first().text,
-        )
-        for word in my_d
-        if word.translated.filter_by(language=target).first()]
-
-    q = w+d
-    a = list(filter(lambda el: el["source"] and el["target"], set(q)))
-
-    return jsonify(words=a)
-
-
-@app.route("/words")
-def words():
-    return render_template('question.html')
+    return render_template('dashboard/post.html', word_form=word_form, translate_form=translate_form)
 
 
 @app.route("/edit/", methods=["POST"])

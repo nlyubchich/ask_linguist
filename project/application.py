@@ -1,9 +1,9 @@
 import os
 import logging.config
-from importlib import import_module
-
 from flask import Flask
-from .extensions import csrf, db, toolbar
+from importlib import import_module
+from project.blueprints import all_blueprints
+from .extensions import csrf, db, toolbar, login_manager
 
 
 def create_app():
@@ -16,10 +16,17 @@ def create_app():
         for module in app.config.get('DB_MODELS_IMPORT', list()):
             import_module(module)
 
+    for bp in all_blueprints:
+        import_module(bp.import_name)
+        app.register_blueprint(bp)
+
+    login_manager.login_view = "index.login"
+
     logging.config.dictConfig(app.config["LOG_CONFIG"])
 
     csrf.init_app(app)
     toolbar.init_app(app)
     db.init_app(app)
+    login_manager.init_app(app)
 
     return app

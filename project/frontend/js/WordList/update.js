@@ -34,7 +34,7 @@ export let update = [
 function ajaxRemoveWord(wordId) {
     return Rx.Observable.just(1).do(function () {
         $.ajax({
-            url: '/delete/',
+            url: '/dashboard/delete/',
             type: 'POST',
             headers: {
                 "X-CSRFToken": csrftoken
@@ -49,7 +49,7 @@ function ajaxEditWord(wordId, state) {
         let word = _.find(state.words, (word) => word.id == wordId);
 
         $.ajax({
-            url: '/edit/',
+            url: '/dashboard/edit/',
             type: 'POST',
             headers: {
                 "X-CSRFToken": csrftoken

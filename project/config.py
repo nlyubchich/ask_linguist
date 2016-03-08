@@ -48,6 +48,15 @@ class Config:
         }
     }
 
+    GOOGLE_OAUTH_PARAMS = {
+        'client_id': os.getenv('GOOGLE_OAUTH_CLIENT_ID'),
+        'client_secret': os.getenv('GOOGLE_OAUTH_CLIENT_SECRET'),
+        'scope': ['email', 'profile'],
+        'auth_uri':  os.getenv('GOOGLE_OAUTH_AUTH_URI'),
+        'token_uri':  os.getenv('GOOGLE_OAUTH_TOKEN_URI'),
+        'login_hint':  os.getenv('GOOGLE_OAUTH_LOGIN_HINT'),
+    }
+
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
@@ -64,6 +73,8 @@ class DevelopmentConfig(Config):
 
     # Database
     SQLALCHEMY_DATABASE_URI = 'sqlite:///../db.sqlite3'
+
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 
 class TestingConfig(Config):
