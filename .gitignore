@@ -1,3 +1,4 @@
+/.vagga
 /db.sqlite3
 ### VirtualEnv template
 # Virtualenv
@@ -6,7 +7,9 @@
 [Bb]in
 [Ii]nclude
 /static
+/.db
 [Ll]ib
+/client_secret.json
 [Ss]cripts
 pyvenv.cfg
 pip-selfcheck.json

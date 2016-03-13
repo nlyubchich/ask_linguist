@@ -21,7 +21,7 @@ def google_oauth_loader():
     from project import app
     return OAuth2WebServerFlow(
         redirect_uri=url_for('index.google_oauth', _external=True),
-        **app.config['GOOGLE_OAUTH_PARAMS'],
+        **app.config['GOOGLE_OAUTH_PARAMS']
     )
 
 

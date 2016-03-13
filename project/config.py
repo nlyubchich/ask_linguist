@@ -8,6 +8,11 @@ try:
 except FileNotFoundError:
     stats_json = dict()
 
+try:
+    google_oauth_json = json.load(open('client_secret.json'))['web']
+except FileNotFoundError:
+    google_oauth_json = dict()
+
 
 class Config:
     DEBUG = False
@@ -49,12 +54,12 @@ class Config:
     }
 
     GOOGLE_OAUTH_PARAMS = {
-        'client_id': os.getenv('GOOGLE_OAUTH_CLIENT_ID'),
-        'client_secret': os.getenv('GOOGLE_OAUTH_CLIENT_SECRET'),
+        'client_id': google_oauth_json.get('client_id'),
+        'client_secret': google_oauth_json.get('client_secret'),
         'scope': ['email', 'profile'],
-        'auth_uri':  os.getenv('GOOGLE_OAUTH_AUTH_URI'),
-        'token_uri':  os.getenv('GOOGLE_OAUTH_TOKEN_URI'),
-        'login_hint':  os.getenv('GOOGLE_OAUTH_LOGIN_HINT'),
+        'auth_uri': google_oauth_json.get('auth_uri'),
+        'token_uri': google_oauth_json.get('token_uri'),
+        'login_hint': 'hello there',
     }
 
 
@@ -64,6 +69,15 @@ class ProductionConfig(Config):
     CSRF_SECRET = os.getenv('CSRF_SECRET')
     STATIC_ASSETS_HASH = stats_json.get('hash')
 
+    GOOGLE_OAUTH_PARAMS = {
+        'client_id': os.getenv('GOOGLE_OAUTH_CLIENT_ID'),
+        'client_secret': os.getenv('GOOGLE_OAUTH_CLIENT_SECRET'),
+        'scope': ['email', 'profile'],
+        'auth_uri': os.getenv('GOOGLE_OAUTH_AUTH_URI'),
+        'token_uri': os.getenv('GOOGLE_OAUTH_TOKEN_URI'),
+        'login_hint': os.getenv('GOOGLE_OAUTH_LOGIN_HINT'),
+    }
+
 
 class DevelopmentConfig(Config):
     # Flask
@@ -72,9 +86,14 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     # Database
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///../db.sqlite3'
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///../db.sqlite3'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite3'
 
     DEBUG_TB_INTERCEPT_REDIRECTS = False
+
+
+class VaggaConfig(DevelopmentConfig):
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 
 class TestingConfig(Config):

@@ -1,4 +1,5 @@
 # coding=utf-8
+from datetime import datetime
 from enum import Enum, unique
 from oauth2client import client
 from project.extensions import db
@@ -15,10 +16,26 @@ class WordStatus(Enum):
 
 
 class Word(db.Model):
+    @unique
+    class ProgressStatus(Enum):
+        started = 0
+        after_day = 10
+        after_three_days = 20
+        after_week = 30
+        after_two_week = 40
+
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.Integer, default=WordStatus.visible.value)
     language = db.Column(db.Unicode(80))
     text = db.Column(db.Unicode(80))
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    progress_status = db.Column(db.Integer, nullable=False, default=ProgressStatus.started)
+
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_is_available_after = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
     translate = db.relationship(
         'Word',
         lazy='dynamic',
@@ -46,6 +63,8 @@ class User(db.Model):
 
     # Google OAuth
     auth_data = db.Column(db.Unicode, nullable=False)
+
+    words = db.relationship('Word', backref='user', lazy='dynamic')
 
     @property
     def is_active(self):
