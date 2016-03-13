@@ -31,7 +31,7 @@ class Word(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    progress_status = db.Column(db.Integer, nullable=False, default=ProgressStatus.started)
+    progress_status = db.Column(db.Integer, nullable=False, default=ProgressStatus.started.value)
 
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_is_available_after = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
