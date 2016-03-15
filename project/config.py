@@ -68,6 +68,7 @@ class ProductionConfig(Config):
     SECRET_KEY = os.getenv('SECRET_KEY')
     CSRF_SECRET = os.getenv('CSRF_SECRET')
     STATIC_ASSETS_HASH = stats_json.get('hash')
+    REDIS_URL = os.getenv('REDISCLOUD_URL')
 
     GOOGLE_OAUTH_PARAMS = {
         'client_id': os.getenv('GOOGLE_OAUTH_CLIENT_ID'),

@@ -3,15 +3,20 @@ from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired
 
 
-class WordForm(Form):
-    language = StringField('Language', validators=[DataRequired()])
-    word = StringField('Word', validators=[DataRequired()])
+class PhraseForm(Form):
+    source_language = StringField('Source language', validators=[DataRequired()])
+    source_text = StringField('Source text', validators=[DataRequired()])
+    translated_language = StringField('Language translated to', validators=[DataRequired()])
+    translated_text = StringField('Translated text', validators=[DataRequired()])
 
 
-class EditWordForm(Form):
-    target_id = IntegerField('target_id', validators=[DataRequired()])
-    text = StringField('Text', validators=[DataRequired()])
+class EditPhraseForm(Form):
+    phrase_id = IntegerField('phrase_id', validators=[DataRequired()])
+    source_language = StringField('Source language', validators=[DataRequired()])
+    source_text = StringField('Source text', validators=[DataRequired()])
+    translated_language = StringField('Language translated to', validators=[DataRequired()])
+    translated_text = StringField('Translated text', validators=[DataRequired()])
 
 
-class DeleteWordForm(Form):
-    target_id = IntegerField('target_id', validators=[DataRequired()])
+class DeletePhraseForm(Form):
+    phrase_id = IntegerField('phrase_id', validators=[DataRequired()])

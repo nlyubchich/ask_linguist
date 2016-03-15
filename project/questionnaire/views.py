@@ -1,36 +1,46 @@
 from flask import jsonify, render_template
+from flask.ext.login import current_user
 
+from project import bl
+from project.bl import PHRASE_REDIS_KEY_TEMPLATE
 from project.blueprints import questionnaire_app as app
-from project.models import Word
-from project.utils import Hashabledict
+from project.extensions import redis_store, db
+from project.models import Phrase
 
 
-@app.route("/<source>-<target>/")
-def questionnaire(source, target):
-    my_words = Word.query.filter_by(language=target)
+@app.route("/<translated_language>-<source_language>/")
+def questionnaire(translated_language, source_language):
+    redis_key = dict(
+        user_id=current_user.id,
+        source_language=source_language,
+        translated_language=translated_language,
+    )
 
-    w = [
-        Hashabledict(
-            source=tuple(source.text for source in word.translated.filter_by(language=source)),
-            target=word.text
-        )
-        for word in my_words
-        if word.translated.filter_by(language=source).first()
-        ]
+    phrase_ids = redis_store.lrange(PHRASE_REDIS_KEY_TEMPLATE.format(**redis_key), 0, -1)
+    phrase_ids = [int(phrase_id) for phrase_id in phrase_ids]
+    if not phrase_ids:
+        phrase_ids = bl.mark_available_phrases(**redis_key)
 
-    my_d = Word.query.filter_by(language=source)
-    d = [
-        Hashabledict(
-            source=(word.text,),
-            target=word.translated.filter_by(language=target).first().text,
-        )
-        for word in my_d
-        if word.translated.filter_by(language=target).first()]
+    if not phrase_ids:
+        return jsonify(status='no words')
 
-    q = w+d
-    a = list(filter(lambda el: el["source"] and el["target"], set(q)))
+    phrases = [
+        {
+            'source': phrase.source_text,
+            'target': phrase.translated_text,
+        }
+        for phrase in Phrase.query.filter(Phrase.id.in_(phrase_ids))
+    ]
 
-    return jsonify(words=a)
+    return jsonify(phrases=phrases)
+
+
+@app.route("/mark_done")
+def mark_done():
+    phrases = bl.questionnaire_done(current_user.id, 'French', 'English')
+    map(db.session.add, phrases)
+    db.session.commit()
+    return jsonify(status='ok')
 
 
 @app.route("/words")

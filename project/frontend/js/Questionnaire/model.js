@@ -3,8 +3,8 @@ import _ from 'lodash';
 class Model {
     constructor(initialData) {
         return {
-            words: initialData.words,
-            currentEl: _.sample(initialData.words),
+            phrases: initialData.phrases,
+            currentPhrase: _.sample(initialData.phrases),
             status: "",
             isFail: false
         }

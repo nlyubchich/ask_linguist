@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import tanok from 'tanok/tanok.js';
-import {init, update, View} from './WordList';
+import {init, update, View} from './PhraseList';
 
 
 $.get("/dashboard/list", function (result) {

@@ -4,6 +4,7 @@ Flask==0.10.1
 Flask-DebugToolbar==0.10.0
 Flask-Login==0.3.2
 Flask-Migrate==1.7.0
+Flask-Redis==0.1.0
 Flask-Script==2.0.5
 Flask-SQLAlchemy==2.1
 Flask-WTF==0.12
@@ -19,6 +20,7 @@ psycopg2==2.6.1
 pyasn1==0.1.9
 pyasn1-modules==0.0.8
 python-editor==0.5
+redis==2.10.5
 rsa==3.3
 simplejson==3.8.2
 six==1.10.0

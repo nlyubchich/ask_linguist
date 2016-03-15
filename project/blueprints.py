@@ -3,7 +3,7 @@ from flask.ext.login import current_user
 from project.extensions import login_manager
 
 
-def only_authenticated_user():
+def _only_authenticated_user_hook():
     if not (
         current_user.is_authenticated or
         request.endpoint == login_manager.login_view
@@ -23,7 +23,7 @@ def _factory(bp_name, url_prefix, restricted=False):
     )
 
     if restricted:
-        blueprint.before_request(only_authenticated_user)
+        blueprint.before_request(_only_authenticated_user_hook)
 
     return blueprint
 

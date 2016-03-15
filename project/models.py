@@ -1,53 +1,61 @@
 # coding=utf-8
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum, unique
 from oauth2client import client
 from project.extensions import db
 
-translation = db.Table('translation',
-                       db.Column('word_id', db.Integer, db.ForeignKey('word.id')),
-                       db.Column('translated_id', db.Integer, db.ForeignKey('word.id')))
 
+class Phrase(db.Model):
+    _progress_day_map = {
+        0: timedelta(days=0),
+        10: timedelta(days=1),
+        20: timedelta(days=3),
+        30: timedelta(days=7),
+        40: timedelta(days=14),
+    }
 
-@unique
-class WordStatus(Enum):
-    visible = 0
-    deleted = 1
+    _progress_percent_map = {
+        0: "0%",
+        10: "25%",
+        20: "50%",
+        30: "75%",
+        40: "100%",
+    }
 
+    @unique
+    class Status(Enum):
+        visible = 0
+        deleted = 1
 
-class Word(db.Model):
     @unique
     class ProgressStatus(Enum):
+
         started = 0
         after_day = 10
         after_three_days = 20
         after_week = 30
         after_two_week = 40
 
-    id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.Integer, default=WordStatus.visible.value)
-    language = db.Column(db.Unicode(80))
-    text = db.Column(db.Unicode(80))
+        def get_progress_delta(self):
+            return Phrase._progress_day_map[self.value]
 
+        def get_progress_percent(self):
+            return Phrase._progress_percent_map[self.value]
+
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    status = db.Column(db.Integer, default=Status.visible.value)
     progress_status = db.Column(db.Integer, nullable=False, default=ProgressStatus.started.value)
 
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    date_is_available_after = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_available = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-    translate = db.relationship(
-        'Word',
-        lazy='dynamic',
-        secondary=translation,
-        primaryjoin=(translation.c.word_id == id),
-        secondaryjoin=(translation.c.translated_id == id),
-        backref=db.backref('translated', lazy='dynamic'),
-    )
+    source_language = db.Column(db.Unicode)
+    source_text = db.Column(db.Unicode)
 
-    def __init__(self, language, text):
-        self.language = language.title()
-        self.text = text
+    translated_language = db.Column(db.Unicode)
+    translated_text = db.Column(db.Unicode)
 
     def __repr__(self):
         return '<Language %s, Text %s>' % (self.language, self.text)
@@ -64,7 +72,7 @@ class User(db.Model):
     # Google OAuth
     auth_data = db.Column(db.Unicode, nullable=False)
 
-    words = db.relationship('Word', backref='user', lazy='dynamic')
+    phrases = db.relationship('Phrase', backref='user', lazy='dynamic')
 
     @property
     def is_active(self):

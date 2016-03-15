@@ -3,7 +3,7 @@ import logging.config
 from flask import Flask
 from importlib import import_module
 from project.blueprints import all_blueprints
-from .extensions import csrf, db, toolbar, login_manager
+from .extensions import csrf, db, toolbar, login_manager, redis_store
 
 
 def create_app():
@@ -28,5 +28,6 @@ def create_app():
     toolbar.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
+    redis_store.init_app(app)
 
     return app

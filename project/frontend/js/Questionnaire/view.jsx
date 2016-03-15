@@ -5,24 +5,24 @@ import TanokWrapper from 'tanok/component.js';
 
 class Asker extends React.Component {
 
-    checkWord() {
+    checkPhrase() {
         let text = ReactDOM.findDOMNode(this.refs.guessInput).value;
-        this.send('check_word', {text})
+        this.send('check_phrase', {text})
     }
 
     inputKeyPressHandler(e) {
         if (keycode(e.which) == 'enter') {
-            this.checkWord()
+            this.checkPhrase()
         }
     }
 
     render() {
         return (
             <div>
-                <p>{"Remaining: " + this.props.words.length}</p>
-                <p> {this.props.currentEl.source.join(", ")}</p>
+                <p>{"Remaining: " + this.props.phrases.length}</p>
+                <p> {this.props.currentPhrase.source}</p>
                 <input type="text" ref="guessInput" onKeyPress={this.inputKeyPressHandler.bind(this)} />
-                <button onClick={this.checkWord.bind(this)}>Guess</button>
+                <button onClick={this.checkPhrase.bind(this)}>Guess</button>
                 <p>{this.props.status}</p>
             </div>
         )

@@ -2,6 +2,8 @@ import httplib2
 from apiclient import discovery
 from flask import request, redirect, url_for, render_template
 from flask.ext.login import login_required, login_user
+
+from project import bl
 from project.blueprints import index_app as app
 
 from project.extensions import db
@@ -12,7 +14,7 @@ from project.utils import google_oauth_loader
 @app.route('/')
 @login_required
 def index():
-    return redirect(url_for('dashboard.hello_world'))
+    return redirect(url_for('dashboard.dashboard'))
 
 
 @app.route('/login')
@@ -45,7 +47,7 @@ def google_oauth():
         nick_name = person['displayName']
         first_name = person['name']['givenName']
         last_name = person['name']['familyName']
-        user = User(
+        user = bl.create_user(
             email=user_email,
             nick_name=nick_name,
             first_name=first_name,

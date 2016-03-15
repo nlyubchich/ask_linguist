@@ -1,20 +1,8 @@
-# OPPA GOVNOCODE
 from flask import url_for
 from oauth2client.client import OAuth2WebServerFlow
 
 from project.extensions import login_manager
 from project.models import User
-
-
-class Hashabledict(dict):
-    def __key(self):
-        return tuple((k, self[k]) for k in sorted(self))
-
-    def __hash__(self):
-        return hash(self.__key())
-
-    def __eq__(self, other):
-        return self.__key() == other.__key()
 
 
 def google_oauth_loader():

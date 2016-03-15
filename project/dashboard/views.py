@@ -1,61 +1,63 @@
 from flask import jsonify, render_template
+from flask.ext.login import current_user
 
 from project.blueprints import dashboard_app as app
 from project.extensions import db
-from project.models import Word
+from project.models import Phrase
 from project import bl
-from .forms import WordForm, EditWordForm, DeleteWordForm
+from .forms import EditPhraseForm, DeletePhraseForm, PhraseForm
 
 
 @app.route('/list')
-def word_list():
-    words = Word.query.order_by(Word.id.desc())
-    dicted_words = [{
-                        "id": word.id,
-                        "text": word.text,
-                        "language": word.language,
-                        "translate": tuple(map(lambda w: w.text, word.translate))
-                    } for word in words]
-    return jsonify(words=dicted_words)
+def phrase_list():
+    phrases = bl.get_phrases_by_user(current_user.id).order_by(Phrase.id.desc())
+    phrases = [{
+        "phraseId": phrase.id,
+        "sourceLanguage": phrase.source_language,
+        "sourceText": phrase.source_text,
+        "translatedLanguage": phrase.translated_language,
+        "translatedText": phrase.translated_text,
+        "dateCreated": phrase.date_created,
+        "dateAvailable": phrase.date_available,
+        "progressStatus": Phrase.ProgressStatus(phrase.progress_status).get_progress_percent()
+    } for phrase in phrases]
+    return jsonify(phrases=phrases)
 
 
 @app.route('/', methods=['GET', 'POST'])
-def hello_world():
-    word_form = WordForm(prefix="word")
-    translate_form = WordForm(prefix="translate")
-    if word_form.validate_on_submit() and translate_form.validate_on_submit():
-        translated_word = Word.query.filter_by(
-            language=word_form.language.data,
-            text=word_form.word.data
-        ).first() or Word(language=word_form.language.data, text=word_form.word.data)
+def dashboard():
+    phrase_form = PhraseForm()
+    if phrase_form.validate_on_submit():
+        phrase = bl.create_phrase(**phrase_form.data)
 
-        translate = Word.query.filter_by(
-            language=translate_form.language.data,
-            text=translate_form.word.data
-        ).first() or Word(language=translate_form.language.data, text=translate_form.word.data)
-
-        translated_word.translate.append(translate)
-        db.session.add(translated_word)
-        db.session.add(translate)
+        db.session.add(phrase)
         db.session.commit()
 
-        word_form.word.data, translate_form.word.data = "", ""
-    return render_template('dashboard/post.html', word_form=word_form, translate_form=translate_form)
+        phrase_form.source_text.data, phrase_form.translated_text.data = "", ""
+    return render_template('dashboard/post.html', phrase_form=phrase_form)
 
 
 @app.route("/edit/", methods=["POST"])
-def editword():
-    form = EditWordForm()
+def edit_phrase():
+    form = EditPhraseForm()
     if form.validate_on_submit():
-        bl.edit_word_text(form.target_id.data, form.text.data)
+        # TODO: only owner can edit the phrase
+        phrase = bl.edit_phrase(**form.data)
+        db.session.add(phrase)
+        db.session.commit()
+
         return jsonify(status="OK")
     return jsonify(status="not OK", errors=form.errors)
 
 
 @app.route("/delete/", methods=["POST"])
-def deleteword():
-    form = DeleteWordForm()
+def delete_phrase():
+    form = DeletePhraseForm()
     if form.validate_on_submit():
-        bl.delete_word(form.target_id.data)
+        # TODO: only owner can delete the phrase
+        phrase = bl.delete_phrase(form.phrase_id.data)
+        db.session.add(phrase)
+        db.session.commit()
+
         return jsonify(status="OK")
     return jsonify(status="not OK", errors=form.errors)
