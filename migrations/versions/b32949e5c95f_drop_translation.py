@@ -45,7 +45,7 @@ def upgrade():
         UPDATE phrase
         SET status = 1
         FROM translation
-        WHERE tranlation.translated_id = phrase.id;
+        WHERE translation.translated_id = phrase.id;
     """)
     op.drop_table('translation')
     ### end Alembic commands ###
