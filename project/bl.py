@@ -30,7 +30,7 @@ def questionnaire_done(user_id, source_language, translated_language):
     statuses = [ps.value for ps in Phrase.ProgressStatus]
     for phrase in phrases:
         phrase.progress_status = list(filter(lambda ns: phrase.progress_status < ns, statuses))[0]
-        phrase.date_available = phrase.date_available + Phrase.ProgressStatus(phrase.progress_status).get_progress_delta()
+        phrase.date_available = datetime.utcnow() + Phrase.ProgressStatus(phrase.progress_status).get_progress_delta()
 
     redis_store.delete(redis_key)
     return phrases
