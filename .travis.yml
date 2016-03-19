@@ -1,13 +1,26 @@
+sudo: required
+dist: trusty
 language: node_js
 python:
   - "3.5"
 node_js:
-  - "5"
+  - "5.8"
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      # nodejs >v4 compiler requirements
+      - g++-4.8
+
+before_install:
+  - sudo apt-get -y install python3-pip python3-dev
 
 install:
-#  - pip install -r requirements.txt
+  - pip install -r requirements.txt
   - npm install
 
 script:
-#  - flake8 project/
+  - flake8 project/
   - npm run lint
