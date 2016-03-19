@@ -8,12 +8,12 @@ from project.extensions import redis_store, db
 from project.models import Phrase
 
 
-@app.route("/<translated_language>-<source_language>/")
-def questionnaire(translated_language, source_language):
+@app.route("/<source_language>-<translated_language>/")
+def questionnaire(source_language, translated_language):
     redis_key = dict(
         user_id=current_user.id,
-        source_language=source_language,
-        translated_language=translated_language,
+        source_language=translated_language,
+        translated_language=source_language,
     )
 
     phrase_ids = redis_store.lrange(PHRASE_REDIS_KEY_TEMPLATE.format(**redis_key), 0, -1)
