@@ -13,6 +13,8 @@ class Asker extends React.Component {
     inputKeyPressHandler(e) {
         if (keycode(e.which) == 'enter') {
             this.checkPhrase()
+        } else {
+            
         }
     }
 

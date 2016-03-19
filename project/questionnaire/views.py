@@ -16,7 +16,9 @@ def questionnaire(source_language, translated_language):
         translated_language=source_language,
     )
 
-    phrase_ids = redis_store.lrange(PHRASE_REDIS_KEY_TEMPLATE.format(**redis_key), 0, -1)
+    phrase_ids = redis_store.lrange(
+        PHRASE_REDIS_KEY_TEMPLATE.format(**redis_key), 0, -1
+    )
     phrase_ids = [int(phrase_id) for phrase_id in phrase_ids]
     if not phrase_ids:
         phrase_ids = bl.mark_available_phrases(**redis_key)
@@ -46,5 +48,3 @@ def mark_done():
 @app.route("/words")
 def words():
     return render_template('questionnaire/question.html')
-
-

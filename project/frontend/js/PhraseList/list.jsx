@@ -4,6 +4,20 @@ import TanokWrapper from 'tanok/component.js';
 import classSet from "classnames";
 
 
+class PhraseInput extends React.Component {
+    render() {
+        let {fieldContent, isActive} = this.props;
+
+        return isActive ?
+            <input
+                onChange={this.working_on_phrase.bind(this)}
+                defaultValue={fieldContent}
+                onKeyPress={this.inputKeyPressHandler.bind(this)}
+            /> : <div>{{fieldContent}}</div>
+    }
+}
+
+
 class PhraseItem extends React.Component {
 
     working_on_phrase(event) {
@@ -33,14 +47,9 @@ class PhraseItem extends React.Component {
     }
 
     render() {
-        let {phraseId, sourceText, sourceLanguage, isActive, translatedLanguage, translatedText, progressStatus} = this.props;
+        let {sourceText, sourceLanguage, isActive, translatedLanguage, translatedText, progressStatus} = this.props;
         let textElement, editElement;
         if (isActive) {
-            textElement = <input
-                onChange={this.working_on_phrase.bind(this)}
-                defaultValue={sourceText}
-                onKeyPress={this.inputKeyPressHandler.bind(this)}
-            />;
             editElement = (
                 <td>
                     <input
@@ -58,7 +67,6 @@ class PhraseItem extends React.Component {
                 </td>
             )
         } else {
-            textElement = sourceText;
             editElement = (
                 <td>
                     <input
@@ -76,7 +84,6 @@ class PhraseItem extends React.Component {
                 className={classSet({
                     "active": isActive
                 })}>
-                <td>{phraseId}</td>
                 <td>{sourceLanguage}</td>
                 <td>{textElement}</td>
                 <td>{translatedLanguage}</td>
@@ -104,7 +111,6 @@ class PhraseList extends React.Component {
             <table className="table table-hover">
                 <tbody>
                     <tr>
-                        <th>ID</th>
                         <th>Source language</th>
                         <th>Source phrase</th>
                         <th>Language translated to</th>

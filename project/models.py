@@ -46,10 +46,13 @@ class Phrase(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     status = db.Column(db.Integer, default=Status.visible.value)
-    progress_status = db.Column(db.Integer, nullable=False, default=ProgressStatus.started.value)
+    progress_status = db.Column(db.Integer, nullable=False,
+                                default=ProgressStatus.started.value)
 
-    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    date_available = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_created = db.Column(db.DateTime, nullable=False,
+                             default=datetime.utcnow)
+    date_available = db.Column(db.DateTime, nullable=False,
+                               default=datetime.utcnow)
 
     source_language = db.Column(db.Unicode)
     source_text = db.Column(db.Unicode)

@@ -4,6 +4,7 @@
   "description": "",
   "main": "webpack.config.babel.js",
   "scripts": {
+    "lint": "eslint project/frontend",
     "test": "echo \"Error: no test specified\" && exit 1",
     "webpack-prod": "NODE_ENV=production webpack",
     "webpack-trunk": "NODE_ENV=development webpack",
@@ -39,6 +40,13 @@
     "stylus-loader": "^1.4.3",
     "tanok": "^0.3.1",
     "webpack": "^1.12.10",
-    "lodash": "latest"
+    "lodash": "latest",
+    "rx": "latest"
+  },
+  "devDependencies": {
+    "babel-eslint": "^5.0.0",
+    "eslint": "^2.4.0",
+    "eslint-config-mourner": "^2.0.0",
+    "eslint-plugin-react": "^4.2.3"
   }
 }

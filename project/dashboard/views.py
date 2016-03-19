@@ -10,7 +10,10 @@ from .forms import EditPhraseForm, DeletePhraseForm, PhraseForm
 
 @app.route('/list')
 def phrase_list():
-    phrases = bl.get_phrases_by_user(current_user.id).order_by(Phrase.id.desc())
+    phrases = (
+        bl.get_phrases_by_user(current_user.id)
+        .order_by(Phrase.id.desc())
+    )
     phrases = [{
         "phraseId": phrase.id,
         "sourceLanguage": phrase.source_language,
@@ -19,7 +22,10 @@ def phrase_list():
         "translatedText": phrase.translated_text,
         "dateCreated": phrase.date_created,
         "dateAvailable": phrase.date_available,
-        "progressStatus": Phrase.ProgressStatus(phrase.progress_status).get_progress_percent()
+        "progressStatus": (
+            Phrase.ProgressStatus(phrase.progress_status)
+            .get_progress_percent()
+        )
     } for phrase in phrases]
     return jsonify(phrases=phrases)
 

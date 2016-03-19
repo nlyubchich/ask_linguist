@@ -29,8 +29,13 @@ def questionnaire_done(user_id, source_language, translated_language):
 
     statuses = [ps.value for ps in Phrase.ProgressStatus]
     for phrase in phrases:
-        phrase.progress_status = list(filter(lambda ns: phrase.progress_status < ns, statuses))[0]
-        phrase.date_available = datetime.utcnow() + Phrase.ProgressStatus(phrase.progress_status).get_progress_delta()
+        phrase.progress_status = list(
+            filter(lambda ns: phrase.progress_status < ns, statuses)
+        )[0]
+        phrase.date_available = (
+            datetime.utcnow() +
+            Phrase.ProgressStatus(phrase.progress_status).get_progress_delta()
+        )
 
     redis_store.delete(redis_key)
     return phrases
@@ -61,7 +66,8 @@ def mark_available_phrases(user_id, source_language, translated_language):
     return phrase_ids
 
 
-def create_phrase(source_language, source_text, translated_language, translated_text):
+def create_phrase(source_language, source_text,
+                  translated_language, translated_text):
     phrase = Phrase()
     phrase.user = current_user
     phrase.source_language = source_language
@@ -86,7 +92,8 @@ def delete_phrase(phrase_id):
     word.status = Phrase.Status.deleted.value
 
 
-def edit_phrase(phrase_id, source_language, source_text, translated_language, translated_text):
+def edit_phrase(phrase_id, source_language, source_text,
+                translated_language, translated_text):
     phrase = Phrase.query.get_or_404(phrase_id)
     phrase.source_language = source_language
     phrase.source_text = source_text
