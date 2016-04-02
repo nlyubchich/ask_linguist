@@ -30,17 +30,21 @@ def phrase_list():
     return jsonify(phrases=phrases)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def dashboard():
+    return render_template('dashboard/post.html')
+
+
+@app.route("/create/", methods=["POST"])
+def create_phrase():
     phrase_form = PhraseForm()
     if phrase_form.validate_on_submit():
         phrase = bl.create_phrase(**phrase_form.data)
-
         db.session.add(phrase)
         db.session.commit()
-
-        phrase_form.source_text.data, phrase_form.translated_text.data = "", ""
-    return render_template('dashboard/post.html', phrase_form=phrase_form)
+        print(phrase.id)
+        return jsonify(status="OK", phrase_id=phrase.id)
+    return jsonify(status="not OK", errors=phrase_form.errors)
 
 
 @app.route("/edit/", methods=["POST"])
@@ -61,8 +65,7 @@ def delete_phrase():
     form = DeletePhraseForm()
     if form.validate_on_submit():
         # TODO: only owner can delete the phrase
-        phrase = bl.delete_phrase(form.phrase_id.data)
-        db.session.add(phrase)
+        bl.delete_phrase(form.phrase_id.data)
         db.session.commit()
 
         return jsonify(status="OK")

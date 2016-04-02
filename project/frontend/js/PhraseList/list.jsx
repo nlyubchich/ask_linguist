@@ -1,94 +1,98 @@
 import keycode from 'keycode'
 import React from 'react'
 import TanokWrapper from 'tanok/component.js';
-import classSet from "classnames";
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 
-class PhraseInput extends React.Component {
-    render() {
-        let {fieldContent, isActive} = this.props;
-
-        return isActive ?
-            <input
-                onChange={this.working_on_phrase.bind(this)}
-                defaultValue={fieldContent}
-                onKeyPress={this.inputKeyPressHandler.bind(this)}
-            /> : <div>{{fieldContent}}</div>
+class PhraseEdit extends React.Component {
+    constructor(props) {
+        super(props);
+        this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     }
 }
 
-
 class PhraseItem extends React.Component {
-
-    working_on_phrase(event) {
-        let {eventStream} = this.props;
-        eventStream.send("working_on_phrase", {text: event.target.value});
+    constructor(props) {
+        super(props);
+        this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     }
 
-    edit_phrase() {
+    editedSourceLanguage(event) {
+        this.props.eventStream.send(
+            "editedSourceLanguage", {text: event.target.value}
+        )
+    }
+    editedSourceText(event) {
+        this.props.eventStream.send(
+            "editedSourceText", {text: event.target.value}
+        )
+    }
+    editedTranslatedLanguage(event) {
+        this.props.eventStream.send(
+            "editedTranslatedLanguage", {text: event.target.value}
+        )
+    }
+    editedTranslatedText(event) {
+        this.props.eventStream.send(
+            "editedTranslatedText", {text: event.target.value}
+        )
+    }
+
+    editPhrase() {
         let {eventStream, phraseId} = this.props;
-        eventStream.send("edit_phrase", {phraseId: phraseId})
+        eventStream.send("editPhrase", {phraseId: phraseId})
     }
 
-    save_phrase() {
+    savePhrase() {
         let {eventStream} = this.props;
-        eventStream.send("save_phrase")
+        eventStream.send("savePhrase")
     }
 
-    remove_phrase() {
+    removePhrase() {
         let {eventStream} = this.props;
-        eventStream.send('remove_phrase')
+        eventStream.send('removePhrase')
     }
 
     inputKeyPressHandler(e) {
         if (keycode(e.which) == 'enter') {
-            this.save_phrase()
+            this.savePhrase()
         }
     }
 
-    render() {
-        let {sourceText, sourceLanguage, isActive, translatedLanguage, translatedText, progressStatus} = this.props;
-        let textElement, editElement;
-        if (isActive) {
-            editElement = (
-                <td>
-                    <input
-                        className="btn btn-success"
-                        type="button"
-                        value="Save"
-                        onClick={this.save_phrase.bind(this)}
-                    />
-                    <input
-                        className="btn btn-danger"
-                        type="button"
-                        value="Delete"
-                        onClick={this.remove_phrase.bind(this)}
-                    />
-                </td>
-            )
-        } else {
-            editElement = (
-                <td>
-                    <input
-                        className="btn btn-info"
-                        type="button"
-                        value="Edit"
-                        onClick={this.edit_phrase.bind(this)}
-                    />
-                </td>
-            )
-        }
-
+    render_active() {
+        let {sourceLanguage, sourceText,
+            translatedLanguage, translatedText,
+            progressStatus} = this.props;
         return (
-            <tr
-                className={classSet({
-                    "active": isActive
-                })}>
-                <td>{sourceLanguage}</td>
-                <td>{textElement}</td>
-                <td>{translatedLanguage}</td>
-                <td>{translatedText}</td>
-
+            <tr className="active">
+                <td>
+                    <input
+                        onChange={this.editedSourceLanguage.bind(this)}
+                        value={sourceLanguage}
+                        onKeyPress={this.inputKeyPressHandler.bind(this)}
+                    />
+                </td>
+                <td>
+                    <input
+                        onChange={this.editedSourceText.bind(this)}
+                        value={sourceText}
+                        onKeyPress={this.inputKeyPressHandler.bind(this)}
+                    />
+                </td>
+                <td>
+                    <input
+                        onChange={this.editedTranslatedLanguage.bind(this)}
+                        value={translatedLanguage}
+                        onKeyPress={this.inputKeyPressHandler.bind(this)}
+                    />
+                </td>
+                <td>
+                    <input
+                        onChange={this.editedTranslatedText.bind(this)}
+                        value={translatedText}
+                        onKeyPress={this.inputKeyPressHandler.bind(this)}
+                    />
+                </td>
                 <td>
                     <div className="progress">
                       <div className="progress-bar progress-bar-success progress-bar-striped"
@@ -98,38 +102,99 @@ class PhraseItem extends React.Component {
                       </div>
                     </div>
                 </td>
-
-                {editElement}
+                <td>
+                    <input
+                        className="btn btn-success"
+                        type="button"
+                        value="Save"
+                        onClick={this.savePhrase.bind(this)}
+                    />
+                    <input
+                        className="btn btn-danger"
+                        type="button"
+                        value="Delete"
+                        onClick={this.removePhrase.bind(this)}
+                    />
+                </td>
             </tr>
         )
+    }
+
+    render_not_active() {
+        let {sourceLanguage, sourceText,
+            translatedLanguage, translatedText,
+            progressStatus} = this.props;
+        return (
+            <tr>
+                <td>{sourceLanguage}</td>
+                <td>{sourceText}</td>
+                <td>{translatedLanguage}</td>
+                <td>{translatedText}</td>
+                <td>
+                    <div className="progress">
+                      <div className="progress-bar progress-bar-success progress-bar-striped"
+                           role="progressbar"
+                           style={{"width": progressStatus}}
+                      >
+                      </div>
+                    </div>
+                </td>
+                <td>
+                    <input
+                        className="btn btn-info"
+                        type="button"
+                        value="Edit"
+                        onClick={this.editPhrase.bind(this)}
+                    />
+                </td>
+            </tr>
+        )
+    }
+
+    render() {
+        return this.props.isActive ? this.render_active() : this.render_not_active()
     }
 }
 
 class PhraseList extends React.Component {
+    toggledAddNewPhrase() {
+        this.send('toggledAddNewPhrase');
+    }
+
     render() {
         return  (
-            <table className="table table-hover">
-                <tbody>
-                    <tr>
-                        <th>Source language</th>
-                        <th>Source phrase</th>
-                        <th>Language translated to</th>
-                        <th>Translated phrase</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                    {
-                        this.props.phrases.map(
-                            (phrase, i) => <PhraseItem
-                                eventStream={this.props.eventStream}
-                                key={phrase.phraseId}
-                                isActive={phrase.phraseId == this.props.activePhrase}
-                                {...phrase}
-                            />
-                        )
-                    }
-                </tbody>
-            </table>
+            <div>
+                <input
+                    className="btn btn-info"
+                    type="button"
+                    value="Add new phrase"
+                    disabled={this.props.toggledAddNewPhrase}
+                    onClick={this.toggledAddNewPhrase.bind(this)}
+                />
+
+                <table className="table table-hover">
+                    <tbody>
+                        <tr>
+                            <th>Source language</th>
+                            <th>Source phrase</th>
+                            <th>Language translated to</th>
+                            <th>Translated phrase</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        {
+                            this.props.phrases.map(
+                                (phrase, i) => <PhraseItem
+                                    eventStream={this.props.eventStream}
+                                    key={phrase.phraseId}
+                                    isActive={this.props.activePhrase === i}
+                                    {...phrase}
+                                />
+                            )
+                        }
+                    </tbody>
+                </table>
+            </div>
         )
     }
 }

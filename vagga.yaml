@@ -36,34 +36,45 @@ containers:
       LC_ALL: en_US.UTF-8
 
 commands:
-  make_migrate: !Supervise
+  redis: &redis !Command
+    container: redis
+    run: |
+      redis-server --version
+      redis-server --daemonize no
+      sleep infinity
+
+  postgres: &postgres !Command
+    container: postgres
+    run: |
+      chown postgres:postgres $PGDATA;
+      if [ -z $(ls -A $PGDATA) ]; then
+        su postgres -c "$PG_BIN/pg_ctl initdb";
+        su postgres -c "echo 'host all all all trust' >> $PGDATA/pg_hba.conf"
+        su postgres -c "$PG_BIN/pg_ctl -w -o '-F --port=$PG_PORT -k /tmp' start";
+        su postgres -c "$PG_BIN/psql -h 127.0.0.1 -p $PG_PORT -c \"CREATE USER $PG_USER WITH PASSWORD '$PG_PASSWORD';\""
+        su postgres -c "$PG_BIN/createdb -h 127.0.0.1 -p $PG_PORT $PG_DB -O $PG_USER";
+      else
+        su postgres -c "$PG_BIN/pg_ctl -w -o '-F --port=$PG_PORT -k /tmp' start";
+      fi
+      rm /work/.dbcreation # Release lock
+      sleep infinity
+
+  migrate: !Supervise
     description: Run app
     children:
+      postgres: *postgres
       service: !Command
         container: python
         run: |
             touch /work/.dbcreation # Create lock file
             while [ -f /work/.dbcreation ]; do sleep 0.2; done # Acquire lock
             python3 manage.py db migrate
-      db: !Command
-        container: postgres
-        run: |
-          chown postgres:postgres $PGDATA;
-          if [ -z $(ls -A $PGDATA) ]; then
-            su postgres -c "$PG_BIN/pg_ctl initdb";
-            su postgres -c "echo 'host all all all trust' >> $PGDATA/pg_hba.conf"
-            su postgres -c "$PG_BIN/pg_ctl -w -o '-F --port=$PG_PORT -k /tmp' start";
-            su postgres -c "$PG_BIN/psql -h 127.0.0.1 -p $PG_PORT -c \"CREATE USER $PG_USER WITH PASSWORD '$PG_PASSWORD';\""
-            su postgres -c "$PG_BIN/createdb -h 127.0.0.1 -p $PG_PORT $PG_DB -O $PG_USER";
-          else
-            su postgres -c "$PG_BIN/pg_ctl -w -o '-F --port=$PG_PORT -k /tmp' start";
-          fi
-          rm /work/.dbcreation # Release lock
-          sleep infinity
 
   run: !Supervise
     description: Run app
     children:
+      postgres: *postgres
+      redis: *redis
       service: !Command
         container: python
         run: |
@@ -71,25 +82,4 @@ commands:
             while [ -f /work/.dbcreation ]; do sleep 0.2; done # Acquire lock
             python3 manage.py db upgrade
             python3 run.py
-      db: !Command
-        container: postgres
-        run: |
-          chown postgres:postgres $PGDATA;
-          if [ -z $(ls -A $PGDATA) ]; then
-            su postgres -c "$PG_BIN/pg_ctl initdb";
-            su postgres -c "echo 'host all all all trust' >> $PGDATA/pg_hba.conf"
-            su postgres -c "$PG_BIN/pg_ctl -w -o '-F --port=$PG_PORT -k /tmp' start";
-            su postgres -c "$PG_BIN/psql -h 127.0.0.1 -p $PG_PORT -c \"CREATE USER $PG_USER WITH PASSWORD '$PG_PASSWORD';\""
-            su postgres -c "$PG_BIN/createdb -h 127.0.0.1 -p $PG_PORT $PG_DB -O $PG_USER";
-          else
-            su postgres -c "$PG_BIN/pg_ctl -w -o '-F --port=$PG_PORT -k /tmp' start";
-          fi
-          rm /work/.dbcreation # Release lock
-          sleep infinity
 
-      redis_server: !Command
-        container: redis
-        run: |
-          redis-server --version
-          redis-server --daemonize no
-          sleep infinity

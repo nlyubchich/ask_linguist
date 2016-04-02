@@ -4,7 +4,8 @@ class Model {
     constructor(initialData) {
         return {
             phrases: initialData.phrases || [],
-            activePhrase: null
+            activePhrase: null,
+            toggledAddNewPhrase: false
         };
     }
 }

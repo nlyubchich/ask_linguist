@@ -33,15 +33,16 @@
     "image-webpack-loader": "^1.6.2",
     "jquery": "^2.2.0",
     "keycode": "^2.1.0",
-    "react": "^0.14.6",
+    "lodash": "latest",
+    "react": "^0.14.8",
+    "react-addons-pure-render-mixin": "^0.14.8",
     "react-dom": "^0.14.6",
+    "rx": "latest",
     "stats-webpack-plugin": "^0.2.2",
     "style-loader": "^0.13.0",
     "stylus-loader": "^1.4.3",
     "tanok": "^0.3.1",
-    "webpack": "^1.12.10",
-    "lodash": "latest",
-    "rx": "latest"
+    "webpack": "^1.12.10"
   },
   "devDependencies": {
     "babel-eslint": "^5.0.0",
