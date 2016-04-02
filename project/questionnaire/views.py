@@ -28,8 +28,8 @@ def questionnaire(source_language, translated_language):
 
     phrases = [
         {
-            'source': phrase.translated_text,
-            'target': phrase.source_text,
+            'source': phrase.translated_text.strip(),
+            'target': phrase.source_text.strip(),
         }
         for phrase in Phrase.query.filter(Phrase.id.in_(phrase_ids))
     ]

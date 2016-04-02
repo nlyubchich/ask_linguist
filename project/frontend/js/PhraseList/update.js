@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import l from 'lodash';
-import {actionIs, debounce} from 'tanok/helpers.js';
+import {actionIs} from 'tanok/helpers.js';
 import * as Rx from 'rx';
 
 let csrftoken = document.querySelector('meta[name=csrf-token]').getAttribute('content');
@@ -18,7 +18,7 @@ export let update = [
         if (phraseId === 0) {
             state.toggledAddNewPhrase = false;
         } else {
-            effect = ajaxRemovePhrase.bind(null, phraseId)
+            effect = ajaxRemovePhrase.bind(null, phraseId);
         }
         return [state, effect];
     }],
@@ -41,11 +41,12 @@ export let update = [
     }],
 
     [[actionIs('toggledAddNewPhrase')], (params, state) => {
+        let lastPhrase = state.phrases[0];
         state.phrases.unshift({
             'phraseId': 0,
-            'sourceLanguage': '',
+            'sourceLanguage': lastPhrase.sourceLanguage,
             'sourceText': '',
-            'translatedLanguage': '',
+            'translatedLanguage': lastPhrase.translatedLanguage,
             'translatedText': ''
         });
         state.activePhrase = 0;
@@ -109,7 +110,7 @@ function ajaxCreatePhrase(state, eventStream) {
                 'translated_text': phrase.translatedText
             }
         }).done((response) => {
-            eventStream.send('savedNewPhrase', {phraseId: response.phrase_id})
+            eventStream.send('savedNewPhrase', {phraseId: response.phrase_id});
         });
     });
 }
