@@ -1,9 +1,10 @@
-import $ from 'jquery';
 import tanok from 'tanok/tanok.js';
 import {init, update, View} from './PhraseList';
+import {fetchGetJson} from './utils';
 
 
-$.get('/dashboard/list', function (result) {
-    let div  = document.getElementById('list');
-    tanok(init(result), update, View, {container: div});
-});
+fetchGetJson('/dashboard/list')
+    .then((result) => {
+        let div = document.getElementById('list');
+        tanok(init(result), update, View, {container: div});
+    });

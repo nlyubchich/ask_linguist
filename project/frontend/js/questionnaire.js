@@ -1,9 +1,10 @@
-import $ from 'jquery';
 import tanok from 'tanok/tanok.js';
 import {init, update, View} from './Questionnaire';
+import {fetchGetJson} from './utils';
 
 
-$.get('/questionnaire/English-French/', (result) => {
-    let div  = document.getElementById('test');
-    tanok(init(result), update, View, {container: div});
-});
+fetchGetJson('/questionnaire/English-French/')
+    .then((result) => {
+        let div = document.getElementById('test');
+        tanok(init(result), update, View, {container: div});
+    });

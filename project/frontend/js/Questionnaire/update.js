@@ -1,18 +1,19 @@
 import * as l from 'lodash';
 import {actionIs} from 'tanok/helpers.js';
-import $ from 'jquery';
 import * as Rx from 'rx';
+import {fetchGetJson} from '../utils';
 
 
-export let update = [
+let askerUpdate = [
     ['init', (params, state) => {
         return [state];
     }],
-    [[actionIs('check_phrase')], ({payload}, state) => {
-        return [state, checkIsCorrectPhrase(payload.text)];
+    [[actionIs('checkPhrase')], (params, state) => {
+        return [state, checkIsCorrectPhrase];
     }],
-    [[actionIs('check_is_ok')], (params, state) => {
+    [[actionIs('checkIsOk')], (params, state) => {
         l.pull(state.phrases, state.currentPhrase);
+        state.enteredText = '';
         return [state, checkIsFinishedQuestionnaire];
     }],
     [[actionIs('nextPhrase')], (params, state) => {
@@ -23,31 +24,32 @@ export let update = [
         state.status = 'Finished!';
         return [state, ajaxFinishedQuestionnaire];
     }],
-    [[actionIs('check_is_not_ok')], (params, state) => {
+    [[actionIs('checkIsNotOk')], (params, state) => {
         state.isFail = true;
         state.status = state.currentPhrase.target;
         return [state];
     }],
-    [[actionIs('toggle_fail')], (params, state) => {
+    [[actionIs('toggleFail')], (params, state) => {
         state.isFail = false;
         state.status = '';
+        state.enteredText = '';
         state.currentPhrase = l.sample(state.phrases);
         return [state];
     }],
-    [[actionIs('updateEnteredText')], (params, state) => {
-        state.status = '';
+    [[actionIs('updateEnteredText')], ({payload: {text}}, state) => {
+        state.enteredText = text;
         return [state];
     }]
 ];
 
-function checkIsCorrectPhrase(phrase) {
-    return (state, eventStream) => Rx.Observable.just(1).do(() => {
+function checkIsCorrectPhrase(state, eventStream) {
+    return Rx.Observable.just(1).do(() => {
         if (state.isFail) {
-            eventStream.send('toggle_fail');
-        } else if (phrase === state.currentPhrase.target) {
-            eventStream.send('check_is_ok');
+            eventStream.send('toggleFail');
+        } else if (state.enteredText === state.currentPhrase.target) {
+            eventStream.send('checkIsOk');
         } else {
-            eventStream.send('check_is_not_ok');
+            eventStream.send('checkIsNotOk');
         }
     });
 }
@@ -63,9 +65,81 @@ function checkIsFinishedQuestionnaire(state, eventStream) {
 }
 
 function ajaxFinishedQuestionnaire() {
-    return Rx.Observable.just(1).do(() => {
-        $.ajax({
-            url: '/questionnaire/mark_done'
-        });
+    return Rx.Observable.just(1).do(() => fetchGetJson('/questionnaire/mark_done'));
+}
+
+
+
+
+let chooserUpdate = [
+    ['init', (params, state) => {
+        let currentSource = state.currentPhrase.source;
+        state.possibleAnswers = [currentSource];
+        state.possibleAnswers = l.shuffle(state.possibleAnswers.concat(
+            l.sampleSize(l.without(state.allPhrases.map((phrase) => phrase.source), currentSource), 3)
+        ));
+        return [state];
+    }],
+    [[actionIs('checkChooserPhrase')], ({payload: {index}}, state) => {
+        return [state, checkChooserIsCorrectPhrase(index)];
+    }],
+    [[actionIs('checkChooserIsOk')], (params, state) => {
+        l.pull(state.phrases, state.currentPhrase);
+        return [state, checkChooserIsFinished];
+    }],
+    [[actionIs('checkChooserIsNotOk')], (params, state) => {
+        state.isFail = true;
+        return [state];
+    }],
+    [[actionIs('toggleChooserFail')], (params, state) => {
+        state.isFail = false;
+        state.status = '';
+        return [state, chooserToggleNext];
+    }],
+    [[actionIs('chooserFinished')], (params, state) => {
+        state.isChooser = false;
+        state.phrases = state.allPhrases;
+        state.currentPhrase = l.sample(state.phrases);
+        return [state];
+    }],
+    [[actionIs('chooserNextPhrase')], (params, state) => {
+        state.currentPhrase = l.sample(state.phrases);
+        let currentSource = state.currentPhrase.source;
+        state.possibleAnswers = [currentSource];
+        state.possibleAnswers = l.shuffle(state.possibleAnswers.concat(
+            l.sampleSize(l.without(state.allPhrases.map((phrase) => phrase.source), currentSource), 3)
+        ));
+        return [state];
+    }]
+];
+
+function checkChooserIsCorrectPhrase(i) {
+    return (state, eventStream) => Rx.Observable.just(1).do(() => {
+        if (state.isFail) {
+            eventStream.send('toggleChooserFail');
+        } else if (state.possibleAnswers[i] === state.currentPhrase.source) {
+            eventStream.send('checkChooserIsOk');
+        } else {
+            eventStream.send('checkChooserIsNotOk');
+        }
     });
 }
+
+
+function checkChooserIsFinished(state, eventStream) {
+    return Rx.Observable.just(1).do(() => {
+        if (l.isEmpty(state.phrases)) {
+            eventStream.send('chooserFinished');
+        } else {
+            eventStream.send('chooserNextPhrase');
+        }
+    });
+}
+
+
+function chooserToggleNext(state, eventStream) {
+    return Rx.Observable.just(1).do(() => eventStream.send('chooserNextPhrase'));
+}
+
+
+export let update = l.concat(chooserUpdate, askerUpdate);

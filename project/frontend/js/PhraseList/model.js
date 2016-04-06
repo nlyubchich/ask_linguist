@@ -1,4 +1,4 @@
-import l from 'lodash';
+import * as l from 'lodash';
 
 class Model {
     constructor(initialData) {

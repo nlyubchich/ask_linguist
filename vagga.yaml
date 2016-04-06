@@ -46,7 +46,8 @@ commands:
   postgres: &postgres !Command
     container: postgres
     run: |
-      chown postgres:postgres $PGDATA;
+      chown -R postgres:postgres $PGDATA;
+      chmod -R 700 postgres:postgres $PGDATA;
       if [ -z $(ls -A $PGDATA) ]; then
         su postgres -c "$PG_BIN/pg_ctl initdb";
         su postgres -c "echo 'host all all all trust' >> $PGDATA/pg_hba.conf"

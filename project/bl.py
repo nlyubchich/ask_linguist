@@ -1,14 +1,12 @@
 from datetime import datetime
-
 from flask.ext.login import current_user
-
+from sqlalchemy.sql.expression import func
 from project.extensions import redis_store
 from project.models import Phrase, db, User
 
-
 PHRASE_REDIS_KEY_TEMPLATE = "{user_id}-{source_language}-{translated_language}"
 
-LIMIT = 50
+PHRASES_FOR_QUESTIONNAIRE_LIMIT = 50
 
 
 def questionnaire_done(user_id, source_language, translated_language):
@@ -50,7 +48,9 @@ def mark_available_phrases(user_id, source_language, translated_language):
         Phrase.translated_language == translated_language,
         Phrase.status == Phrase.Status.visible.value,
         Phrase.date_available < datetime.now()
-    ).limit(LIMIT)
+    ).order_by(
+        func.random()
+    ).limit(PHRASES_FOR_QUESTIONNAIRE_LIMIT)
     phrase_ids = [phrase.id for phrase in phrases]
     if not phrase_ids:
         return []

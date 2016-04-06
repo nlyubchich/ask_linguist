@@ -1,9 +1,8 @@
-import $ from 'jquery';
 import l from 'lodash';
 import {actionIs} from 'tanok/helpers.js';
 import * as Rx from 'rx';
+import {fetchPostJson} from '../utils';
 
-let csrftoken = document.querySelector('meta[name=csrf-token]').getAttribute('content');
 
 export let update = [
     ['init', (params, state) => {
@@ -82,13 +81,8 @@ export let update = [
 
 function ajaxRemovePhrase(phraseId) {
     return Rx.Observable.just(1).do(function () {
-        $.ajax({
-            url: '/dashboard/delete/',
-            type: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
-            data: {'phrase_id': phraseId}
+        fetchPostJson('/dashboard/delete/', {
+            'phrase_id': phraseId
         });
     });
 }
@@ -97,19 +91,12 @@ function ajaxCreatePhrase(state, eventStream) {
     return Rx.Observable.just(1).do(function () {
         let phrase = l.find(state.phrases, (phrase) => phrase.phraseId === 0);
 
-        $.ajax({
-            url: '/dashboard/create/',
-            type: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
-            data: {
-                'source_language': phrase.sourceLanguage,
-                'source_text': phrase.sourceText,
-                'translated_language': phrase.translatedLanguage,
-                'translated_text': phrase.translatedText
-            }
-        }).done((response) => {
+        fetchPostJson('/dashboard/create/', {
+            'source_language': phrase.sourceLanguage,
+            'source_text': phrase.sourceText,
+            'translated_language': phrase.translatedLanguage,
+            'translated_text': phrase.translatedText
+        }).then((response) => {
             eventStream.send('savedNewPhrase', {phraseId: response.phrase_id});
         });
     });
@@ -119,19 +106,12 @@ function ajaxEditPhrase(phraseId, state) {
     return Rx.Observable.just(1).do(function () {
         let phrase = l.find(state.phrases, (phrase) => phrase.phraseId === phraseId);
 
-        $.ajax({
-            url: '/dashboard/edit/',
-            type: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
-            data: {
-                'phrase_id': phraseId,
-                'source_language': phrase.sourceLanguage,
-                'source_text': phrase.sourceText,
-                'translated_language': phrase.translatedLanguage,
-                'translated_text': phrase.translatedText
-            }
+        fetchPostJson('/dashboard/edit/', {
+            'phrase_id': phraseId,
+            'source_language': phrase.sourceLanguage,
+            'source_text': phrase.sourceText,
+            'translated_language': phrase.translatedLanguage,
+            'translated_text': phrase.translatedText
         });
     });
 }
