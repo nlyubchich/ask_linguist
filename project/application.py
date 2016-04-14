@@ -1,6 +1,8 @@
 import os
 import logging.config
 from flask import Flask
+# from flask.ext.graphql import GraphQLView, GraphiQLView
+# from .schema import schema
 from importlib import import_module
 from project.blueprints import all_blueprints
 from .extensions import csrf, db, toolbar, login_manager, redis_store
@@ -29,5 +31,8 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
     redis_store.init_app(app)
+    # GraphQLBlueprint()
+    # app.add_url_rule('/graphql', view_func=GraphQLView.as_view('graphql', schema=schema))
+    # app.add_url_rule('/graphiql', view_func=GraphiQLView.as_view('graphiql'))
 
     return app
