@@ -24,7 +24,6 @@ containers:
     - !Install [chromium-browser]
     - !Py3Install [selenium, setuptools]
     - !Py3Requirements "requirements-test.txt"
-#    - !Sh echo 'CHROMIUM_FLAGS=" --user-data-dir"' >> /etc/chromium-browser/default
 
     environ:
       LC_ALL: en_US.UTF-8
