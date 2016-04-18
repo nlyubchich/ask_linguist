@@ -9,7 +9,7 @@ class TestDashboard(SeleniumTest):
     def add_phrase(self, source_lang, source_text, translated_lang,
                    translated_text):
         driver = self.driver
-        new_phrase_inputs = "(//tr[@class='active']/td/input)"  # tr.active > td > input
+        new_phrase_inputs = "(//tr[@class='active']/td/input)"
 
         driver.find_element_by_css_selector(
             'input.btn.btn-info[value="Add new phrase"]').click()

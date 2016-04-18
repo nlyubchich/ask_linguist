@@ -42,14 +42,14 @@ class SeleniumTest(unittest.TestCase):
     def is_element_present(self, how, what):
         try:
             self.driver.find_element(by=how, value=what)
-        except NoSuchElementException as e:
+        except NoSuchElementException:
             return False
         return True
 
     def is_alert_present(self):
         try:
             self.driver.switch_to.alert()
-        except NoAlertPresentException as e:
+        except NoAlertPresentException:
             return False
         return True
 

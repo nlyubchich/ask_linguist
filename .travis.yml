@@ -32,12 +32,12 @@ before_install:
   - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   - sudo dpkg -i google-chrome*.deb
   - sudo apt-get -y install python3-pip python3-dev
-  - python3 -V
-  - pip3 -V
+  - python -V
+  - pip -V
 
 install:
-  - sudo pip3 install -r requirements.txt
-  - sudo pip3 install flake8
+  - sudo pip install -r requirements.txt
+  - sudo pip install flake8
   - npm install
 
 before_script:
@@ -46,4 +46,4 @@ before_script:
 script:
   - flake8 project/
   - npm run lint
-  - python3 -m unittest project.tests.functional
+  - python -m unittest project.tests.functional
