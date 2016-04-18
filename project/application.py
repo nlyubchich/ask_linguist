@@ -32,7 +32,13 @@ def create_app():
     login_manager.init_app(app)
     redis_store.init_app(app)
     # GraphQLBlueprint()
-    # app.add_url_rule('/graphql', view_func=GraphQLView.as_view('graphql', schema=schema))
-    # app.add_url_rule('/graphiql', view_func=GraphiQLView.as_view('graphiql'))
+    # app.add_url_rule(
+    #     '/graphql',
+    #     view_func=GraphQLView.as_view('graphql', schema=schema)
+    # )
+    # app.add_url_rule(
+    #     '/graphiql',
+    #     view_func=GraphiQLView.as_view('graphiql')
+    # )
 
     return app

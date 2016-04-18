@@ -27,7 +27,8 @@ class SeleniumTest(unittest.TestCase):
         driver = self.driver
         driver.get(self.base_url + "/register")
         driver.find_element_by_id("email").clear()
-        driver.find_element_by_id("email").send_keys(self.user_id + "@example.com")
+        driver.find_element_by_id("email").send_keys(
+            self.user_id + "@example.com")
         driver.find_element_by_id("nick_name").clear()
         driver.find_element_by_id("nick_name").send_keys(self.user_id)
         driver.find_element_by_id("first_name").clear()
@@ -69,5 +70,6 @@ class SeleniumTest(unittest.TestCase):
         self.assertEqual([], self.verificationErrors)
 
 
-def generate_random_string(size=10, chars=string.ascii_uppercase + string.digits):
+def generate_random_string(size=10,
+                           chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))

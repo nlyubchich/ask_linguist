@@ -1,6 +1,8 @@
 import graphene
 from graphene import relay
-from graphene.contrib.sqlalchemy import SQLAlchemyNode, SQLAlchemyConnectionField
+from graphene.contrib.sqlalchemy import (
+    SQLAlchemyNode, SQLAlchemyConnectionField
+)
 from .models import Phrase as PhraseModel, User as UserModel
 
 schema = graphene.Schema()
