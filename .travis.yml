@@ -7,9 +7,7 @@ node_js:
   - "5.8"
 
 addons:
-  artifacts:
-    s3_region: "us-west-2"
-    debug: true
+  artifacts: true
 
 services:
   - redis-server
