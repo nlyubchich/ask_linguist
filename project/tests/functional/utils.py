@@ -63,8 +63,17 @@ class SeleniumTest(unittest.TestCase):
             self.accept_next_alert = True
 
     def tearDown(self):
+        if self._test_has_failed():
+            self.driver.save_screenshot(generate_random_string()+'.png')
         self.driver.quit()
         self.assertEqual([], self.verificationErrors)
+
+    def _test_has_failed(self):
+        # for 3.4. In 3.3, can just use self._outcomeForDoCleanups.success:
+        for method, error in self._outcome.errors:
+            if error:
+                return True
+        return False
 
 
 def generate_random_string(size=10,
