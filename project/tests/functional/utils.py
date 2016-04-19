@@ -10,10 +10,7 @@ class SeleniumTest(unittest.TestCase):
     page = None
 
     def setUp(self):
-        options = webdriver.ChromeOptions()
-        options.add_argument('--user-data-dir --no-sandbox')
-        options.binary_location = '/usr/bin/chromium-browser'
-        self.driver = webdriver.Chrome(chrome_options=options)
+        self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(10)
         self.base_url = "http://localhost:5000"
         self.verificationErrors = []
