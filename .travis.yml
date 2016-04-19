@@ -40,9 +40,10 @@ install:
 
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
+  - python3 manage.py db upgrade
+  - python3 run.py &
 
 script:
   - flake8 project/
   - npm run lint
-  - python3 run.py &
   - python3 -m unittest project.tests.functional
