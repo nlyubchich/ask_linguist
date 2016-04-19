@@ -43,4 +43,5 @@ before_script:
 script:
   - flake8 project/
   - npm run lint
+  - python3 run.py &
   - python3 -m unittest project.tests.functional
