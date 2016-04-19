@@ -6,8 +6,6 @@ python:
 node_js:
   - "5.8"
 
-addons:
-  artifacts: true
 
 services:
   - redis-server
@@ -20,6 +18,7 @@ env:
   DATABASE_URL: 'postgres://localhost/travis_ci_test'
 
 addons:
+  artifacts: true
   apt:
     sources:
       - ubuntu-toolchain-r-test
