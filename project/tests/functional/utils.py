@@ -64,10 +64,15 @@ class SeleniumTest(unittest.TestCase):
 
     def tearDown(self):
         if self._test_has_failed():
-            self.driver.save_screenshot(
-                'project/tests/functional/'+generate_random_string()+'.png'
-            )
-            self.dump_html()
+            fail_path = 'project/tests/functional/' + generate_random_string()
+            self.driver.save_screenshot(fail_path + '.png')
+
+            with open(fail_path + '.html', 'w') as f:
+                f.write(self.driver.page_source)
+
+            # with open(fail_path + '.json', 'w') as f:
+            #     f.write(json.dumps(self.driver.get_log("browser")))
+
         self.driver.quit()
         self.assertEqual([], self.verificationErrors)
 
@@ -77,12 +82,6 @@ class SeleniumTest(unittest.TestCase):
             if error:
                 return True
         return False
-
-    def dump_html(self):
-        with open(
-            'project/tests/functional/'+generate_random_string()+'.html', 'w'
-        ) as f:
-            f.write(self.driver.page_source)
 
 
 def generate_random_string(size=10,

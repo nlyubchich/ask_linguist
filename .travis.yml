@@ -18,7 +18,6 @@ env:
 
 addons:
   artifacts:
-    debug: true
     paths:
     - project/tests/functional
   apt:
