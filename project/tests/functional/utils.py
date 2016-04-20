@@ -64,7 +64,7 @@ class SeleniumTest(unittest.TestCase):
 
     def tearDown(self):
         if self._test_has_failed():
-            self.driver.save_screenshot(generate_random_string()+'.png')
+            self.driver.save_screenshot('project/tests/functional/'+generate_random_string()+'.png')
         self.driver.quit()
         self.assertEqual([], self.verificationErrors)
 

@@ -18,8 +18,9 @@ env:
 
 addons:
   artifacts:
-    s3_region: "us-east-1"
     debug: true
+    paths:
+    - project/tests/functional
   apt:
     sources:
       - ubuntu-toolchain-r-test
