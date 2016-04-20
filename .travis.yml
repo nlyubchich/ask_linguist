@@ -17,6 +17,7 @@ env:
   DATABASE_URL: 'postgres://localhost/travis_ci_test'
 
 addons:
+  firefox: "latest"
   artifacts:
     paths:
     - project/tests/functional
