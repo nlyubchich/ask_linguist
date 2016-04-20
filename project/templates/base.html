@@ -9,18 +9,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.%s.css' % config.STATIC_ASSETS_HASH) }}">
     <script type="text/javascript">
         function logError(msg) {var errorsList = document.getElementById('js-errors');
-           var newError = document.createElement('li');
-           var errorData = document.createTextNode(msg);
-           newError.appendChild(errorData);
-           errorsList.appendChild(newError)
-
+            var newError = document.createElement('li');
+            var errorData = document.createTextNode(msg);
+            newError.appendChild(errorData);
+            errorsList.appendChild(newError);
+            errorsList.style.display = 'block';
         }
-        window.onerror = logError;
         window.addEventListener('error', function (e) {
             if (e.message) {
                 logError(e.message);
             } else {
-                logError('Something bad with '+e.target.src)
+                logError('Error happened when fetching '+e.target.src)
             }
         }, true);
     </script>
@@ -28,9 +27,7 @@
     {% block scripts %}{% endblock %}
 </head>
 <body>
-    <ul id="js-errors">
-
-    </ul>
+    <ul id="js-errors" style="display: none"></ul>
 
     <nav class="navbar navbar-default">
         <div class="container-fluid">

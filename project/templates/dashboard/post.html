@@ -1,18 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-{#    <form method="post" class="form-inline">#}
-{#        {{ phrase_form.csrf_token }}#}
-{##}
-{#        {{ phrase_form.source_language.label }} {{ phrase_form.source_language(size=20) }}#}
-{#        {{ phrase_form.source_text.label }} {{ phrase_form.source_text(size=20, autocomplete="off") }}#}
-{##}
-{#        {{ phrase_form.translated_language.label }} {{ phrase_form.translated_language(size=20) }}#}
-{#        {{ phrase_form.translated_text.label }} {{ phrase_form.translated_text(size=20, autocomplete="off") }}#}
-
-{#      <button type="submit" class="btn btn-default">Insert</button>#}
-{#    </form>#}
-
     <div id="list"></div>
     <script src="{{ url_for('static', filename='list.%s.js' % config.STATIC_ASSETS_HASH) }}"></script>
 {% endblock %}

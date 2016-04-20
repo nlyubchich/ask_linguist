@@ -63,17 +63,17 @@ class SeleniumTest(unittest.TestCase):
             self.accept_next_alert = True
 
     def tearDown(self):
-        if self._test_has_failed():
+        driver = self.driver
+        js_errors = driver.find_element_by_id('js-errors').text
+        if self._test_has_failed() or js_errors:
             fail_path = 'project/tests/functional/' + generate_random_string()
-            self.driver.save_screenshot(fail_path + '.png')
+            driver.save_screenshot(fail_path + '.png')
 
             with open(fail_path + '.html', 'w') as f:
-                f.write(self.driver.page_source)
+                f.write(driver.page_source)
 
-            # with open(fail_path + '.json', 'w') as f:
-            #     f.write(json.dumps(self.driver.get_log("browser")))
-
-        self.driver.quit()
+        driver.quit()
+        self.assertFalse(js_errors)
         self.assertEqual([], self.verificationErrors)
 
     def _test_has_failed(self):
