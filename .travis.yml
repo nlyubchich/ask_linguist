@@ -11,10 +11,10 @@ services:
   - postgresql
 
 env:
-  - APP_SETTINGS="project.config.VaggaTestingConfig"
-  - SECRET_KEY="really secret"
-  - CSRF_SECRET="really secret"
-  - DATABASE_URL="postgres://localhost/travis_ci_test"
+  APP_SETTINGS: 'project.config.VaggaTestingConfig'
+  SECRET_KEY: 'really secret'
+  CSRF_SECRET: 'really secret'
+  DATABASE_URL: 'postgres://localhost/travis_ci_test'
 
 addons:
   artifacts: true
