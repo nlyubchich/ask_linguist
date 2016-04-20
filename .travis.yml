@@ -17,7 +17,9 @@ env:
   DATABASE_URL: 'postgres://localhost/travis_ci_test'
 
 addons:
-  artifacts: true
+  artifacts:
+    s3_region: "us-east-1"
+    debug: true
   apt:
     sources:
       - ubuntu-toolchain-r-test
