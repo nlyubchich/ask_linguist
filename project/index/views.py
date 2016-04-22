@@ -1,6 +1,14 @@
+import json
 import httplib2
 from apiclient import discovery
-from flask import request, redirect, url_for, render_template
+from flask import (
+    request,
+    redirect,
+    url_for,
+    render_template,
+    jsonify,
+    current_app
+)
 from flask.ext.login import login_required, login_user
 from werkzeug.security import generate_password_hash
 
@@ -11,6 +19,14 @@ from project.extensions import db
 from project.models import User
 from project.utils import google_oauth_loader
 from .forms import RegisterForm, LoginForm
+
+js_error_format = '''
+Javascript error occured: %(message)s
+Location:           %(url)s
+
+Stacktrace:
+%(stacktrace)s
+'''
 
 
 @login_required
@@ -89,3 +105,10 @@ def google_oauth():
     login_user(user, remember=True)
 
     return redirect(url_for('index.index'))
+
+
+@app.route('/js_errors', methods=['POST'])
+def js_errors():
+    payload = json.loads(request.data.decode("utf-8"))
+    current_app.logger.error(js_error_format % payload)
+    return jsonify(status='ok')

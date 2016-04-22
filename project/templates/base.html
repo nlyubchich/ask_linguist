@@ -8,20 +8,39 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.%s.css' % config.STATIC_ASSETS_HASH) }}">
     <script type="text/javascript">
-        function logError(msg) {var errorsList = document.getElementById('js-errors');
+        function logError(error) {
+            var errorObj = error.reason || error;
+            var errorMessage = errorObj.reason || errorObj.message ||
+                    'Error occurred with next resource: ' + errorObj.target.src;
+
+            var errorsList = document.getElementById('js-errors');
             var newError = document.createElement('li');
-            var errorData = document.createTextNode(msg);
+            var errorData = document.createTextNode(errorMessage);
+
+            var errorPayload = {};
+
             newError.appendChild(errorData);
             errorsList.appendChild(newError);
             errorsList.style.display = 'block';
+
+            errorPayload.url = window.location.href;
+            errorPayload.message = errorMessage;
+            errorPayload.stacktrace = errorObj.stack || '';
+
+            fetch('/js_errors', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify(errorPayload)
+            })
         }
-        window.addEventListener('error', function (e) {
-            if (e.message) {
-                logError(e.message);
-            } else {
-                logError('Error happened when fetching '+e.target.src)
-            }
-        }, true);
+        window.onerror = logError;
+        window.addEventListener('error', logError, true);
+        window.addEventListener('unhandledrejection', logError, true)
     </script>
 
     {% block scripts %}{% endblock %}

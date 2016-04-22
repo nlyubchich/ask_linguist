@@ -1,10 +1,19 @@
 let csrftoken = document.querySelector('meta[name=csrf-token]').getAttribute('content');
 
+function checkIsRequestSucceed(response) {
+    if (!response.ok) {
+        throw Error(`${response.status} ${response.statusText}: ${response.url}`);
+    }
+    return response;
+}
+
 export function fetchGetJson(url) {
     return fetch(url, {
         credentials: 'same-origin'
     })
-        .then((response) => response.json());
+        .then(checkIsRequestSucceed)
+        .then((response) => response.json())
+        .catch(logError);  // eslint-disable-line
 }
 
 export function fetchPostJson(url, payload) {
@@ -18,5 +27,7 @@ export function fetchPostJson(url, payload) {
         },
         body: JSON.stringify(payload)
     })
-        .then((response) => response.json());
+        .then(checkIsRequestSucceed)
+        .then((response) => response.json())
+        .catch(logError);  // eslint-disable-line
 }
