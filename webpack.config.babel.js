@@ -12,7 +12,8 @@ module.exports = {
     entry: {
         questionnaire: './js/questionnaire.js',
         list: './js/list.js',
-        styles: './styles/styles.styl'
+        styles: './styles/styles.styl',
+        common: './styles/common.styl'
     },
     output: {
         path: path.join(__dirname, 'project/static'),

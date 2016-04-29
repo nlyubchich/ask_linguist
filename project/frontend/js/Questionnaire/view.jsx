@@ -2,6 +2,7 @@ import React from 'react';
 import keycode from 'keycode';
 import TanokWrapper from 'tanok/component.js';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
+import classNames from 'classnames';
 
 const ENTER_KEY = 'enter';
 
@@ -27,17 +28,22 @@ class Asker extends React.Component {
 
     render() {
         return (
-            <div>
-                <p>{'Remaining: ' + this.props.phrases.length}</p>
-                <p> {this.props.currentPhrase.source}</p>
-                <input
-                    type='text'
-                    value={this.props.enteredText}
-                    onChange={this.editedGuessInput.bind(this)}
-                    onKeyPress={this.inputKeyPressHandler.bind(this)}
-                />
-                <button onClick={this.checkPhrase.bind(this)}>Guess</button>
-                <p>{this.props.status}</p>
+            <div className='questionnaire'>
+                <p className='current-phrase'> {this.props.currentPhrase.source}</p>
+                <div>
+                    <p className='asker-correct-answer'>{this.props.status}</p>
+                    <input className='asker-input'
+                        type='text'
+                        value={this.props.enteredText}
+                        onChange={this.editedGuessInput.bind(this)}
+                        onKeyPress={this.inputKeyPressHandler.bind(this)}
+                    />
+                </div>   
+                <div>
+                    <button className='btn check-btn' onClick={this.checkPhrase.bind(this)}>Check</button>
+                </div>
+
+                <p className='phrase-counter'>{this.props.phrases.length + ' words left'}</p>
             </div>
         );
     }
@@ -60,20 +66,29 @@ class Chooser extends React.Component {
     render() {
         return (
             <div>
-                <p>{'Remaining: ' + this.props.phrases.length}</p>
-                <p> {this.props.currentPhrase.target}</p>
-                <ul>
-                    {this.props.possibleAnswers.map((answer, index) => {
-                        return (
-                            <li key={index} onClick={this.checkClick.bind(this, index)}>
-                                {
-                                    (this.props.isFail && this.props.currentPhrase.source === answer) ?
-                                     'THIS!!! '+answer : answer
-                                }
-                            </li>
-                        );
-                    })}
-                </ul>
+                <div className='questionnaire'>
+                    <p className='current-phrase'> {this.props.currentPhrase.target}</p>
+                    <ul className='answers-list'>
+                        {this.props.possibleAnswers.map((answer, index) => {
+                            let isCorrectAnswer = this.props.currentPhrase.source === answer;
+                            return (
+                                <li
+                                    className={classNames({
+                                        'variants': true,
+                                        'correct-answer': isCorrectAnswer && this.props.isFail ,
+                                        
+                                    })}
+                                    key={index}
+                                    onClick={this.checkClick.bind(this, index)}
+                                >
+                                    {answer}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                    <p className='phrase-counter'>{this.props.phrases.length + ' words left'}</p>
+                </div>
+
             </div>
         );
     }
@@ -98,7 +113,7 @@ class Questionnaire extends React.Component {
                 status={this.props.status}
                 possibleAnswers={this.props.possibleAnswers}
                 isFail={this.props.isFail}
-            /> :
+            />:
             <Asker
                 eventStream={this.props.eventStream}
                 phrases={this.props.phrases}
@@ -106,6 +121,13 @@ class Questionnaire extends React.Component {
                 status={this.props.status}
                 enteredText={this.props.enteredText}
             />;
+
+
+
+
+
+
+
     }
 }
 

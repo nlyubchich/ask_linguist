@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div id="list"></div>
+    <script src="{{ url_for('static', filename='list.%s.js' % config.STATIC_ASSETS_HASH) }}"></script>
+{% endblock %}

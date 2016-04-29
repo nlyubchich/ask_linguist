@@ -20,7 +20,7 @@ def create_app():
         import_module(bp.import_name)
         app.register_blueprint(bp)
 
-    login_manager.login_view = "index.login"
+    login_manager.login_view = "index.signup"
 
     logging.config.dictConfig(app.config["LOG_CONFIG"])
 

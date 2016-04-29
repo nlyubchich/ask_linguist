@@ -17,9 +17,14 @@ def index():
     return redirect(url_for('dashboard.dashboard'))
 
 
-@app.route('/login')
-def login():
-    return render_template('index/login.html')
+@app.route('/signup')
+def signup():
+    return render_template('index/signup.html')
+
+
+@app.route('/signin')
+def signin():
+    return render_template('index/signin.html')
 
 
 @app.route('/google_oauth')

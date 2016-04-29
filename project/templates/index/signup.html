@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div>
+        <div class="welcome-image">
+{#            TODO: move to file#}
+            <img src="http://www.shouldwe.org/uploads/issue/image/104/multilingual.jpg"
+             alt="Welcome Image" style="width: 975px; height: 580px;">
+        </div>
+        <div class="signup">
+                <form method="post">
+                    <input class="s-input" type="text" name="nickname" placeholder="Nickname" disabled><br>
+                    <input class="s-input" type="email" name="email" placeholder="Email" disabled><br>
+                    <input class="s-input" type="password" name="password" placeholder="Password" disabled><br>
+                    <input class="s-btn" type="submit" value="Create an account">
+{#        Add "required" later#}
+                    <p>or</p>
+                    <a class="s-btn" href="{{ url_for('index.google_oauth') }}">Sign up with Google</a>
+                </form>
+        </div>
+    </div>
+{% endblock %}

@@ -6,28 +6,51 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.%s.css' % config.STATIC_ASSETS_HASH) }}">
+    {#    <link rel="stylesheet" href="{{ url_for('static', filename='styles.%s.css' % config.STATIC_ASSETS_HASH) }}">#}
+    <link rel="stylesheet" href="{{ url_for('static', filename='common.%s.css' % config.STATIC_ASSETS_HASH) }}">
     {% block scripts %}{% endblock %}
+
 </head>
-<body>
-
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <ul class="nav navbar-nav navbar-right">
-
-                {% if current_user.is_authenticated %}
-                    <li>
-                        <p class="navbar-text">My greetings, {{ current_user.nick_name }}</p>
-                    </li>
-                {% endif %}
+<body style="margin: 0;">
+<div class="panel">
+    <ul class="menu">
+        <li class="left logo">Ask Linguist</li>
+        <li class="left">
+{#            TODO: Add links#}
+           <span>Vocabulary Lists</span>
+            <ul class="ddlist">
+                <li class="ddlitem"><a class="tdn" href="">French</a></li>
+                <li class="ddlitem"><a class="tdn" href="">German</a></li>
+{#                <li class="tdn"><a href="">Some more vocabularies</a></li>#}
+                <li class="ddlitem"><a class="tdn" href="">Add a new vocabulary list</a></li>
             </ul>
-        </div><!-- /.container-fluid -->
-    </nav>
+        </li>
+        <li class="left"><a class="left tdn" href="">Practice</a></li>
+        <li class="left">
+            <span>Progress</span>
+            <ul class="ddlist">
+                <li class="">Words for today: </li>
+                <li class="">Learnt words in total: </li>
+            </ul>
+        </li>
+        {% if current_user.is_authenticated %}
+            <li class="right">
+                <span><ins>{{ current_user.nick_name }}</ins></span>
+                <ul class="ddlist">
+                    <li><a class="tdn" href="">Your profile</a></li>
+                    <li><a class="tdn" href="">Log out</a></li>
+                </ul>
+             </li>
+        {% else %}
+            <a class="right sign-in" href="{# TODO: add the link #}">Sign in</a>
+        {% endif %}
+    </ul>
+</div>
 
-    {% block header %}{% endblock %}
-    {% block content %}{% endblock %}
 
-    {% block footer %}
-    {% endblock %}
+{% block header %}{% endblock %}
+{% block content %}{% endblock %}
+
+{% block footer %}{% endblock %}
 </body>
 </html>
