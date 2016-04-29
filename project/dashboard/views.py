@@ -42,7 +42,6 @@ def create_phrase():
         phrase = bl.create_phrase(**phrase_form.data)
         db.session.add(phrase)
         db.session.commit()
-        print(phrase.id)
         return jsonify(status="OK", phrase_id=phrase.id)
     return jsonify(status="not OK", errors=phrase_form.errors)
 

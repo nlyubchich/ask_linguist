@@ -29,7 +29,6 @@ class Phrase(db.Model):
 
     @unique
     class ProgressStatus(Enum):
-
         started = 0
         after_day = 10
         after_three_days = 20
@@ -65,15 +64,22 @@ class Phrase(db.Model):
 
 
 class User(db.Model):
+    @unique
+    class RegisterType(Enum):
+        google_oauth = 1
+        inplace = 2
+
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.Unicode, unique=True, nullable=False)
+    register_type = db.Column(db.Integer, nullable=False)
 
     nick_name = db.Column(db.Unicode)
     first_name = db.Column(db.Unicode)
     last_name = db.Column(db.Unicode)
 
     # Google OAuth
-    auth_data = db.Column(db.Unicode, nullable=False)
+    auth_data = db.Column(db.Unicode)
+    password = db.Column(db.Unicode)
 
     phrases = db.relationship('Phrase', backref='user', lazy='dynamic')
 
@@ -83,9 +89,10 @@ class User(db.Model):
 
     @property
     def is_authenticated(self):
-        credentials = client.OAuth2Credentials.from_json(self.auth_data)
-        if credentials.access_token_expired:
-            return False
+        if self.register_type == self.RegisterType.google_oauth.value:
+            credentials = client.OAuth2Credentials.from_json(self.auth_data)
+            if credentials.access_token_expired:
+                return False
         return True
 
     def get_id(self):

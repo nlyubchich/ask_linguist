@@ -43,10 +43,11 @@ export let update = [
         let lastPhrase = state.phrases[0];
         state.phrases.unshift({
             'phraseId': 0,
-            'sourceLanguage': lastPhrase.sourceLanguage,
+            'sourceLanguage': lastPhrase ? lastPhrase.sourceLanguage : '',
             'sourceText': '',
-            'translatedLanguage': lastPhrase.translatedLanguage,
-            'translatedText': ''
+            'translatedLanguage': lastPhrase ? lastPhrase.translatedLanguage : '',
+            'translatedText': '',
+            'progressStatus': '0%'
         });
         state.activePhrase = 0;
         state.toggledAddNewPhrase = true;

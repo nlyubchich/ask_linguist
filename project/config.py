@@ -97,6 +97,10 @@ class VaggaConfig(DevelopmentConfig):
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 
+class VaggaTestingConfig(VaggaConfig):
+    DEBUG = False
+
+
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'

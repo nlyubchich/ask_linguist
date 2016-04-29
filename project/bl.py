@@ -102,10 +102,11 @@ def edit_phrase(phrase_id, source_language, source_text,
     return phrase
 
 
-def create_user(email, nick_name, first_name, last_name):
+def create_user(email, nick_name, first_name, last_name, register_type):
     user = User()
     user.email = email
     user.nick_name = nick_name
     user.first_name = first_name
     user.last_name = last_name
+    user.register_type = register_type
     return user

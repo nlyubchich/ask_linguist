@@ -7,7 +7,7 @@ def _only_authenticated_user_hook():
     if not (
         current_user.is_authenticated or
         request.endpoint == login_manager.login_view
-    ):
+    ) and login_manager._login_disabled is False:
         return login_manager.unauthorized()
 
 

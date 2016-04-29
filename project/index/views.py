@@ -1,7 +1,16 @@
+import json
 import httplib2
 from apiclient import discovery
-from flask import request, redirect, url_for, render_template
+from flask import (
+    request,
+    redirect,
+    url_for,
+    render_template,
+    jsonify,
+    current_app
+)
 from flask.ext.login import login_required, login_user
+from werkzeug.security import generate_password_hash
 
 from project import bl
 from project.blueprints import index_app as app
@@ -9,22 +18,50 @@ from project.blueprints import index_app as app
 from project.extensions import db
 from project.models import User
 from project.utils import google_oauth_loader
+from .forms import RegisterForm, LoginForm
+
+js_error_format = '''
+Javascript error occured: %(message)s
+Location:           %(url)s
+
+Stacktrace:
+%(stacktrace)s
+'''
 
 
-@app.route('/')
 @login_required
+@app.route('/')
 def index():
     return redirect(url_for('dashboard.dashboard'))
 
 
-@app.route('/signup')
-def signup():
-    return render_template('index/signup.html')
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        login_user(form.user, remember=True)
+        return redirect(url_for('dashboard.dashboard'))
+    return render_template('index/login.html', form=form)
 
 
-@app.route('/signin')
-def signin():
-    return render_template('index/signin.html')
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user = bl.create_user(
+            email=form.email.data,
+            nick_name=form.nick_name.data,
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            register_type=User.RegisterType.inplace.value,
+        )
+        user.password = generate_password_hash(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+
+        login_user(user, remember=True)
+        return redirect(url_for('dashboard.dashboard'))
+    return render_template('index/register.html', form=form)
 
 
 @app.route('/google_oauth')
@@ -57,6 +94,7 @@ def google_oauth():
             nick_name=nick_name,
             first_name=first_name,
             last_name=last_name,
+            register_type=User.RegisterType.google_oauth.value,
         )
 
     user.auth_data = credentials.to_json()
@@ -67,3 +105,10 @@ def google_oauth():
     login_user(user, remember=True)
 
     return redirect(url_for('index.index'))
+
+
+@app.route('/js_errors', methods=['POST'])
+def js_errors():
+    payload = json.loads(request.data.decode("utf-8"))
+    current_app.logger.error(js_error_format % payload)
+    return jsonify(status='ok')
