@@ -138,7 +138,9 @@ class TestDashboard(SeleniumTest):
             translated_text=translated_text_2,
         )
 
-        active_phrase_selector = '(//tr[@class="row-border active-row"]/td/input)'
+        active_phrase_selector = (
+            '(//tr[@class="row-border active-row"]/td/input)'
+        )
         driver.find_element_by_xpath('(//input[@value="Edit"])[2]').click()
         driver.find_element_by_xpath(active_phrase_selector + '[1]').clear()
         driver.find_element_by_xpath(active_phrase_selector + '[1]').send_keys(
