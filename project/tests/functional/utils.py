@@ -28,13 +28,17 @@ class SeleniumTest(unittest.TestCase):
         driver.find_element_by_css_selector('input[name="email"]').send_keys(
             self.user_id + "@example.com")
         driver.find_element_by_css_selector('input[name="nick_name"]').clear()
-        driver.find_element_by_css_selector('input[name="nick_name"]').send_keys(self.user_id)
+        driver.find_element_by_css_selector('input[name="nick_name"]'
+                                            ).send_keys(self.user_id)
         driver.find_element_by_css_selector('input[name="first_name"]').clear()
-        driver.find_element_by_css_selector('input[name="first_name"]').send_keys(self.user_id)
+        driver.find_element_by_css_selector('input[name="first_name"]'
+                                            ).send_keys(self.user_id)
         driver.find_element_by_css_selector('input[name="last_name"]').clear()
-        driver.find_element_by_css_selector('input[name="last_name"]').send_keys(self.user_id)
+        driver.find_element_by_css_selector('input[name="last_name"]'
+                                            ).send_keys(self.user_id)
         driver.find_element_by_css_selector('input[name="password"]').clear()
-        driver.find_element_by_css_selector('input[name="password"]').send_keys(self.user_id)
+        driver.find_element_by_css_selector('input[name="password"]'
+                                            ).send_keys(self.user_id)
         driver.find_element_by_css_selector('input[type="submit"]').click()
 
     def is_element_present(self, how, what):
