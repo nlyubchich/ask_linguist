@@ -9,7 +9,7 @@ class TestDashboard(SeleniumTest):
     def add_phrase(self, source_lang, source_text, translated_lang,
                    translated_text):
         driver = self.driver
-        new_phrase_inputs = '(//tr[@class="active-row"]/td/input)'
+        new_phrase_inputs = '(//tr[@class="row-border active-row"]/td/input)'
 
         driver.find_elements_by_class_name('add-btn')[0].click()
         source_lang_input = new_phrase_inputs + '[1]'
@@ -60,7 +60,7 @@ class TestDashboard(SeleniumTest):
         )
 
         # most recent (second) phrase
-        phrase_row_selector = '//tr[@class="row-border"][2]/'
+        phrase_row_selector = '//tr[@class="row-border"][1]/'
         self.assertEqual(
             source_lang,
             driver.find_element_by_xpath(phrase_row_selector + 'td[1]').text,
@@ -80,11 +80,11 @@ class TestDashboard(SeleniumTest):
         self.assertEqual(
             'width: 0%;',
             driver.find_element_by_css_selector(
-                'div.progress-bar').get_attribute('style'),
+                'div.progress-level').get_attribute('style'),
         )
 
         # first added phrase
-        phrase_row_selector = '//tr[@class="row-border"][3]/'
+        phrase_row_selector = '//tr[@class="row-border"][2]/'
         self.assertEqual(
             source_lang,
             driver.find_element_by_xpath(phrase_row_selector + 'td[1]').text,
@@ -138,7 +138,7 @@ class TestDashboard(SeleniumTest):
             translated_text=translated_text_2,
         )
 
-        active_phrase_selector = '(//tr[@class="active-row"]/td/input)'
+        active_phrase_selector = '(//tr[@class="row-border active-row"]/td/input)'
         driver.find_element_by_xpath('(//input[@value="Edit"])[2]').click()
         driver.find_element_by_xpath(active_phrase_selector + '[1]').clear()
         driver.find_element_by_xpath(active_phrase_selector + '[1]').send_keys(
@@ -195,7 +195,7 @@ class TestDashboard(SeleniumTest):
         self.assertEqual(
             edited_source_lang_1,
             driver.find_element_by_xpath(
-                row_1_selector+'td[0]').text
+                row_1_selector+'td[1]').text
         )
         self.assertEqual(
             edited_source_text_1,
