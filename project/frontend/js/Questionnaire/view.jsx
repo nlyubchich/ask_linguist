@@ -40,7 +40,7 @@ class Asker extends React.Component {
                     />
                 </div>   
                 <div>
-                    <button className='btn check-btn' onClick={this.checkPhrase.bind(this)}>Check</button>
+                    <button className='check-btn' onClick={this.checkPhrase.bind(this)}>Check</button>
                 </div>
 
                 <p className='phrase-counter'>{this.props.phrases.length + ' words left'}</p>

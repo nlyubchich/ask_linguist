@@ -3,9 +3,7 @@
 {% block content %}
     <div>
         <div class="welcome-image">
-{#            TODO: move to file#}
-            <img src="http://www.shouldwe.org/uploads/issue/image/104/multilingual.jpg"
-             alt="Welcome Image" style="width: 975px; height: 580px;">
+            <img src="{{ url_for('static', filename='img/welcome.jpg') }}" alt="Welcome Image" style="width: 975px; height: 580px;"/>
         </div>
         <div class="signup">
                 <form method="post">

@@ -6,8 +6,6 @@
   "scripts": {
     "lint": "eslint project/frontend",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "webpack-prod": "NODE_ENV=production webpack",
-    "webpack-trunk": "NODE_ENV=development webpack",
     "postinstall": "webpack"
   },
   "repository": {
@@ -25,7 +23,6 @@
     "babel-loader": "^6.2.1",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
-    "bootstrap": "^3.3.6",
     "classnames": "^2.2.3",
     "css-loader": "^0.23.1",
     "extract-text-webpack-plugin": "^1.0.1",
