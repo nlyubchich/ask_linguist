@@ -27,9 +27,11 @@ def questionnaire_done(user_id, source_language, translated_language):
 
     statuses = [ps.value for ps in Phrase.ProgressStatus]
     for phrase in phrases:
-        phrase.progress_status = list(
-            filter(lambda ns: phrase.progress_status < ns, statuses)
-        )[0]
+        next_statuses = list(filter(lambda ns: phrase.progress_status < ns, statuses))
+        if not next_statuses:
+            phrase.status = Phrase.Status.finished.value
+            continue
+        phrase.progress_status = next_statuses[0]
         phrase.date_available = (
             datetime.utcnow() +
             Phrase.ProgressStatus(phrase.progress_status).get_progress_delta()

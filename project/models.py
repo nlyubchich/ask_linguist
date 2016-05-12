@@ -26,6 +26,7 @@ class Phrase(db.Model):
     class Status(Enum):
         visible = 0
         deleted = 1
+        finished = 2
 
     @unique
     class ProgressStatus(Enum):
