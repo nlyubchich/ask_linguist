@@ -49,7 +49,8 @@ def mark_available_phrases(user_id, source_language, translated_language):
         Phrase.source_language == source_language,
         Phrase.translated_language == translated_language,
         Phrase.status == Phrase.Status.visible.value,
-        Phrase.date_available < datetime.now()
+        Phrase.date_available < datetime.now(),
+        Phrase.progress_status < Phrase.ProgressStatus.after_two_week.value,
     ).order_by(
         func.random()
     ).limit(PHRASES_FOR_QUESTIONNAIRE_LIMIT)
