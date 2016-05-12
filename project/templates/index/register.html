@@ -1,13 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <form method="POST">
-    {{ form.csrf_token }}
-    {{ form.email.label }} {{ form.email }}
-    {{ form.nick_name.label }} {{ form.nick_name }}
-    {{ form.first_name.label }} {{ form.first_name }}
-    {{ form.last_name.label }} {{ form.last_name }}
-    {{ form.password.label }} {{ form.password }}
-    <input type="submit" value="Go">
-</form>
+    <div>
+        <div class="welcome-image">
+            <img src="{{ url_for('static', filename='img/welcome.jpg') }}" alt="Welcome Image" style="width: 975px; height: 580px;"/>
+        </div>
+        <div class="signup">
+                <form method="post">
+                    {{ form.csrf_token }}
+                    <input class="s-input" type="email" name="email" placeholder="Email"/><br>
+                    <input class="s-input" type="text" name="nick_name" placeholder="Nickname"/><br>
+                    <input class="s-input" type="text" name="first_name" placeholder="First name"/><br>
+                    <input class="s-input" type="text" name="last_name" placeholder="Last name"/><br>
+                    <input class="s-input" type="password" name="password" placeholder="Password"/><br>
+                    <input class="s-btn" type="submit" value="Create an account"/>
+{#        Add "required" later#}
+                    <p>or</p>
+                    <a class="s-btn" href="{{ url_for('index.google_oauth') }}">Sign up with Google</a>
+                </form>
+        </div>
+    </div>
 {% endblock %}

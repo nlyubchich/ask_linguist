@@ -32,7 +32,7 @@ def phrase_list():
 
 @app.route('/')
 def dashboard():
-    return render_template('dashboard/post.html')
+    return render_template('dashboard/phrase_list.html')
 
 
 @app.route("/create/", methods=["POST"])

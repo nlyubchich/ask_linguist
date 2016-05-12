@@ -9,7 +9,7 @@ from flask import (
     jsonify,
     current_app
 )
-from flask.ext.login import login_required, login_user
+from flask.ext.login import login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash
 
 from project import bl
@@ -33,6 +33,13 @@ Stacktrace:
 @app.route('/')
 def index():
     return redirect(url_for('dashboard.dashboard'))
+
+
+@login_required
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('.register'))
 
 
 @app.route('/login', methods=['GET', 'POST'])

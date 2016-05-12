@@ -6,7 +6,6 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.%s.css' % config.STATIC_ASSETS_HASH) }}">
     <script type="text/javascript">
         function logError(error) {
             var errorObj = error.reason || error;
@@ -42,29 +41,50 @@
         window.addEventListener('error', logError, true);
         window.addEventListener('unhandledrejection', logError, true)
     </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='common.%s.css' % config.STATIC_ASSETS_HASH) }}">
 
     {% block scripts %}{% endblock %}
 </head>
 <body>
     <ul id="js-errors" style="display: none"></ul>
 
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <ul class="nav navbar-nav navbar-right">
+    <div class="panel">
+        <ul class="menu">
+            <li class="panel-item left logo">Ask Linguist</li>
+            <li class="panel-item left">
+                <span>Vocabulary Lists</span>
+                <ul class="ddlist">
+                    <li class="ddlitem"><a class="tdn" href="{{ url_for('dashboard.dashboard') }}">French</a></li>
+{#                    <li class="ddlitem"><a class="tdn" href="">German</a></li>#}
+{#                    <li class="ddlitem"><a class="tdn" href="">Add a new vocabulary list</a></li>#}
+                </ul>
+            </li>
+            <li class="panel-item left"><a class="tdn" href="{{ url_for('questionnaire.words') }}">Practice</a></li>
+            <li class="panel-item left">
+                <span>Progress</span>
+                <ul class="ddlist">
+                    <li class="">Words for today: </li>
+                    <li class="">Learnt words in total: </li>
+                </ul>
+            </li>
+            {% if current_user.is_authenticated %}
+                <li class="panel-item right">
+                    <span class="toolbar-user-info">{{ current_user.nick_name }}</span>
+                    <ul class="ddlist ddlist-user-settings">
+                        <li><a class="tdn" href="">Your profile</a></li>
+                        <li><a class="tdn" href="{{ url_for('index.logout') }}">Log out</a></li>
+                    </ul>
+                </li>
+            {% else %}
+                <li class="panel-item right"><a class="tdn" href="{{ url_for('index.login') }}">Sign in</a></li>
+            {% endif %}
+        </ul>
+    </div>
 
-                {% if current_user.is_authenticated %}
-                    <li>
-                        <p class="navbar-text">My greetings, {{ current_user.nick_name }}</p>
-                    </li>
-                {% endif %}
-            </ul>
-        </div><!-- /.container-fluid -->
-    </nav>
 
     {% block header %}{% endblock %}
     {% block content %}{% endblock %}
 
-    {% block footer %}
-    {% endblock %}
+    {% block footer %}{% endblock %}
 </body>
 </html>

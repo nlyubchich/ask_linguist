@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="container">
+    <div>
         <div id="test"></div>
     </div>
     <script src="{{ url_for('static', filename='questionnaire.%s.js' % config.STATIC_ASSETS_HASH) }}"></script>

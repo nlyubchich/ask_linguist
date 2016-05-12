@@ -149,6 +149,14 @@ commands:
           python3 run.py
 
   test: !Supervise
+    # for run tests, run:
+    # write next lines to ~/.vagga.yaml
+    #     external-volumes:
+    #       X11: /tmp/.X11-unix
+    # then run next commands
+    # xhost +
+    # vagga -eDISPLAY -eDBUS_SESSION_BUS_ADDRESS test
+    #
     description: Run tests
     children:
       postgres-empty: *postgres

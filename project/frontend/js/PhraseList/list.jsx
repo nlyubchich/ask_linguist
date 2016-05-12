@@ -57,57 +57,62 @@ class PhraseItem extends React.Component {
             translatedLanguage, translatedText,
             progressStatus} = this.props;
         return (
-            <tr className='active'>
+            <tr className='row-border active-row'>
                 <td>
-                    <input
+                    <input className='table-input' size='10' placeholder='language'
                         onChange={this.editedSourceLanguage.bind(this)}
                         value={sourceLanguage}
                         onKeyPress={this.inputKeyPressHandler.bind(this)}
                     />
                 </td>
                 <td>
-                    <input
+                    <input className='table-input' size='20' placeholder='phrase'
                         onChange={this.editedSourceText.bind(this)}
                         value={sourceText}
                         onKeyPress={this.inputKeyPressHandler.bind(this)}
                     />
                 </td>
                 <td>
-                    <input
+                    <input className='table-input' size='10' placeholder='language'
                         onChange={this.editedTranslatedLanguage.bind(this)}
                         value={translatedLanguage}
                         onKeyPress={this.inputKeyPressHandler.bind(this)}
                     />
                 </td>
                 <td>
-                    <input
+                    <input className='table-input' size='20' placeholder='translation'
                         onChange={this.editedTranslatedText.bind(this)}
                         value={translatedText}
                         onKeyPress={this.inputKeyPressHandler.bind(this)}
                     />
                 </td>
                 <td>
-                    <div className='progress'>
-                      <div className='progress-bar progress-bar-success progress-bar-striped'
-                           role='progressbar'
+                    <div className='status'>
+                      <div className='progress-level'
                            style={{'width': progressStatus}}
                       >
                       </div>
                     </div>
                 </td>
-                <td>
+                <td className='actions-active'>
                     <input
-                        className='btn btn-success'
+                        className='actions-btn'
                         type='button'
                         value='Save'
                         onClick={this.savePhrase.bind(this)}
                     />
                     <input
-                        className='btn btn-danger'
+                        className='actions-btn'
                         type='button'
                         value='Delete'
                         onClick={this.removePhrase.bind(this)}
                     />
+                    <input
+                        className='actions-btn'
+                        type='button'
+                        value='Cancel'
+                        onClick=''
+                     />
                 </td>
             </tr>
         );
@@ -118,15 +123,15 @@ class PhraseItem extends React.Component {
             translatedLanguage, translatedText,
             progressStatus} = this.props;
         return (
-            <tr>
+            <tr className='row-border'>
                 <td>{sourceLanguage}</td>
                 <td>{sourceText}</td>
                 <td>{translatedLanguage}</td>
                 <td>{translatedText}</td>
                 <td>
-                    <div className='progress'>
-                      <div className='progress-bar progress-bar-success progress-bar-striped'
-                           role='progressbar'
+                    <div className='status'>
+                      <div className='progress-level'
+                           // FIXME: progressStatus is null but should be 0
                            style={{'width': progressStatus}}
                       >
                       </div>
@@ -134,7 +139,7 @@ class PhraseItem extends React.Component {
                 </td>
                 <td>
                     <input
-                        className='btn btn-info'
+                        className='actions-btn'
                         type='button'
                         value='Edit'
                         onClick={this.editPhrase.bind(this)}
@@ -169,23 +174,24 @@ class PhraseList extends React.Component {
         return  (
             <div>
                 <input
-                    className='btn btn-info'
+                    className='add-btn'
                     type='button'
-                    value='Add new phrase'
+                    value='Add a new phrase'
                     disabled={this.props.toggledAddNewPhrase}
                     onClick={this.toggledAddNewPhrase.bind(this)}
                 />
+                <input className='search-field' type='search' placeholder='Search' size='30'/>
 
-                <table className='table table-hover'>
+                <table className='table'>
                     <tbody>
-                        <tr>
-                            <th>Source language</th>
-                            <th>Source phrase</th>
-                            <th>Language translated to</th>
-                            <th>Translated phrase</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
+                         <tr className='table-head'>
+                             <th className='lang'>Source language</th>
+                             <th className='word'>Phrase</th>
+                             <th className='lang'>Language translated to</th>
+                             <th className='word'>Translation</th>
+                             <th className='status-bar'>Status</th>
+                             <th className='actions'>Actions</th>
+                         </tr>
                         {
                             this.props.phrases.map(
                                 (phrase, i) => <PhraseItem
@@ -196,7 +202,7 @@ class PhraseList extends React.Component {
                                 />
                             )
                         }
-                    </tbody>
+                     </tbody>
                 </table>
             </div>
         );
