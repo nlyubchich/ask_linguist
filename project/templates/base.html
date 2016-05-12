@@ -52,16 +52,14 @@
         <ul class="menu">
             <li class="panel-item left logo">Ask Linguist</li>
             <li class="panel-item left">
-    {#            TODO: Add links#}
-               <span>Vocabulary Lists</span>
+                <span>Vocabulary Lists</span>
                 <ul class="ddlist">
-                    <li class="ddlitem"><a class="tdn" href="">French</a></li>
-                    <li class="ddlitem"><a class="tdn" href="">German</a></li>
-    {#                <li class="tdn"><a href="">Some more vocabularies</a></li>#}
-                    <li class="ddlitem"><a class="tdn" href="">Add a new vocabulary list</a></li>
+                    <li class="ddlitem"><a class="tdn" href="{{ url_for('dashboard.dashboard') }}">French</a></li>
+{#                    <li class="ddlitem"><a class="tdn" href="">German</a></li>#}
+{#                    <li class="ddlitem"><a class="tdn" href="">Add a new vocabulary list</a></li>#}
                 </ul>
             </li>
-            <li class="panel-item left"><a class="tdn" href="">Practice</a></li>
+            <li class="panel-item left"><a class="tdn" href="{{ url_for('questionnaire.words') }}">Practice</a></li>
             <li class="panel-item left">
                 <span>Progress</span>
                 <ul class="ddlist">
@@ -74,11 +72,11 @@
                     <span class="toolbar-user-info">{{ current_user.nick_name }}</span>
                     <ul class="ddlist ddlist-user-settings">
                         <li><a class="tdn" href="">Your profile</a></li>
-                        <li><a class="tdn" href="">Log out</a></li>
+                        <li><a class="tdn" href="{{ url_for('index.logout') }}">Log out</a></li>
                     </ul>
-                 </li>
+                </li>
             {% else %}
-                <a class="right sign-in" href="{# TODO: add the link #}">Sign in</a>
+                <li class="panel-item right"><a class="tdn" href="{{ url_for('index.login') }}">Sign in</a></li>
             {% endif %}
         </ul>
     </div>

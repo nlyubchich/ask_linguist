@@ -3,7 +3,8 @@
 {% block content %}
     <div class="signin">
         <div>
-            <form class="form">
+            <form class="form" method="post">
+                {{ form.csrf_token }}
                 <input class="s-input" type="email" name="email" placeholder="Email"><br>
                 <input class="s-input" type="password" name="password" placeholder="Password"><br>
                 <input class="s-btn" type="submit" value="Sign In">

@@ -10,9 +10,9 @@ module.exports = {
     context: path.join(__dirname, 'project/frontend'),
     cache: true,
     entry: {
+        welcomeImg: './img/welcome.jpg',
         questionnaire: './js/questionnaire.js',
         list: './js/list.js',
-        styles: './styles/styles.styl',
         common: './styles/common.styl'
     },
     output: {
@@ -39,7 +39,7 @@ module.exports = {
                 loaders: isProduction ? ['file?name=font/[hash:4].[ext]'] : ['file?name=font/[name].[ext]']
             }, {
                 test: /.*\.(gif|png|jpg|jpeg|svg)$/,
-                loaders: Array.prototype.concat(isProduction ? ['file?name=img/[hash:4].[ext]'] : ['file?name=img/[name].[ext]'], isProduction ? ['image-webpack?optimizationLevel=7&interlaced=false'] : [])
+                loaders: Array.prototype.concat(['file?name=img/[name].[ext]'], isProduction ? ['image-webpack?optimizationLevel=7&interlaced=false'] : [])
             }
         ]
     },
