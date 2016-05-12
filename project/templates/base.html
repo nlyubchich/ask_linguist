@@ -50,8 +50,8 @@
 
     <div class="panel">
         <ul class="menu">
-            <li class="left logo">Ask Linguist</li>
-            <li class="left">
+            <li class="panel-item left logo">Ask Linguist</li>
+            <li class="panel-item left">
     {#            TODO: Add links#}
                <span>Vocabulary Lists</span>
                 <ul class="ddlist">
@@ -61,8 +61,8 @@
                     <li class="ddlitem"><a class="tdn" href="">Add a new vocabulary list</a></li>
                 </ul>
             </li>
-            <li class="left"><a class="tdn" href="">Practice</a></li>
-            <li class="left">
+            <li class="panel-item left"><a class="tdn" href="">Practice</a></li>
+            <li class="panel-item left">
                 <span>Progress</span>
                 <ul class="ddlist">
                     <li class="">Words for today: </li>
@@ -70,7 +70,7 @@
                 </ul>
             </li>
             {% if current_user.is_authenticated %}
-                <li class="right">
+                <li class="panel-item right">
                     <span class="toolbar-user-info">{{ current_user.nick_name }}</span>
                     <ul class="ddlist ddlist-user-settings">
                         <li><a class="tdn" href="">Your profile</a></li>
