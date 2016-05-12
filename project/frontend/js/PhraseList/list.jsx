@@ -94,21 +94,21 @@ class PhraseItem extends React.Component {
                       </div>
                     </div>
                 </td>
-                <td className='active'>
+                <td className='actions-active'>
                     <input
-                        className='btn'
+                        className='actions-btn'
                         type='button'
                         value='Save'
                         onClick={this.savePhrase.bind(this)}
                     />
                     <input
-                        className='btn'
+                        className='actions-btn'
                         type='button'
                         value='Delete'
                         onClick={this.removePhrase.bind(this)}
                     />
                     <input
-                        className='btn'
+                        className='actions-btn'
                         type='button'
                         value='Cancel'
                         onClick=''
@@ -139,7 +139,7 @@ class PhraseItem extends React.Component {
                 </td>
                 <td>
                     <input
-                        className='btn'
+                        className='actions-btn'
                         type='button'
                         value='Edit'
                         onClick={this.editPhrase.bind(this)}

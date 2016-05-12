@@ -45,7 +45,7 @@
 
     {% block scripts %}{% endblock %}
 </head>
-<body style="margin: 0;">
+<body>
     <ul id="js-errors" style="display: none"></ul>
 
     <div class="panel">
@@ -61,7 +61,7 @@
                     <li class="ddlitem"><a class="tdn" href="">Add a new vocabulary list</a></li>
                 </ul>
             </li>
-            <li class="left"><a class="left tdn" href="">Practice</a></li>
+            <li class="left"><a class="tdn" href="">Practice</a></li>
             <li class="left">
                 <span>Progress</span>
                 <ul class="ddlist">
@@ -72,7 +72,7 @@
             {% if current_user.is_authenticated %}
                 <li class="right">
                     <span class="toolbar-user-info">{{ current_user.nick_name }}</span>
-                    <ul class="ddlist">
+                    <ul class="ddlist ddlist-user-settings">
                         <li><a class="tdn" href="">Your profile</a></li>
                         <li><a class="tdn" href="">Log out</a></li>
                     </ul>
