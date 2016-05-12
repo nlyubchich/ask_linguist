@@ -27,7 +27,9 @@ def questionnaire_done(user_id, source_language, translated_language):
 
     statuses = [ps.value for ps in Phrase.ProgressStatus]
     for phrase in phrases:
-        next_statuses = list(filter(lambda ns: phrase.progress_status < ns, statuses))
+        next_statuses = list(
+            filter(lambda ns: phrase.progress_status < ns, statuses)
+        )
         if not next_statuses:
             phrase.status = Phrase.Status.finished.value
             continue
