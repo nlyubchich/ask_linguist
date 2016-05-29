@@ -1,7 +1,5 @@
-# coding=utf-8
 from datetime import datetime, timedelta
 from enum import Enum, unique
-from oauth2client import client
 from project.extensions import db
 
 
@@ -78,6 +76,7 @@ class User(db.Model):
     first_name = db.Column(db.Unicode)
     last_name = db.Column(db.Unicode)
 
+    # TODO: remove auth_data as unused
     # Google OAuth
     auth_data = db.Column(db.Unicode)
     password = db.Column(db.Unicode)
@@ -90,10 +89,6 @@ class User(db.Model):
 
     @property
     def is_authenticated(self):
-        if self.register_type == self.RegisterType.google_oauth.value:
-            credentials = client.OAuth2Credentials.from_json(self.auth_data)
-            if credentials.access_token_expired:
-                return False
         return True
 
     def get_id(self):

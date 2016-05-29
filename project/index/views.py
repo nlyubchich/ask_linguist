@@ -1,13 +1,12 @@
 import json
-import httplib2
-from apiclient import discovery
 from flask import (
     request,
     redirect,
     url_for,
     render_template,
     jsonify,
-    current_app
+    current_app,
+    session
 )
 from flask.ext.login import login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash
@@ -17,7 +16,8 @@ from project.blueprints import index_app as app
 
 from project.extensions import db
 from project.models import User
-from project.utils import google_oauth_loader
+from project.oauth import google
+from project.bl import load_user
 from .forms import RegisterForm, LoginForm
 
 js_error_format = '''
@@ -71,31 +71,34 @@ def register():
     return render_template('index/register.html', form=form)
 
 
-@app.route('/google_oauth')
-def google_oauth():
-    flow = google_oauth_loader()
-
-    if 'code' not in request.args:
-        auth_uri = flow.step1_get_authorize_url()
-        return redirect(auth_uri)
-
-    auth_code = request.args.get('code')
-
-    credentials = flow.step2_exchange(auth_code)
-    user_email = credentials.id_token['email']
-
-    user = User.query.filter_by(email=user_email).first()
-    if not user:
-        http_auth = credentials.authorize(httplib2.Http())
-        service = discovery.build(
-            serviceName='plus',
-            version='v1',
-            http=http_auth,
+@app.route('/google_login')
+def google_login():
+    return google.authorize(
+        callback=url_for(
+            '.google_authorized',
+            _external=True,
+            # next=request.args.get('next') or request.referrer or None
         )
-        person = service.people().get(userId='me').execute()
-        nick_name = person['displayName']
-        first_name = person['name']['givenName']
-        last_name = person['name']['familyName']
+    )
+
+
+@app.route('/google_oauth')
+def google_authorized():
+    next_url = request.args.get('next') or url_for('.index')
+    resp = google.authorized_response()
+    if resp is None:
+        return 'Access denied: reason=%s error=%s' % (
+            request.args['error_reason'],
+            request.args['error_description']
+        )
+    session['google_token'] = (resp['access_token'], '')
+    person = google.get('userinfo').data
+    user_email = person['email']
+    user = load_user(user_email)
+    if not user:
+        nick_name = person['name']
+        first_name = person['given_name']
+        last_name = person['family_name']
         user = bl.create_user(
             email=user_email,
             nick_name=nick_name,
@@ -104,14 +107,11 @@ def google_oauth():
             register_type=User.RegisterType.google_oauth.value,
         )
 
-    user.auth_data = credentials.to_json()
-
+    login_user(user, remember=True)
     db.session.add(user)
     db.session.commit()
 
-    login_user(user, remember=True)
-
-    return redirect(url_for('index.index'))
+    return redirect(next_url)
 
 
 @app.route('/js_errors', methods=['POST'])

@@ -54,8 +54,8 @@ class Config:
     }
 
     GOOGLE_OAUTH_PARAMS = {
-        'client_id': google_oauth_json.get('client_id'),
-        'client_secret': google_oauth_json.get('client_secret'),
+        'consumer_key': google_oauth_json.get('client_id'),
+        'consumer_secret': google_oauth_json.get('client_secret'),
         'scope': ['email', 'profile'],
         'auth_uri': google_oauth_json.get('auth_uri'),
         'token_uri': google_oauth_json.get('token_uri'),
@@ -81,14 +81,10 @@ class ProductionConfig(Config):
 
 
 class DevelopmentConfig(Config):
-    # Flask
     DEBUG = True
     DEVELOPMENT = True
-    SQLALCHEMY_TRACK_MODIFICATIONS = True
-
-    # Database
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///../db.sqlite3'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite3'
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 

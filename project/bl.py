@@ -1,8 +1,11 @@
 from datetime import datetime
+
+from flask import session
 from flask.ext.login import current_user
 from sqlalchemy.sql.expression import func
 from project.extensions import redis_store
 from project.models import Phrase, db, User
+from project.oauth import google
 
 PHRASE_REDIS_KEY_TEMPLATE = "{user_id}-{source_language}-{translated_language}"
 
@@ -115,3 +118,12 @@ def create_user(email, nick_name, first_name, last_name, register_type):
     user.last_name = last_name
     user.register_type = register_type
     return user
+
+
+def load_user(user_email):
+    return User.query.filter_by(email=user_email).first()
+
+
+@google.tokengetter
+def get_google_oauth_token():
+    return session.get('google_token')

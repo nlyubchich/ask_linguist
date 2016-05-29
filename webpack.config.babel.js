@@ -21,6 +21,15 @@ module.exports = {
         filename: isProduction ? '[name].[hash].js' : '[name].trunk.js'
     },
     module: {
+        preLoaders: [
+            {
+                test: /\.styl$/,
+                loader: 'stylint'
+            },
+            {
+                test: /\.jsx?$/, loader: 'eslint-loader', exclude: /node_modules/
+            }
+        ],
         loaders: [
             {
                 test: /\.jsx?$/,
@@ -28,9 +37,6 @@ module.exports = {
                 query: {
                     presets: ['react', 'es2015']
                 }
-            }, {
-                test: /\.css$/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
             }, {
                 test: /\.styl$/,
                 loader: ExtractTextPlugin.extract('style-loader', 'css-loader!stylus-loader')

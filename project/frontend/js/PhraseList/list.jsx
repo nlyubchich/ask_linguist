@@ -150,7 +150,7 @@ class PhraseItem extends React.Component {
     }
 
     render() {
-        return this.props.isActive ? this.renderActive() : this.renderNotActive()
+        return this.props.isActive ? this.renderActive() : this.renderNotActive();
     }
 }
 
@@ -212,7 +212,8 @@ class PhraseList extends React.Component {
 PhraseList.propTypes = {
     eventStream: React.PropTypes.object.isRequired,
     phrases: React.PropTypes.array.isRequired,
-    activePhrase: React.PropTypes.number
+    activePhrase: React.PropTypes.number,
+    toggledAddNewPhrase: React.PropTypes.function
 };
 
 export let TPhraseList = new TanokWrapper(PhraseList);

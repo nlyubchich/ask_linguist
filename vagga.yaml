@@ -2,7 +2,7 @@ containers:
   python:
     setup:
     - !Alpine v3.3
-    - !Install [libpq, postgresql-dev]
+    - !Install [libpq, postgresql-dev, ca-certificates]
     - !Py3Install ['setuptools']
     - !Py3Requirements "requirements.txt"
     environ:
