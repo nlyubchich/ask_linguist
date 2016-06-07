@@ -8,5 +8,5 @@ class TestRegister(SeleniumTest):
         self.assertEqual(self.base_url+'/dashboard/', driver.current_url)
         self.assertEqual(
             "{user_name}".format(user_name=self.user_id),
-            driver.find_elements_by_class_name("toolbar-user-info")[0].text,
+            driver.find_elements_by_class_name("b-top-panel__item-login-info")[0].text,
         )

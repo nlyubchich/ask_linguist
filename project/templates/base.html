@@ -48,35 +48,36 @@
 <body>
     <ul id="js-errors" style="display: none"></ul>
 
-    <div class="panel">
+    <div class="b-top-panel">
         <ul class="menu">
-            <li class="panel-item left logo">Ask Linguist</li>
-            <li class="panel-item left">
+            <li class="b-top-panel__item b-top-panel__item-logo b-top-panel__item--left">Ask Linguist</li>
+            <li class="b-top-panel__item b-top-panel__item--left">
                 <span>Vocabulary Lists</span>
-                <ul class="ddlist">
-                    <li class="ddlitem"><a class="tdn" href="{{ url_for('dashboard.dashboard') }}">French</a></li>
-{#                    <li class="ddlitem"><a class="tdn" href="">German</a></li>#}
-{#                    <li class="ddlitem"><a class="tdn" href="">Add a new vocabulary list</a></li>#}
+                <ul class="b-top-panel__item-dropdown">
+                    <li class="b-top-panel__item-dropdown-object"><a class="tdn" href="{{ url_for('dashboard.dashboard') }}">French</a></li>
+{#                    <li class=""><a class="tdn" href="">German</a></li>#}
+{#                    <li class=""><a class="tdn" href="">Add a new vocabulary list</a></li>#}
                 </ul>
             </li>
-            <li class="panel-item left"><a class="tdn" href="{{ url_for('questionnaire.words') }}">Practice</a></li>
-            <li class="panel-item left">
+            <li class="b-top-panel__item b-top-panel__item--left"><a class="tdn" href="{{ url_for('questionnaire.words') }}">Practice</a></li>
+            <li class="b-top-panel__item b-top-panel__item--left">
                 <span>Progress</span>
-                <ul class="ddlist">
+                <ul class="b-top-panel__item-dropdown">
                     <li class="">Words for today: </li>
                     <li class="">Learnt words in total: </li>
                 </ul>
             </li>
             {% if current_user.is_authenticated %}
-                <li class="panel-item right">
-                    <span class="toolbar-user-info">{{ current_user.nick_name }}</span>
-                    <ul class="ddlist ddlist-user-settings">
+                <li class="b-top-panel__item b-top-panel__item--right">
+                    <span class="b-top-panel__item-login-info">{{ current_user.nick_name }}</span>
+                    <ul class="b-top-panel__item-dropdown b-top-panel__item-dropdown-user-settings">
                         <li><a class="tdn" href="">Your profile</a></li>
                         <li><a class="tdn" href="{{ url_for('index.logout') }}">Log out</a></li>
                     </ul>
                 </li>
             {% else %}
-                <li class="panel-item right"><a class="tdn" href="{{ url_for('index.login') }}">Sign in</a></li>
+                <li class="b-top-panel__item b-top-panel__item--right"><a class="tdn b-top-panel__item-login-info"
+                                                                   href="{{ url_for('index.login') }}">Sign in</a></li>
             {% endif %}
         </ul>
     </div>
