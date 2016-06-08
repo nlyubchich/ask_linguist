@@ -9,7 +9,7 @@ class TestDashboard(SeleniumTest):
     def add_phrase(self, source_lang, source_text, translated_lang,
                    translated_text):
         driver = self.driver
-        new_phrase_inputs = '(//tr[@class="b-vocabulary-table__row active-row"]/td/input)'
+        new_phrase_inputs = '(//tr[@class="b-vocabulary-table__row b-vocabulary-table__row--active"]/td/input)'
 
         driver.find_elements_by_class_name('b-add-btn')[0].click()
         source_lang_input = new_phrase_inputs + '[1]'
@@ -139,7 +139,7 @@ class TestDashboard(SeleniumTest):
         )
 
         active_phrase_selector = (
-            '(//tr[@class="b-vocabulary-table__row active-row"]/td/input)'
+            '(//tr[@class="b-vocabulary-table__row b-vocabulary-table__row--active"]/td/input)'
         )
         driver.find_element_by_xpath('(//input[@value="Edit"])[2]').click()
         driver.find_element_by_xpath(active_phrase_selector + '[1]').clear()

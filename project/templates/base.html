@@ -49,7 +49,7 @@
     <ul id="js-errors" style="display: none"></ul>
 
     <div class="b-top-panel">
-        <ul class="menu">
+        <ul class="b-top-panel__menu">
             <li class="b-top-panel__item b-top-panel__item-logo b-top-panel__item--left">Ask Linguist</li>
             <li class="b-top-panel__item b-top-panel__item--left">
                 <span>Vocabulary Lists</span>
@@ -69,7 +69,7 @@
             </li>
             {% if current_user.is_authenticated %}
                 <li class="b-top-panel__item b-top-panel__item--right">
-                    <span class="b-top-panel__item-login-info">{{ current_user.nick_name }}</span>
+                    <span class="b-top-panel__item-user-info">{{ current_user.nick_name }}</span>
                     <ul class="b-top-panel__item-dropdown b-top-panel__item-dropdown-user-settings">
                         <li><a class="tdn" href="">Your profile</a></li>
                         <li><a class="tdn" href="{{ url_for('index.logout') }}">Log out</a></li>
