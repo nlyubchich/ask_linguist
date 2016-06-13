@@ -4,8 +4,8 @@
   width 100%
 
   &__head
-    background-color $color-green-for-table-head
-    border 2px solid $color-green-for-border
+    background-color lighten($color-green, 5%)
+    border 2px solid darken($color-green, 10%)
     color $color-white
     height 48px
 
@@ -14,11 +14,11 @@
     height 50px
 
     &:hover
-      background-color $color-green-for-table-row
+      background-color lighten($color-green, 85%)
 
   &__input
     background-color $color-white
-    border 1px solid $color-green-for-border
+    border 1px solid darken($color-green, 20%)
     border-radius 5px
     font-size 15px
     margin 5px

@@ -57,7 +57,7 @@ class PhraseItem extends React.Component {
             translatedLanguage, translatedText,
             progressStatus} = this.props;
         return (
-            <tr className='b-vocabulary-table__row active-row'>
+            <tr className='b-vocabulary-table__row b-vocabulary-table__row--active'>
                 <td>
                     <input className='b-vocabulary-table__input' size='10' placeholder='language'
                         onChange={this.editedSourceLanguage.bind(this)}
