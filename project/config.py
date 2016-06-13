@@ -71,8 +71,8 @@ class ProductionConfig(Config):
     REDIS_URL = os.getenv('REDISCLOUD_URL')
 
     GOOGLE_OAUTH_PARAMS = {
-        'client_id': os.getenv('GOOGLE_OAUTH_CLIENT_ID'),
-        'client_secret': os.getenv('GOOGLE_OAUTH_CLIENT_SECRET'),
+        'consumer_key': os.getenv('GOOGLE_OAUTH_CLIENT_ID'),
+        'consumer_secret': os.getenv('GOOGLE_OAUTH_CLIENT_SECRET'),
         'scope': ['email', 'profile'],
         'auth_uri': os.getenv('GOOGLE_OAUTH_AUTH_URI'),
         'token_uri': os.getenv('GOOGLE_OAUTH_TOKEN_URI'),
