@@ -38,9 +38,7 @@
     "stylus": "^0.54.2",
     "stylus-loader": "^2.0.0",
     "tanok": "^0.3.1",
-    "webpack": "^1.12.10"
-  },
-  "devDependencies": {
+    "webpack": "^1.12.10",
     "babel-eslint": "^6.0.2",
     "eslint": "^2.4.0",
     "eslint-config-mourner": "^2.0.0",
