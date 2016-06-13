@@ -75,8 +75,7 @@ class Chooser extends React.Component {
                                 <li
                                     className={classNames({
                                         'b-chooser__answers-list__variant': true,
-                                        'b-chooser__correct-answer': isCorrectAnswer && this.props.isFail ,
-                                        
+                                        'b-chooser__correct-answer': isCorrectAnswer && this.props.isFail
                                     })}
                                     key={index}
                                     onClick={this.checkClick.bind(this, index)}
@@ -100,7 +99,7 @@ Chooser.propTypes = {
     currentPhrase: React.PropTypes.object.isRequired,
     status: React.PropTypes.string.isRequired,
     possibleAnswers: React.PropTypes.array.isRequired,
-    isFail: React.PropTypes.bool.isRequired,
+    isFail: React.PropTypes.bool.isRequired
 };
 
 class Questionnaire extends React.Component {
