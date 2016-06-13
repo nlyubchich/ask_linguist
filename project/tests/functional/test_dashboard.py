@@ -10,7 +10,8 @@ class TestDashboard(SeleniumTest):
                    translated_text):
         driver = self.driver
         new_phrase_inputs = (
-            '(//tr[@class="b-vocabulary-table__row--active"]/td/input)'
+            '(//tr[@class="b-vocabulary-table__row '
+            'b-vocabulary-table__row--active"]/td/input)'
         )
 
         driver.find_elements_by_class_name('b-add-btn')[0].click()
@@ -141,7 +142,8 @@ class TestDashboard(SeleniumTest):
         )
 
         active_phrase_selector = (
-            '(//tr[@class="b-vocabulary-table__row--active"]/td/input)'
+            '(//tr[@class="b-vocabulary-table__row '
+            'b-vocabulary-table__row--active"]/td/input)'
         )
         driver.find_element_by_xpath('(//input[@value="Edit"])[2]').click()
         driver.find_element_by_xpath(active_phrase_selector + '[1]').clear()
