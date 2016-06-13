@@ -9,7 +9,9 @@ class TestDashboard(SeleniumTest):
     def add_phrase(self, source_lang, source_text, translated_lang,
                    translated_text):
         driver = self.driver
-        new_phrase_inputs = '(//tr[@class="b-vocabulary-table__row active-row"]/td/input)'
+        new_phrase_inputs = (
+            '(//tr[@class="b-vocabulary-table__row active-row"]/td/input)'
+        )
 
         driver.find_elements_by_class_name('b-add-btn')[0].click()
         source_lang_input = new_phrase_inputs + '[1]'
