@@ -28,7 +28,7 @@ class Asker extends React.Component {
 
     render() {
         return (
-            <div className='b-questionnaire-frame'>
+            <div className='b-questionnaire-container'>
                 <p className='b-current-phrase'> {this.props.currentPhrase.source}</p>
                 <div>
                     <p className='b-asker__correct-answer'>{this.props.status}</p>
@@ -66,7 +66,7 @@ class Chooser extends React.Component {
     render() {
         return (
             <div>
-                <div className='b-questionnaire-frame'>
+                <div className='b-questionnaire-container'>
                     <p className='b-current-phrase'> {this.props.currentPhrase.target}</p>
                     <ul className='b-chooser__answers-list'>
                         {this.props.possibleAnswers.map((answer, index) => {

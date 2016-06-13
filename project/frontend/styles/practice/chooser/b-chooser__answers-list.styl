@@ -2,8 +2,8 @@
   padding 0
 
   &__variant
-    background-color $color-green-for-variant
-    border 1px solid darken($color-green-for-variant, 40%)
+    background-color lighten($color-green, 70%)
+    border 1px solid darken($color-green, 10%)
     border-radius: 5px
     cursor pointer
     font-size 25px
@@ -12,4 +12,5 @@
     padding 10px
 
     &:hover
-      background-color darken($color-green-for-variant, 40%)
+      background-color $color-green
+      color $color-white
