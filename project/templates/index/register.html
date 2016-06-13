@@ -10,6 +10,9 @@
                 <form method="post">
                     {{ form.csrf_token }}
                     <input class="b-form__input" type="email" name="email" placeholder="Email" required/>
+{#                    {% for error in form.email.errors %}#}
+{#                        <div>{{ error }}</div>#}
+{#                    {% endfor %}#}
                     <input class="b-form__input" type="text" name="nick_name" placeholder="Nickname" required/>
                     <input class="b-form__input" type="text" name="first_name" placeholder="First name" required/>
                     <input class="b-form__input" type="text" name="last_name" placeholder="Last name" required/>
