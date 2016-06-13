@@ -32,6 +32,9 @@ before_install:
   - sh -e /etc/init.d/xvfb start
   - sudo apt-get update
   - sudo apt-get -y install python3-pip python3-dev chromium-browser
+  - curl http://chromedriver.storage.googleapis.com/2.22/chromedriver_linux64.zip > chromedriver.zip
+  - unzip -o chromedriver.zip
+  - sudo mv chromedriver /usr/bin/chromedriver
   - python3 -V
   - pip3 -V
 
