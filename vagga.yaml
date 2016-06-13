@@ -16,9 +16,18 @@ containers:
     setup:
     - !Ubuntu xenial
     - !UbuntuUniverse
-    - !Install [firefox]
+    - !Install [chromium-browser, unzip]
     - !Py3Install [selenium, setuptools]
     - !Py3Requirements "requirements-test.txt"
+    - !Download
+      url: http://chromedriver.storage.googleapis.com/2.22/chromedriver_linux64.zip
+      path: /tmp/chromedriver.zip
+    - !Sh |
+        unzip -o /tmp/chromedriver.zip -d /tmp
+        ls /tmp
+        mv /tmp/chromedriver /usr/bin
+        chmod a+x /usr/bin/chromedriver
+    - !EnsureDir /root
 
     environ:
       LC_ALL: en_US.UTF-8
@@ -33,6 +42,9 @@ containers:
         subdirs:
           .X11-unix:
       /tmp/.X11-unix: !BindRW /volumes/X11
+      /root: !Tmpfs
+        size: 100Mi
+        mode: 0o755
 
   postgres:
     setup:

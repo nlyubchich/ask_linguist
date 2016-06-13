@@ -10,7 +10,7 @@ class SeleniumTest(unittest.TestCase):
     page = None
 
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        self.driver = webdriver.Chrome()
         self.driver.implicitly_wait(10)
         self.base_url = "http://localhost:5000"
         self.verificationErrors = []

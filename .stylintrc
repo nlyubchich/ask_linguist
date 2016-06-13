@@ -7,7 +7,7 @@
     "commentSpace": "always",
     "cssLiteral": true,
     "depthLimit": false,
-    "duplicates": true,
+    "duplicates": false,
     "efficient": "always",
     "exclude": [],
     "extendPref": false,
