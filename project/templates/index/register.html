@@ -2,21 +2,21 @@
 
 {% block content %}
     <div>
-        <div class="welcome-image">
-            <img src="{{ url_for('static', filename='img/welcome.jpg') }}" alt="Welcome Image" style="width: 975px; height: 580px;"/>
+        <div>
+            <img class="b-welcome-image" src="{{ url_for('static', filename='img/welcome.png') }}" alt="Welcome Image"/>
+{#            TODO: I need a picture 1352px*572px#}
         </div>
-        <div class="signup">
+        <div class="b-form-signup">
                 <form method="post">
                     {{ form.csrf_token }}
-                    <input class="s-input" type="email" name="email" placeholder="Email"/><br>
-                    <input class="s-input" type="text" name="nick_name" placeholder="Nickname"/><br>
-                    <input class="s-input" type="text" name="first_name" placeholder="First name"/><br>
-                    <input class="s-input" type="text" name="last_name" placeholder="Last name"/><br>
-                    <input class="s-input" type="password" name="password" placeholder="Password"/><br>
-                    <input class="s-btn" type="submit" value="Create an account"/>
-{#        Add "required" later#}
+                    <input class="b-form__input" type="email" name="email" placeholder="Email" required/>
+                    <input class="b-form__input" type="text" name="nick_name" placeholder="Nickname" required/>
+                    <input class="b-form__input" type="text" name="first_name" placeholder="First name" required/>
+                    <input class="b-form__input" type="text" name="last_name" placeholder="Last name" required/>
+                    <input class="b-form__input" type="password" name="password" placeholder="Password" required/>
+                    <input class="b-form__submit-btn" type="submit" value="Create an account"/>
                     <p>or</p>
-                    <a class="s-btn" href="{{ url_for('index.google_login') }}">Sign up with Google</a>
+                    <a class="b-form__submit-btn" href="{{ url_for('index.google_login') }}">Sign up with Google</a>
                 </form>
         </div>
     </div>

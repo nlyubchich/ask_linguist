@@ -10,7 +10,7 @@ module.exports = {
     context: path.join(__dirname, 'project/frontend'),
     cache: true,
     entry: {
-        welcomeImg: './img/welcome.jpg',
+        welcomeImg: './img/welcome.png',
         questionnaire: './js/questionnaire.js',
         list: './js/list.js',
         common: './styles/common.styl'

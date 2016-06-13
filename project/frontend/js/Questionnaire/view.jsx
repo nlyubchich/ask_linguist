@@ -28,11 +28,11 @@ class Asker extends React.Component {
 
     render() {
         return (
-            <div className='questionnaire'>
-                <p className='current-phrase'> {this.props.currentPhrase.source}</p>
+            <div className='b-questionnaire-frame'>
+                <p className='b-current-phrase'> {this.props.currentPhrase.source}</p>
                 <div>
-                    <p className='asker-correct-answer'>{this.props.status}</p>
-                    <input className='asker-input'
+                    <p className='b-asker__correct-answer'>{this.props.status}</p>
+                    <input className='b-asker__input'
                         type='text'
                         value={this.props.enteredText}
                         onChange={this.editedGuessInput.bind(this)}
@@ -40,10 +40,10 @@ class Asker extends React.Component {
                     />
                 </div>
                 <div>
-                    <button className='check-btn' onClick={this.checkPhrase.bind(this)}>Check</button>
+                    <button className='b-asker__check-btn' onClick={this.checkPhrase.bind(this)}>Check</button>
                 </div>
 
-                <p className='phrase-counter'>{this.props.phrases.length + ' words left'}</p>
+                <p className='b-phrase-counter'>{this.props.phrases.length + ' words left'}</p>
             </div>
         );
     }
@@ -66,16 +66,17 @@ class Chooser extends React.Component {
     render() {
         return (
             <div>
-                <div className='questionnaire'>
-                    <p className='current-phrase'> {this.props.currentPhrase.target}</p>
-                    <ul className='answers-list'>
+                <div className='b-questionnaire-frame'>
+                    <p className='b-current-phrase'> {this.props.currentPhrase.target}</p>
+                    <ul className='b-chooser__answers-list'>
                         {this.props.possibleAnswers.map((answer, index) => {
                             let isCorrectAnswer = this.props.currentPhrase.source === answer;
                             return (
                                 <li
                                     className={classNames({
-                                        'variants': true,
-                                        'correct-answer': isCorrectAnswer && this.props.isFail
+                                        'b-chooser__answers-list__variant': true,
+                                        'b-chooser__correct-answer': isCorrectAnswer && this.props.isFail ,
+                                        
                                     })}
                                     key={index}
                                     onClick={this.checkClick.bind(this, index)}
@@ -85,7 +86,7 @@ class Chooser extends React.Component {
                             );
                         })}
                     </ul>
-                    <p className='phrase-counter'>{this.props.phrases.length + ' words left'}</p>
+                    <p className='b-phrase-counter'>{this.props.phrases.length + ' words left'}</p>
                 </div>
 
             </div>
@@ -99,7 +100,7 @@ Chooser.propTypes = {
     currentPhrase: React.PropTypes.object.isRequired,
     status: React.PropTypes.string.isRequired,
     possibleAnswers: React.PropTypes.array.isRequired,
-    isFail: React.PropTypes.bool.isRequired
+    isFail: React.PropTypes.bool.isRequired,
 };
 
 class Questionnaire extends React.Component {
