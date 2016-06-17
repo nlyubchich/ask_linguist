@@ -1,5 +1,5 @@
 from flask import jsonify, render_template
-from flask.ext.login import current_user
+from flask_login import current_user
 
 from project.blueprints import dashboard_app as app
 from project.extensions import db

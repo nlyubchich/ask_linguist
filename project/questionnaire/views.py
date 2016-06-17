@@ -1,5 +1,5 @@
 from flask import jsonify, render_template
-from flask.ext.login import current_user
+from flask_login import current_user
 
 from project import bl
 from project.bl import PHRASE_REDIS_KEY_TEMPLATE

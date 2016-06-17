@@ -8,7 +8,7 @@ from flask import (
     current_app,
     session
 )
-from flask.ext.login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash
 
 from project import bl

@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from flask.ext.login import current_user
+from flask_login import current_user
 from project.extensions import login_manager
 
 

@@ -1,6 +1,6 @@
 from mixer.backend.flask import mixer
 from project.application import create_app
-from flask.ext.testing import TestCase as FlaskTestCase
+from flask_testing import TestCase as FlaskTestCase
 
 
 class TestCase(FlaskTestCase):

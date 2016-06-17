@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from flask import session
-from flask.ext.login import current_user
+from flask_login import current_user
 from sqlalchemy.sql.expression import func
 from project.extensions import redis_store
 from project.models import Phrase, db, User
