@@ -33,7 +33,7 @@ class TestDashboard(SeleniumTest):
         )
         driver.find_element_by_css_selector('input[value="Save"]').click()
 
-        for i in range(10):  # 10*0.5 = 5 seconds
+        for _ in range(10):  # 10*0.5 = 5 seconds
             if self.is_element_present(By.CSS_SELECTOR, 'td'):
                 break
             time.sleep(0.5)

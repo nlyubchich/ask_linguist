@@ -5,6 +5,8 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 
+UPPERCASE_AND_DIGITS = string.ascii_uppercase + string.digits
+
 
 class SeleniumTest(unittest.TestCase):
     page = None
@@ -89,6 +91,5 @@ class SeleniumTest(unittest.TestCase):
         return False
 
 
-def generate_random_string(size=10,
-                           chars=string.ascii_uppercase + string.digits):
+def generate_random_string(size=10, chars=UPPERCASE_AND_DIGITS):
     return ''.join(random.choice(chars) for _ in range(size))

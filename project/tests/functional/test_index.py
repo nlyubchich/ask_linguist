@@ -1,4 +1,4 @@
-from .utils import SeleniumTest
+from project.tests.functional.utils import SeleniumTest
 
 
 class TestRegister(SeleniumTest):
