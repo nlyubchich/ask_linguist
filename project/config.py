@@ -15,10 +15,9 @@ except FileNotFoundError:
 
 
 class Config:
-    # SQLALCHEMY_ECHO = True?
     DEBUG = False
     TESTING = False
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     SECRET_KEY = 'really secret'
 

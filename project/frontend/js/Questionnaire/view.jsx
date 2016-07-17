@@ -32,7 +32,7 @@ class Asker extends React.Component {
   render() {
     return (
       <div className="b-questionnaire-container">
-        <p className="b-current-phrase"> {this.props.currentPhrase.sourceText}</p>
+        <p className="b-current-phrase"> {this.props.currentPhrase.translatedText}</p>
         <div>
           <p className="b-asker__correct-answer">{this.props.status}</p>
           <input
@@ -80,10 +80,10 @@ class Chooser extends React.Component {
         <div className="b-questionnaire-container">
           <p
             className="b-current-phrase"
-          > {this.props.currentPhrase.translatedText}</p>
+          > {this.props.currentPhrase.sourceText}</p>
           <ul className="b-chooser__answers-list">
             {this.props.possibleAnswers.map((answer, index) => {
-              const isCorrectAnswer = this.props.currentPhrase.sourceText === answer;
+              const isCorrectAnswer = this.props.currentPhrase.translatedText === answer;
               return (
                 <li
                   className={classNames({
@@ -120,7 +120,10 @@ Chooser.propTypes = {
 class Questionnaire extends React.Component {
   render() {
     if (l.isEmpty(this.props.phrases)) {
-      return <div>There is no phrases for today. Well done!</div>
+      return (
+        // TODO: Style it
+        <div>There are no phrases for today. Well done!</div>
+      );
     }
 
     return this.props.isChooser ? (
