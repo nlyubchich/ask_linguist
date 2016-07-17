@@ -3,6 +3,7 @@ import keycode from 'keycode';
 import TanokWrapper from 'tanok/component.js';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import classNames from 'classnames';
+import * as l from 'lodash';
 
 const ENTER_KEY = 'enter';
 
@@ -22,24 +23,24 @@ class Asker extends React.Component {
     }
   }
 
-  editedGuessInput(event) {
+  editedGuessInput(e) {
     this.props.eventStream.send(
-      'updateEnteredText', { text: event.target.value }
+      'updateEnteredText', { text: e.target.value }
     );
   }
 
   render() {
     return (
       <div className="b-questionnaire-container">
-        <p className="b-current-phrase"> {this.props.currentPhrase.source}</p>
+        <p className="b-current-phrase"> {this.props.currentPhrase.sourceText}</p>
         <div>
           <p className="b-asker__correct-answer">{this.props.status}</p>
           <input
             className="b-asker__input"
             type="text"
             value={this.props.enteredText}
-            onChange={this.editedGuessInput}
-            onKeyPress={this.inputKeyPressHandler}
+            onChange={(e) => this.editedGuessInput(e)}
+            onKeyPress={(e) => this.inputKeyPressHandler(e)}
           />
         </div>
         <div>
@@ -51,9 +52,7 @@ class Asker extends React.Component {
           </button>
         </div>
 
-        <p
-          className="b-phrase-counter"
-        >
+        <p className="b-phrase-counter">
           {`${this.props.phrases.length} words left`}
         </p>
       </div>
@@ -81,10 +80,10 @@ class Chooser extends React.Component {
         <div className="b-questionnaire-container">
           <p
             className="b-current-phrase"
-          > {this.props.currentPhrase.target}</p>
+          > {this.props.currentPhrase.translatedText}</p>
           <ul className="b-chooser__answers-list">
             {this.props.possibleAnswers.map((answer, index) => {
-              const isCorrectAnswer = this.props.currentPhrase.source === answer;
+              const isCorrectAnswer = this.props.currentPhrase.sourceText === answer;
               return (
                 <li
                   className={classNames({
@@ -120,6 +119,10 @@ Chooser.propTypes = {
 
 class Questionnaire extends React.Component {
   render() {
+    if (l.isEmpty(this.props.phrases)) {
+      return <div>There is no phrases for today. Well done!</div>
+    }
+
     return this.props.isChooser ? (
       <Chooser
         eventStream={this.props.eventStream}

@@ -15,6 +15,7 @@ except FileNotFoundError:
 
 
 class Config:
+    # SQLALCHEMY_ECHO = True?
     DEBUG = False
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False

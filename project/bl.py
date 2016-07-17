@@ -46,7 +46,7 @@ def questionnaire_done(user_id, source_language, translated_language):
     return phrases
 
 
-def mark_available_phrases(user_id, source_language, translated_language):
+def mark_available_phrases(user_id, source_language, translated_language, limit=PHRASES_FOR_QUESTIONNAIRE_LIMIT):
     phrases = db.session.query(
         Phrase.id
     ).filter(
@@ -58,7 +58,7 @@ def mark_available_phrases(user_id, source_language, translated_language):
         Phrase.progress_status < Phrase.ProgressStatus.after_two_week.value,
     ).order_by(
         func.random()
-    ).limit(PHRASES_FOR_QUESTIONNAIRE_LIMIT)
+    ).limit(limit)
     phrase_ids = [phrase.id for phrase in phrases]
     if not phrase_ids:
         return []

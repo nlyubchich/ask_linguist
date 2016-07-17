@@ -1,5 +1,5 @@
 const CSRF_TOKEN = document.querySelector('meta[name=csrf-token]').getAttribute('content');
-const GRAPH_ENDPOINT = '/graph';
+const GRAPH_ENDPOINT = '/graph/';
 
 function checkIsRequestSucceed(response) {
   if (!response.ok) {

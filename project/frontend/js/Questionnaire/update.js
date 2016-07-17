@@ -8,7 +8,7 @@ function checkChooserIsCorrectPhrase(i) {
   return (state, eventStream) => Rx.Observable.just(1).do(() => {
     if (state.isFail) {
       eventStream.send('toggleChooserFail');
-    } else if (state.possibleAnswers[i] === state.currentPhrase.source) {
+    } else if (state.possibleAnswers[i] === state.currentPhrase.sourceText) {
       eventStream.send('checkChooserIsOk');
     } else {
       eventStream.send('checkChooserIsNotOk');
@@ -41,7 +41,7 @@ function checkIsCorrectPhrase(state, eventStream) {
   return Rx.Observable.just(1).do(() => {
     if (state.isFail) {
       eventStream.send('toggleFail');
-    } else if (state.enteredText === state.currentPhrase.target) {
+    } else if (state.enteredText === state.currentPhrase.translatedText) {
       eventStream.send('checkIsOk');
     } else {
       eventStream.send('checkIsNotOk');
@@ -78,7 +78,7 @@ const askerUpdate = [
   }],
   [[actionIs('checkIsNotOk')], (params, state) => {
     state.isFail = true;
-    state.status = state.currentPhrase.target;
+    state.status = state.currentPhrase.translatedText;
     return [state];
   }],
   [[actionIs('toggleFail')], (params, state) => {
@@ -97,10 +97,10 @@ const askerUpdate = [
 
 const chooserUpdate = [
   ['init', (params, state) => {
-    const currentSource = state.currentPhrase.source;
+    const currentSource = state.currentPhrase.sourceText;
     state.possibleAnswers = [currentSource];
     state.possibleAnswers = l.shuffle(state.possibleAnswers.concat(
-      l.sampleSize(l.without(state.allPhrases.map((phrase) => phrase.source), currentSource), 3)
+      l.sampleSize(l.without(state.allPhrases.map((phrase) => phrase.sourceText), currentSource), 3)
     ));
     return [state];
   }],
@@ -127,10 +127,10 @@ const chooserUpdate = [
   }],
   [[actionIs('chooserNextPhrase')], (params, state) => {
     state.currentPhrase = l.sample(state.phrases);
-    const currentSource = state.currentPhrase.source;
+    const currentSource = state.currentPhrase.sourceText;
     state.possibleAnswers = [currentSource];
     state.possibleAnswers = l.shuffle(state.possibleAnswers.concat(
-      l.sampleSize(l.without(state.allPhrases.map((phrase) => phrase.source), currentSource), 3)
+      l.sampleSize(l.without(state.allPhrases.map((phrase) => phrase.sourceText), currentSource), 3)
     ));
     return [state];
   }],

@@ -1,18 +1,13 @@
 import os
 import logging.config
 from flask import Flask
-from hiku.console.ui import ConsoleApplication
-from hiku.engine import Engine
-from hiku.executors.sync import SyncExecutor
 from importlib import import_module
-from werkzeug.wsgi import DispatcherMiddleware
 
 from project.blueprints import all_blueprints
 from project.bl import load_user
 from project.extensions import (
-    csrf, db, toolbar, login_manager, redis_store, oauth
+    csrf, db, toolbar, login_manager, redis_store, oauth,
 )
-from project.graph import GRAPH
 
 
 def create_app():
@@ -38,12 +33,5 @@ def create_app():
     login_manager.user_loader(load_user)
     redis_store.init_app(app)
     oauth.init_app(app)
-
-    engine = Engine(SyncExecutor())
-    app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
-        '/graph': ConsoleApplication(
-            GRAPH, engine, app.config.get('DEBUG', False)
-        ),
-    })
 
     return app

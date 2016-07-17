@@ -30,5 +30,6 @@ def _factory(bp_name, url_prefix, restricted=False):
 index_app = _factory("index", '')
 dashboard_app = _factory("dashboard", '/dashboard', True)
 questionnaire_app = _factory("questionnaire", '/questionnaire', True)
+graph_app = _factory("graph", '/graph', True)
 
-all_blueprints = (index_app, dashboard_app, questionnaire_app,)
+all_blueprints = (index_app, dashboard_app, questionnaire_app, graph_app)

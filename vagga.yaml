@@ -7,7 +7,7 @@ containers:
     - !Py3Requirements "requirements.txt"
     environ:
       LC_ALL: en_US.UTF-8
-      APP_SETTINGS: 'project.config.VaggaTestingConfig'
+      APP_SETTINGS: 'project.config.VaggaConfig'
       DATABASE_URL: 'postgres://vagga:vagga@localhost:5433/test'
       SECRET_KEY: 'really secret'
       CSRF_SECRET: 'really secret'

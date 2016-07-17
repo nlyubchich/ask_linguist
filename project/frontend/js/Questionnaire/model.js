@@ -2,10 +2,11 @@ import * as l from 'lodash';
 
 class Model {
   constructor(initialData) {
+    const phrases = initialData['phrases-for-test'];
     return {
-      phrases: initialData.phrases,
-      allPhrases: initialData.phrases.slice(),
-      currentPhrase: l.sample(initialData.phrases),
+      phrases,
+      allPhrases: phrases.slice(),
+      currentPhrase: l.sample(phrases),
       status: '',
       isFail: false,
       enteredText: '',
