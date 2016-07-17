@@ -26,10 +26,6 @@
     "babel-preset-react": "latest",
     "classnames": "latest",
     "css-loader": "latest",
-    "eslint": "latest",
-    "eslint-config-mourner": "latest",
-    "eslint-loader": "latest",
-    "eslint-plugin-react": "latest",
     "extract-text-webpack-plugin": "latest",
     "file-loader": "^0.8.5",
     "image-webpack-loader": "latest",
@@ -46,5 +42,12 @@
     "stylus-loader": "latest",
     "tanok": "latest",
     "webpack": "latest"
+  },
+  "devDependencies": {
+    "eslint": "^3.1.0",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.10.3",
+    "eslint-plugin-jsx-a11y": "^2.0.1",
+    "eslint-plugin-react": "^5.2.2"
   }
 }

@@ -76,9 +76,6 @@ class User(db.Model):
     first_name = db.Column(db.Unicode)
     last_name = db.Column(db.Unicode)
 
-    # TODO: remove auth_data as unused
-    # Google OAuth
-    auth_data = db.Column(db.Unicode)
     password = db.Column(db.Unicode)
 
     phrases = db.relationship('Phrase', backref='user', lazy='dynamic')

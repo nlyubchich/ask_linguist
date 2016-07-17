@@ -7,5 +7,6 @@ webpack:
 	webpack --progress --watch
 
 lint:
+	flake8 project
 	node_modules/.bin/eslint project/frontend/js
 	node_modules/.bin/stylint project/frontend/styles
