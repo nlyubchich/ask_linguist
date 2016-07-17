@@ -69,26 +69,15 @@ def generate_phrases_for_practice(kwargs):
     phrase_ids = redis_store.lrange(
         PHRASE_REDIS_KEY_TEMPLATE.format(
             user_id=user_id,
-            # FIXME: source and translated? WAT?
-            source_language=translated_language,
-            translated_language=source_language,
-        ), 0, -1
+            source_language=source_language,
+            translated_language=translated_language,
+        ), start=0, end=-1
     )
     phrase_ids = [int(phrase_id) for phrase_id in phrase_ids]
 
-    print()
-    print()
-    print()
-    print()
-    print(phrase_ids)
-    print()
-    print()
-    print()
-    print()
     if not phrase_ids:
         phrase_ids = mark_available_phrases(
             user_id, source_language, translated_language, limit)
-    print(phrase_ids)
     return phrase_ids
 
 
@@ -129,8 +118,8 @@ GRAPH = Graph([
         options=[
             Option('user', default='me'),
             Option('limit', IntegerType, default=50),
-            Option('source_language', StringType, default='English'),
-            Option('translated_language', StringType, default='French'),
+            Option('source_language', StringType, default='French'),
+            Option('translated_language', StringType, default='English'),
         ]
     ),
 ])

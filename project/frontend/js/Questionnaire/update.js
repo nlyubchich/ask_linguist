@@ -100,7 +100,10 @@ const chooserUpdate = [
     const currentTranslated = state.currentPhrase.translatedText;
     state.possibleAnswers = [currentTranslated];
     state.possibleAnswers = l.shuffle(state.possibleAnswers.concat(
-      l.sampleSize(l.without(state.allPhrases.map((phrase) => phrase.translatedText), currentTranslated), 3)
+      l.sampleSize(
+        l.without(state.allPhrases.map((phrase) => phrase.translatedText), currentTranslated),
+        3
+      )
     ));
     return [state];
   }],
