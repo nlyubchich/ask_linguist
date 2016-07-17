@@ -1,127 +1,59 @@
-from collections import namedtuple
-
 from sqlalchemy import select
 
 from hiku.expr import S, define
 from hiku.graph import Graph, Edge, Link
-from hiku.types import StringType, IntegerType, OptionType
+from hiku.types import StringType, IntegerType
 from hiku.sources import sqlalchemy as sa
 from hiku.sources.graph import SubGraph, Expr
-
-from .model import session, Planet, Feature, FeaturePlanet
-from .model import _Climate, _Terrain
+from project.models import db, Phrase
 
 
-def _(string):
-    return string
-
-
-planets_query = sa.FieldsQuery(session, Planet.__table__)
-
-features_query = sa.FieldsQuery(session, Feature.__table__)
-
-to_planets_query = sa.LinkQuery(
-    session,
-    edge='planet',
-    from_column=FeaturePlanet.__table__.c.feature_id,
-    to_column=FeaturePlanet.__table__.c.planet_id,
-    to_list=True,
-)
-
-to_features_query = sa.LinkQuery(
-    session,
-    edge='feature',
-    from_column=FeaturePlanet.__table__.c.planet_id,
-    to_column=FeaturePlanet.__table__.c.feature_id,
-    to_list=True,
-)
+phrases_query = sa.FieldsQuery(db.session, Phrase.__table__)
 
 _GRAPH = Graph([
-    Edge('planet', [
-        sa.Field('id', planets_query),
-        sa.Field('name', planets_query),
-        sa.Field('climate', planets_query),
-        sa.Field('terrain', planets_query),
-        sa.Link('features', to_features_query, requires='id'),
-    ]),
-
-    Edge('feature', [
-        sa.Field('id', features_query),
-        sa.Field('title', features_query),
-        sa.Field('director', features_query),
-        sa.Field('producer', features_query),
-        sa.Field('episode_num', features_query),
-        sa.Field('release_date', features_query),
-        sa.Link('planets', to_planets_query, requires='id'),
+    Edge('phrase', [
+        sa.Field('id', phrases_query),
+        sa.Field('source_language', phrases_query),
+        sa.Field('source_text', phrases_query),
+        sa.Field('translated_language', phrases_query),
+        sa.Field('translated_text', phrases_query),
+        sa.Field('date_created', phrases_query),
+        sa.Field('date_available', phrases_query),
+        sa.Field('progress_status', phrases_query),
     ]),
 ])
 
 
-def enum_map(attrs, mapping):
-    value = namedtuple('Value', attrs)
-    return {e: value(*v) for e, v in mapping.items()}
-
-
-CLIMATE = enum_map(['ident', 'title'], {
-    _Climate.arid: ('arid', _('Arid')),
-    _Climate.temperate: ('temperate', _('Temperate')),
-    _Climate.tropical: ('tropical', _('Tropical')),
-})
+@define(None)
+def str_datetime(datetime):
+    return str(datetime)
 
 
 @define(None)
-def climate(value):
-    if value is not None:
-        return ', '.join(sorted(CLIMATE[v].title for v in value))
-    return None
+def get_progress_percent(value):
+    return Phrase.ProgressStatus(value).get_progress_percent()
 
 
-TERRAIN = enum_map(['ident', 'title'], {
-    _Terrain.desert: ('desert', _('Desert')),
-    _Terrain.grasslands: ('grasslands', _('Grasslands')),
-    _Terrain.mountains: ('mountains', _('Mountains')),
-})
-
-
-@define(None)
-def terrain(value):
-    if value is not None:
-        return ', '.join(sorted(TERRAIN[v].title for v in value))
-    return None
-
-
-def all_planets():
-    rows = session.execute(select([Planet.__table__.c.id])).fetchall()
+def all_phrases():
+    # with app.app_context():
+    rows = db.session.execute(select([Phrase.__table__.c.id])).fetchall()
+    # rows = db.session.query(Phrase.id).all()
     return [r.id for r in rows]
 
 
-def all_features():
-    rows = session.execute(select([Feature.__table__.c.id])).fetchall()
-    return [r.id for r in rows]
-
-
-sg_feature = SubGraph(_GRAPH, 'feature')
-sg_planet = SubGraph(_GRAPH, 'planet')
-
+sg_phrase = SubGraph(_GRAPH, 'phrase')
 
 GRAPH = Graph([
-    Edge('feature', [
-        Expr('id', sg_feature, IntegerType, S.this.id),
-        Expr('title', sg_feature, StringType, S.this.title),
-        Expr('director', sg_feature, StringType, S.this.director),
-        Expr('producer', sg_feature, StringType, S.this.producer),
-        Expr('episode-num', sg_feature, IntegerType, S.this.episode_num),
-        sa.Link('planets', to_planets_query, requires='id'),
+    Edge('phrase', [
+        Expr('phraseId', sg_phrase, IntegerType, S.this.id),
+        Expr('sourceLanguage', sg_phrase, StringType, S.this.source_language),
+        Expr('sourceText', sg_phrase, StringType, S.this.source_text),
+        Expr('translatedLanguage', sg_phrase, StringType,
+             S.this.translated_language),
+        Expr('translatedText', sg_phrase, StringType, S.this.translated_text),
+        Expr('dateCreated', sg_phrase, StringType, str_datetime(S.this.date_created)),
+        Expr('dateAvailable', sg_phrase, StringType, str_datetime(S.this.date_available)),
+        Expr('progressStatus', sg_phrase, IntegerType, get_progress_percent(S.this.progress_status)),
     ]),
-    Edge('planet', [
-        Expr('id', sg_planet, IntegerType, S.this.id),
-        Expr('name', sg_planet, StringType, S.this.name),
-        Expr('climate', sg_planet, OptionType(StringType),
-             climate(S.this.climate)),
-        Expr('terrain', sg_planet, OptionType(StringType),
-             terrain(S.this.terrain)),
-        sa.Link('features', to_features_query, requires='id'),
-    ]),
-    Link('planets', all_planets, edge='planet', requires=None, to_list=True),
-    Link('features', all_features, edge='feature', requires=None, to_list=True)
+    Link('phrases', all_phrases, edge='phrase', requires=None, to_list=True),
 ])
