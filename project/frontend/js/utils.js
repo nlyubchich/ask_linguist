@@ -24,7 +24,7 @@ export function fetchPostJson(url, payload) {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      'X-CSRFToken:': CSRF_TOKEN,
+      'X-CSRFToken': CSRF_TOKEN,
     },
     body: JSON.stringify(payload),
   })

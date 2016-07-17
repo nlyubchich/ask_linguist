@@ -10,27 +10,27 @@ class PhraseItem extends React.Component {
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate();
   }
 
-  editedSourceLanguage(event) {
+  editedSourceLanguage(e) {
     this.props.eventStream.send(
-      'editedSourceLanguage', { text: event.target.value }
+      'editedSourceLanguage', { text: e.target.value }
     );
   }
 
-  editedSourceText(event) {
+  editedSourceText(e) {
     this.props.eventStream.send(
-      'editedSourceText', { text: event.target.value }
+      'editedSourceText', { text: e.target.value }
     );
   }
 
-  editedTranslatedLanguage(event) {
+  editedTranslatedLanguage(e) {
     this.props.eventStream.send(
-      'editedTranslatedLanguage', { text: event.target.value }
+      'editedTranslatedLanguage', { text: e.target.value }
     );
   }
 
-  editedTranslatedText(event) {
+  editedTranslatedText(e) {
     this.props.eventStream.send(
-      'editedTranslatedText', { text: event.target.value }
+      'editedTranslatedText', { text: e.target.value }
     );
   }
 
@@ -67,18 +67,18 @@ class PhraseItem extends React.Component {
           <input
             className="b-vocabulary-table__input" size="10"
             placeholder="language"
-            onChange={() => this.editedSourceLanguage()}
+            onChange={(e) => this.editedSourceLanguage(e)}
             value={sourceLanguage}
-            onKeyPress={() => this.inputKeyPressHandler()}
+            onKeyPress={(e) => this.inputKeyPressHandler(e)}
           />
         </td>
         <td>
           <input
             className="b-vocabulary-table__input" size="20"
             placeholder="phrase"
-            onChange={() => this.editedSourceText()}
+            onChange={(e) => this.editedSourceText(e)}
             value={sourceText}
-            onKeyPress={() => this.inputKeyPressHandler()}
+            onKeyPress={(e) => this.inputKeyPressHandler(e)}
           />
         </td>
         <td>
@@ -86,9 +86,9 @@ class PhraseItem extends React.Component {
             className="b-vocabulary-table__input"
             size="10"
             placeholder="language"
-            onChange={() => this.editedTranslatedLanguage()}
+            onChange={(e) => this.editedTranslatedLanguage(e)}
             value={translatedLanguage}
-            onKeyPress={() => this.inputKeyPressHandler()}
+            onKeyPress={(e) => this.inputKeyPressHandler(e)}
           />
         </td>
         <td>
@@ -96,9 +96,9 @@ class PhraseItem extends React.Component {
             className="b-vocabulary-table__input"
             size="20"
             placeholder="translation"
-            onChange={() => this.editedTranslatedText()}
+            onChange={(e) => this.editedTranslatedText(e)}
             value={translatedText}
-            onKeyPress={() => this.inputKeyPressHandler()}
+            onKeyPress={(e) => this.inputKeyPressHandler(e)}
           />
         </td>
         <td>
@@ -196,7 +196,7 @@ class PhraseList extends React.Component {
           className="b-add-btn"
           type="button"
           value="Add a new phrase"
-          disabled={() => this.props.toggledAddNewPhrase}
+          disabled={this.props.toggledAddNewPhrase}
           onClick={() => this.toggledAddNewPhrase()}
         />
         <input
@@ -238,7 +238,7 @@ PhraseList.propTypes = {
   eventStream: React.PropTypes.object.isRequired,
   phrases: React.PropTypes.array.isRequired,
   activePhrase: React.PropTypes.number,
-  toggledAddNewPhrase: React.PropTypes.function,
+  toggledAddNewPhrase: React.PropTypes.bool,
 };
 
 export const TPhraseList = new TanokWrapper(PhraseList);
