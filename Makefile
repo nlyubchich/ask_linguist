@@ -1,10 +1,11 @@
 run:
 	vagga run
 test:
+	xhost +
 	vagga -eDISPLAY -eDBUS_SESSION_BUS_ADDRESS test
 
 webpack:
-	webpack --progress --watch
+	node_modules/.bin/webpack --progress --watch
 
 lint:
 	flake8 project

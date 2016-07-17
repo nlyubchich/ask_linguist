@@ -1,17 +1,17 @@
 import * as l from 'lodash';
 
 class Model {
-    constructor(initialData) {
-        return {
-            phrases: initialData.phrases || [],
-            activePhrase: null,
-            toggledAddNewPhrase: false
-        };
-    }
+  constructor(initialData) {
+    return {
+      phrases: initialData.phrases || [],
+      activePhrase: null,
+      toggledAddNewPhrase: false,
+    };
+  }
 }
 
 export function init(payload) {
-    return new Model({
-        phrases: payload.phrases.map((phrase) => l.assign(phrase, {isEdit: false}))
-    });
+  return new Model({
+    phrases: payload.phrases.map((phrase) => l.assign(phrase, { isEdit: false })),
+  });
 }
