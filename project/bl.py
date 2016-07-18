@@ -46,7 +46,10 @@ def questionnaire_done(user_id, source_language, translated_language):
     return phrases
 
 
-def mark_available_phrases(user_id, source_language, translated_language, limit=PHRASES_FOR_QUESTIONNAIRE_LIMIT):
+def mark_available_phrases(
+        user_id, source_language, translated_language,
+        limit=PHRASES_FOR_QUESTIONNAIRE_LIMIT
+):
     phrases = db.session.query(
         Phrase.id
     ).filter(
