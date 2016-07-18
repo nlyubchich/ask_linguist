@@ -1,6 +1,6 @@
 import React from 'react';
 import keycode from 'keycode';
-import TanokWrapper from 'tanok/component.js';
+import TanokWrapper from 'tanok/src/component.js';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import classNames from 'classnames';
 import * as l from 'lodash';

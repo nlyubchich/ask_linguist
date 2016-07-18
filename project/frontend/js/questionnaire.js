@@ -1,13 +1,6 @@
-import tanok from 'tanok/tanok.js';
+import tanok from 'tanok/src/tanok.js';
 import { init, update, View } from './Questionnaire';
-import { fetchGraphData, fetchGetJson } from './utils';
-
-
-// fetchGetJson('/questionnaire/English-French/')
-//     .then((result) => {
-//       const div = document.getElementById('test');
-//       tanok(init(result), update, View, { container: div });
-//     });
+import { fetchGraphData } from './utils';
 
 
 fetchGraphData(`

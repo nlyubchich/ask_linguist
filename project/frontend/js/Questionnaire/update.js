@@ -1,5 +1,5 @@
 import * as l from 'lodash';
-import { actionIs } from 'tanok/helpers.js';
+import { actionIs } from 'tanok/src/helpers.js';
 import * as Rx from 'rx';
 import { fetchGetJson } from '../utils';
 
