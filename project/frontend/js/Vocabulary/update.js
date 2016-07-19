@@ -1,5 +1,5 @@
 import l from 'lodash';
-import { TanokDispatcher, on } from 'tanok/src/tanok.js';
+import { TanokDispatcher, on } from 'tanok';
 import * as Rx from 'rx';
 import { fetchPostJson } from '../utils';
 
@@ -12,8 +12,8 @@ function ajaxRemovePhrase(phraseId) {
   });
 }
 
-function ajaxCreatePhrase(phrase, eventStream) {
-  return Rx.Observable.just(1).do(() => {
+function ajaxCreatePhraseEffect(phrase) {
+  return (eventStream) => Rx.Observable.just(1).do(() => {
     fetchPostJson('/dashboard/create/', {
       source_language: phrase.sourceLanguage,
       source_text: phrase.sourceText,
@@ -25,8 +25,8 @@ function ajaxCreatePhrase(phrase, eventStream) {
   });
 }
 
-function ajaxEditPhrase(phrase) {
-  return Rx.Observable.just(1).do(() => {
+function ajaxEditPhraseEffect(phrase) {
+  return () => Rx.Observable.just(1).do(() => {
     fetchPostJson('/dashboard/edit/', {
       phrase_id: phrase.phraseId,
       source_language: phrase.sourceLanguage,
@@ -61,21 +61,21 @@ export class PhraseListDispatcher extends TanokDispatcher {
   }
 
   @on('savePhrase')
-  savePhrase(params, state) {
+  savePhrase(_, state) {
     let effect;
     const phrase = state.phrases[state.activePhrase];
     state.activePhrase = null;
     if (phrase.phraseId === 0) {
-      effect = ajaxCreatePhrase.bind(null, phrase);
+      effect = ajaxCreatePhraseEffect(phrase);
       state.toggledAddNewPhrase = false;
     } else {
-      effect = ajaxEditPhrase.bind(null, phrase);
+      effect = ajaxEditPhraseEffect(phrase);
     }
     return [state, effect];
   }
 
   @on('toggledAddNewPhrase')
-  toggledAddNewPhrase(params, state) {
+  toggledAddNewPhrase(_, state) {
     const lastPhrase = state.phrases[0];
     state.phrases.unshift({
       phraseId: 0,

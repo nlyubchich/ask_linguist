@@ -3,48 +3,47 @@ import React from 'react';
 import tanokComponent from 'tanok/src/component.js';
 import shallowCompare from 'react-addons-shallow-compare';
 
+
 @tanokComponent
 export default class PhraseItem extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState);
   }
   editedSourceLanguage(e) {
-    this.props.eventStream.send(
+    this.send(
       'editedSourceLanguage', { text: e.target.value }
     );
   }
 
   editedSourceText(e) {
-    this.props.eventStream.send(
+    this.send(
       'editedSourceText', { text: e.target.value }
     );
   }
 
   editedTranslatedLanguage(e) {
-    this.props.eventStream.send(
+    this.send(
       'editedTranslatedLanguage', { text: e.target.value }
     );
   }
 
   editedTranslatedText(e) {
-    this.props.eventStream.send(
+    this.send(
       'editedTranslatedText', { text: e.target.value }
     );
   }
 
   editPhrase() {
-    const { eventStream, phraseId } = this.props;
-    eventStream.send('editPhrase', { phraseId });
+    const { phraseId } = this.props;
+    this.send('editPhrase', { phraseId });
   }
 
   savePhrase() {
-    const { eventStream } = this.props;
-    eventStream.send('savePhrase');
+    this.send('savePhrase');
   }
 
   removePhrase() {
-    const { eventStream } = this.props;
-    eventStream.send('removePhrase');
+    this.send('removePhrase');
   }
 
   inputKeyPressHandler(e) {

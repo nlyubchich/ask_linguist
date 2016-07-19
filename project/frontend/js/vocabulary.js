@@ -1,6 +1,5 @@
-import tanok from 'tanok/src/tanok.js';
-import { init, PhraseListDispatcher } from './PhraseList';
-import View from './PhraseList/views/list.jsx';
+import { tanok } from 'tanok';
+import { init, PhraseListDispatcher, PhraseList } from './Vocabulary';
 import { fetchGraphData } from './utils';
 
 
@@ -19,5 +18,5 @@ fetchGraphData(`
     }]
 `).then((result) => {
   const div = document.getElementById('list');
-  tanok(init(result), (new PhraseListDispatcher).collect(), View, { container: div });
+  tanok(init(result), (new PhraseListDispatcher).collect(), PhraseList, { container: div });
 });

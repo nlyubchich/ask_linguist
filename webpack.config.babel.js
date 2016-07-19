@@ -12,7 +12,7 @@ module.exports = {
   entry: {
     welcomeImg: './img/welcome.png',
     questionnaire: './js/questionnaire.js',
-    list: './js/list.js',
+    vocabulary: './js/vocabulary.js',
     common: './styles/common.styl',
   },
   output: {

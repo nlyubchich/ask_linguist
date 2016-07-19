@@ -1,4 +1,4 @@
-import tanok from 'tanok/src/tanok.js';
+import { tanok } from 'tanok';
 import { init, update, View } from './Questionnaire';
 import { fetchGraphData } from './utils';
 

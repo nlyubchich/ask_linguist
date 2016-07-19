@@ -4,7 +4,7 @@ import PhraseItem from './item.jsx';
 
 
 @tanokComponent
-export default class PhraseList extends React.Component {
+export class PhraseList extends React.Component {
   toggledAddNewPhrase() {
     this.send('toggledAddNewPhrase');
   }
@@ -31,8 +31,7 @@ export default class PhraseList extends React.Component {
             <tr className="b-vocabulary-table__head">
               <th className="b-vocabulary-column__lang">Source language</th>
               <th className="b-vocabulary-column__word">Phrase</th>
-              <th className="b-vocabulary-column__lang">Language translated to
-              </th>
+              <th className="b-vocabulary-column__lang">Language translated to</th>
               <th className="b-vocabulary-column__word">Translation</th>
               <th className="b-vocabulary-column__status">Status</th>
               <th className="b-vocabulary-column__actions">Actions</th>
