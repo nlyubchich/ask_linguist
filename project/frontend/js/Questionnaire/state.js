@@ -3,15 +3,7 @@ import { AskerDispatcher } from './askerComponent';
 import { ChooserDispatcher } from './chooserComponent';
 
 
-export function init() {
-  return {
-    asker: askerInit(),
-    chooser: chooserInit(),
-  };
-}
-
-
-export default class QuestionnaireDispatcher extends TanokDispatcher {
+export class QuestionnaireDispatcher extends TanokDispatcher {
   @on('init')
   init(_, state) {
     return [state,

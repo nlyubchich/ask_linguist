@@ -1,3 +1,3 @@
 export { init } from './model';
-export { TQuestionnaire as View } from './view.jsx';
-export { update } from './state';
+export { QuestionnaireDispatcher } from './state';
+export { Questionnaire } from './view.jsx';

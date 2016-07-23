@@ -5,16 +5,7 @@ import autobind from 'autobind-decorator';
 
 
 @tanokComponent
-export default class Chooser extends React.Component {
-  static propTypes = {
-    eventStream: React.PropTypes.object.isRequired,
-    phrases: React.PropTypes.array.isRequired,
-    currentPhrase: React.PropTypes.object.isRequired,
-    status: React.PropTypes.string.isRequired,
-    possibleAnswers: React.PropTypes.array.isRequired,
-    isFail: React.PropTypes.bool.isRequired,
-  };
-
+export class Chooser extends React.Component {
   @autobind
   checkClick(index) {
     this.send('checkChooserPhrase', { index });
@@ -24,9 +15,9 @@ export default class Chooser extends React.Component {
     return (
       <div>
         <div className="b-questionnaire-container">
-          <p
-            className="b-current-phrase"
-          > {this.props.currentPhrase.sourceText}</p>
+          <p className="b-current-phrase">
+            {this.props.currentPhrase.sourceText}
+          </p>
           <ul className="b-chooser__answers-list">
             {this.props.possibleAnswers.map((answer, index) => {
               const isCorrectAnswer = this.props.currentPhrase.translatedText === answer;
@@ -53,3 +44,12 @@ export default class Chooser extends React.Component {
     );
   }
 }
+
+Chooser.propTypes = {
+  eventStream: React.PropTypes.object.isRequired,
+  phrases: React.PropTypes.array.isRequired,
+  currentPhrase: React.PropTypes.object.isRequired,
+  status: React.PropTypes.string.isRequired,
+  possibleAnswers: React.PropTypes.array.isRequired,
+  isFail: React.PropTypes.bool.isRequired,
+};

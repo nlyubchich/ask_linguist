@@ -1,8 +1,7 @@
 import * as l from 'lodash';
 
-class Model {
-  constructor(initialData) {
-    const phrases = initialData['phrases-for-test'];
+export default class ChooserModel {
+  constructor(phrases) {
     return {
       phrases,
       allPhrases: phrases.slice(),
@@ -14,8 +13,4 @@ class Model {
       possibleAnswers: [],
     };
   }
-}
-
-export function init(payload) {
-  return new Model(payload);
 }

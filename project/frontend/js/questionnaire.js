@@ -1,5 +1,5 @@
 import { tanok } from 'tanok';
-import { init, update, View } from './Questionnaire';
+import { init, update, Questionnaire } from './Questionnaire';
 import { fetchGraphData } from './utils';
 
 
@@ -17,5 +17,5 @@ fetchGraphData(`
 `)
     .then((result) => {
       const div = document.getElementById('test');
-      tanok(init(result), update, View, { container: div });
+      tanok(init(result), update, Questionnaire, { container: div });
     });
