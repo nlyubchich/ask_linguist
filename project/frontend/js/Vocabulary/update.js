@@ -1,32 +1,34 @@
-import l from 'lodash';
-import { TanokDispatcher, on } from 'tanok';
+import * as l from 'lodash';
 import * as Rx from 'rx';
+import { TanokDispatcher, on } from 'tanok';
 import { fetchPostJson } from '../utils';
 
 
 function ajaxRemovePhrase(phraseId) {
-  return Rx.Observable.just(1).do(() => {
+  return () => {
     fetchPostJson('/dashboard/delete/', {
       phrase_id: phraseId,
     });
-  });
+    return Rx.Observable.empty();
+  };
 }
 
 function ajaxCreatePhraseEffect(phrase) {
-  return (eventStream) => Rx.Observable.just(1).do(() => {
+  return (stream) => {
     fetchPostJson('/dashboard/create/', {
       source_language: phrase.sourceLanguage,
       source_text: phrase.sourceText,
       translated_language: phrase.translatedLanguage,
       translated_text: phrase.translatedText,
     }).then((response) => {
-      eventStream.send('savedNewPhrase', { phraseId: response.phrase_id });
+      stream.send('savedNewPhrase', { phraseId: response.phrase_id });
     });
-  });
+    return Rx.Observable.empty();
+  };
 }
 
 function ajaxEditPhraseEffect(phrase) {
-  return () => Rx.Observable.just(1).do(() => {
+  return () => {
     fetchPostJson('/dashboard/edit/', {
       phrase_id: phrase.phraseId,
       source_language: phrase.sourceLanguage,
@@ -34,7 +36,8 @@ function ajaxEditPhraseEffect(phrase) {
       translated_language: phrase.translatedLanguage,
       translated_text: phrase.translatedText,
     });
-  });
+    return Rx.Observable.empty();
+  };
 }
 
 
@@ -49,7 +52,7 @@ export class PhraseListDispatcher extends TanokDispatcher {
     if (phraseId === 0) {
       state.toggledAddNewPhrase = false;
     } else {
-      effect = ajaxRemovePhrase.bind(null, phraseId);
+      effect = ajaxRemovePhrase(phraseId);
     }
     return [state, effect];
   }
