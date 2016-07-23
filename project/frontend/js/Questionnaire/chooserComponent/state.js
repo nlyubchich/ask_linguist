@@ -4,30 +4,30 @@ import { TanokDispatcher, on } from 'tanok';
 
 
 function checkChooserIsCorrectPhrase(i) {
-  return (state, eventStream) => Rx.Observable.just(1).do(() => {
+  return (state, stream) => Rx.Observable.just(1).do(() => {
     if (state.isFail) {
-      eventStream.send('toggleChooserFail');
+      stream.send('toggleChooserFail');
     } else if (state.possibleAnswers[i] === state.currentPhrase.translatedText) {
-      eventStream.send('checkChooserIsOk');
+      stream.send('checkChooserIsOk');
     } else {
-      eventStream.send('checkChooserIsNotOk');
+      stream.send('checkChooserIsNotOk');
     }
   });
 }
 
 
 function checkChooserIsFinished(phrases) {
-  return (eventStream) => Rx.Observable.just(1).do(() => {
+  return (stream) => Rx.Observable.just(1).do(() => {
     if (l.isEmpty(phrases)) {
-      eventStream.send('chooserFinished');
+      stream.send('chooserFinished');
     } else {
-      eventStream.send('chooserNextPhrase');
+      stream.send('chooserNextPhrase');
     }
   });
 }
 
-function chooserToggleNext(eventStream) {
-  return Rx.Observable.just(1).do(() => eventStream.send('chooserNextPhrase'));
+function chooserToggleNext(stream) {
+  return Rx.Observable.just(1).do(() => stream.send('chooserNextPhrase'));
 }
 
 

@@ -1,12 +1,23 @@
 import React from 'react';
 import classNames from 'classnames';
 import { tanokComponent } from 'tanok';
+import autobind from 'autobind-decorator';
 
 
 @tanokComponent
 export default class Chooser extends React.Component {
+  static propTypes = {
+    eventStream: React.PropTypes.object.isRequired,
+    phrases: React.PropTypes.array.isRequired,
+    currentPhrase: React.PropTypes.object.isRequired,
+    status: React.PropTypes.string.isRequired,
+    possibleAnswers: React.PropTypes.array.isRequired,
+    isFail: React.PropTypes.bool.isRequired,
+  };
+
+  @autobind
   checkClick(index) {
-    this.props.eventStream.send('checkChooserPhrase', { index });
+    this.send('checkChooserPhrase', { index });
   }
 
   render() {
@@ -26,7 +37,7 @@ export default class Chooser extends React.Component {
                     'b-chooser__correct-answer': isCorrectAnswer && this.props.isFail,
                   })}
                   key={index}
-                  onClick={() => this.checkClick(index)}
+                  onClick={this.checkClick}
                 >
                   {answer}
                 </li>
@@ -42,12 +53,3 @@ export default class Chooser extends React.Component {
     );
   }
 }
-
-Chooser.propTypes = {
-  eventStream: React.PropTypes.object.isRequired,
-  phrases: React.PropTypes.array.isRequired,
-  currentPhrase: React.PropTypes.object.isRequired,
-  status: React.PropTypes.string.isRequired,
-  possibleAnswers: React.PropTypes.array.isRequired,
-  isFail: React.PropTypes.bool.isRequired,
-};

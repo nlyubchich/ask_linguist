@@ -1,10 +1,12 @@
 import React from 'react';
-import tanokComponent from 'tanok/src/component.js';
+import { tanokComponent } from 'tanok';
 import PhraseItem from './item.jsx';
+import autobind from 'autobind-decorator';
 
 
 @tanokComponent
 export class PhraseList extends React.Component {
+  @autobind
   toggledAddNewPhrase() {
     this.send('toggledAddNewPhrase');
   }
@@ -17,7 +19,7 @@ export class PhraseList extends React.Component {
           type="button"
           value="Add a new phrase"
           disabled={this.props.toggledAddNewPhrase}
-          onClick={() => this.toggledAddNewPhrase()}
+          onClick={this.toggledAddNewPhrase}
         />
         <input
           className="b-search-field"

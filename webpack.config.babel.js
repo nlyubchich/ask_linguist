@@ -13,7 +13,7 @@ module.exports = {
     welcomeImg: './img/welcome.png',
     questionnaire: './js/questionnaire.js',
     vocabulary: './js/vocabulary.js',
-    common: './styles/common.styl',
+    styles: './styles/common.styl',
   },
   output: {
     path: path.join(__dirname, 'project/static'),
@@ -34,10 +34,10 @@ module.exports = {
       {
         test: /\.jsx?$/,
         loader: 'babel',
+        exclude: /node_modules/,
         query: {
           presets: ['react', 'es2015'],
           plugins: ['transform-object-rest-spread', 'transform-decorators-legacy'],
-          compact: isProduction,
         },
       }, {
         test: /\.styl$/,

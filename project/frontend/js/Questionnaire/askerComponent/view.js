@@ -2,6 +2,7 @@ import React from 'react';
 import keycode from 'keycode';
 import { tanokComponent } from 'tanok';
 import shallowCompare from 'react-addons-shallow-compare';
+import autobind from 'autobind-decorator';
 
 const ENTER_KEY = 'enter';
 
@@ -12,18 +13,21 @@ export default class Asker extends React.Component {
     return shallowCompare(this, nextProps, nextState);
   }
 
+  @autobind
   checkPhrase() {
-    this.props.eventStream.send('checkPhrase');
+    this.send('checkPhrase');
   }
 
+  @autobind
   inputKeyPressHandler(event) {
     if (keycode(event.which) === ENTER_KEY) {
       this.checkPhrase();
     }
   }
 
+  @autobind
   editedGuessInput(e) {
-    this.props.eventStream.send(
+    this.send(
       'updateEnteredText', { text: e.target.value }
     );
   }
@@ -38,8 +42,8 @@ export default class Asker extends React.Component {
             className="b-asker__input"
             type="text"
             value={this.props.enteredText}
-            onChange={(e) => this.editedGuessInput(e)}
-            onKeyPress={(e) => this.inputKeyPressHandler(e)}
+            onChange={this.editedGuessInput}
+            onKeyPress={this.inputKeyPressHandler}
           />
         </div>
         <div>

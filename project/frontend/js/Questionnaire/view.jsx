@@ -15,20 +15,22 @@ export default class Questionnaire extends React.Component {
 
     return this.props.isChooser ? (
       <Chooser
-        eventStream={this.props.eventStream}
-        phrases={this.props.phrases}
-        currentPhrase={this.props.currentPhrase}
-        status={this.props.status}
-        possibleAnswers={this.props.possibleAnswers}
-        isFail={this.props.isFail}
+        { ...this.props.chooser }
+        tanokStream={this.sub('chooser')}
+        {/*phrases={this.props.phrases}*/}
+        {/*currentPhrase={this.props.currentPhrase}*/}
+        {/*status={this.props.status}*/}
+        {/*possibleAnswers={this.props.possibleAnswers}*/}
+        {/*isFail={this.props.isFail}*/}
       />
     ) : (
       <Asker
-        eventStream={this.props.eventStream}
-        phrases={this.props.phrases}
-        currentPhrase={this.props.currentPhrase}
-        status={this.props.status}
-        enteredText={this.props.enteredText}
+        { ...this.props.asker }
+        tanokStream={this.sub('asker')}
+        {/*phrases={this.props.phrases}*/}
+        {/*currentPhrase={this.props.currentPhrase}*/}
+        {/*status={this.props.status}*/}
+        {/*enteredText={this.props.enteredText}*/}
       />
     );
   }

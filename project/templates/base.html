@@ -41,7 +41,7 @@
         window.addEventListener('error', logError, true);
         window.addEventListener('unhandledrejection', logError, true)
     </script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='common.%s.css' % config.STATIC_ASSETS_HASH) }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.%s.css' % config.STATIC_ASSETS_HASH) }}">
 
     {% block scripts %}{% endblock %}
 </head>

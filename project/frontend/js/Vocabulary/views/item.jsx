@@ -1,51 +1,60 @@
 import keycode from 'keycode';
 import React from 'react';
-import tanokComponent from 'tanok/src/component.js';
+import { tanokComponent } from 'tanok';
 import shallowCompare from 'react-addons-shallow-compare';
-
+import autobind from 'autobind-decorator';
 
 @tanokComponent
 export default class PhraseItem extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState);
   }
+
+  @autobind
   editedSourceLanguage(e) {
     this.send(
       'editedSourceLanguage', { text: e.target.value }
     );
   }
 
+  @autobind
   editedSourceText(e) {
     this.send(
       'editedSourceText', { text: e.target.value }
     );
   }
 
+  @autobind
   editedTranslatedLanguage(e) {
     this.send(
       'editedTranslatedLanguage', { text: e.target.value }
     );
   }
 
+  @autobind
   editedTranslatedText(e) {
     this.send(
       'editedTranslatedText', { text: e.target.value }
     );
   }
 
+  @autobind
   editPhrase() {
     const { phraseId } = this.props;
     this.send('editPhrase', { phraseId });
   }
 
+  @autobind
   savePhrase() {
     this.send('savePhrase');
   }
 
+  @autobind
   removePhrase() {
     this.send('removePhrase');
   }
 
+  @autobind
   inputKeyPressHandler(e) {
     if (keycode(e.which) === 'enter') {
       this.savePhrase();
@@ -64,18 +73,18 @@ export default class PhraseItem extends React.Component {
           <input
             className="b-vocabulary-table__input" size="10"
             placeholder="language"
-            onChange={(e) => this.editedSourceLanguage(e)}
+            onChange={this.editedSourceLanguage}
             value={sourceLanguage}
-            onKeyPress={(e) => this.inputKeyPressHandler(e)}
+            onKeyPress={this.inputKeyPressHandler}
           />
         </td>
         <td>
           <input
             className="b-vocabulary-table__input" size="20"
             placeholder="phrase"
-            onChange={(e) => this.editedSourceText(e)}
+            onChange={this.editedSourceText}
             value={sourceText}
-            onKeyPress={(e) => this.inputKeyPressHandler(e)}
+            onKeyPress={this.inputKeyPressHandler}
           />
         </td>
         <td>
@@ -83,9 +92,9 @@ export default class PhraseItem extends React.Component {
             className="b-vocabulary-table__input"
             size="10"
             placeholder="language"
-            onChange={(e) => this.editedTranslatedLanguage(e)}
+            onChange={this.editedTranslatedLanguage}
             value={translatedLanguage}
-            onKeyPress={(e) => this.inputKeyPressHandler(e)}
+            onKeyPress={this.inputKeyPressHandler}
           />
         </td>
         <td>
@@ -93,9 +102,9 @@ export default class PhraseItem extends React.Component {
             className="b-vocabulary-table__input"
             size="20"
             placeholder="translation"
-            onChange={(e) => this.editedTranslatedText(e)}
+            onChange={this.editedTranslatedText}
             value={translatedText}
-            onKeyPress={(e) => this.inputKeyPressHandler(e)}
+            onKeyPress={this.inputKeyPressHandler}
           />
         </td>
         <td>
@@ -112,13 +121,13 @@ export default class PhraseItem extends React.Component {
             className="b-vocabulary-column__actions-btn"
             type="button"
             value="Save"
-            onClick={() => this.savePhrase()}
+            onClick={this.savePhrase}
           />
           <input
             className="b-vocabulary-column__actions-btn"
             type="button"
             value="Delete"
-            onClick={() => this.removePhrase()}
+            onClick={this.removePhrase}
           />
           <input
             className="b-vocabulary-column__actions-btn"
@@ -158,7 +167,7 @@ export default class PhraseItem extends React.Component {
             className="b-vocabulary-column__actions-btn"
             type="button"
             value="Edit"
-            onClick={() => this.editPhrase()}
+            onClick={this.editPhrase}
           />
         </td>
       </tr>
