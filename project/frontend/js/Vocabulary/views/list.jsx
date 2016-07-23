@@ -1,6 +1,6 @@
 import React from 'react';
 import { tanokComponent } from 'tanok';
-import PhraseItem from './item.jsx';
+import PhraseItem from './item';
 import autobind from 'autobind-decorator';
 
 

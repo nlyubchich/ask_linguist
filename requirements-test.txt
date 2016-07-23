@@ -26,7 +26,7 @@ redis==2.10.5
 rsa==3.3
 simplejson==3.8.2
 six==1.10.0
-SQLAlchemy==1.0.11
+SQLAlchemy==1.1.0b2
 uritemplate==0.6
 Werkzeug==0.11.3
 wheel==0.26.0

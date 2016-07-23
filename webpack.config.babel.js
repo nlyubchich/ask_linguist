@@ -43,10 +43,7 @@ module.exports = {
         test: /\.styl$/,
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader!stylus-loader'),
       }, {
-        test: /\.(woff|woff2|eot|ttf)$/,
-        loaders: isProduction ? ['file?name=font/[hash:4].[ext]'] : ['file?name=font/[name].[ext]'],
-      }, {
-        test: /.*\.(gif|png|jpg|jpeg|svg)$/,
+        test: /\.(gif|png|jpg|jpeg|svg)$/,
         loaders: Array.prototype.concat(
           ['file?name=img/[name].[ext]'],
           isProduction ? ['image-webpack?optimizationLevel=7&interlaced=false'] : []
@@ -55,13 +52,14 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['', '.js', '.styl', '.css'],
-    modulesDirectories: ['node_modules', 'scripts'],
+    extensions: ['', '.js', '.jsx', '.styl'],
+    modulesDirectories: ['node_modules'],
   },
   plugins: Array.prototype.concat(isProduction ? [
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: false,
-    }), new StatsPlugin('stats.json', {
+    }),
+    new StatsPlugin('stats.json', {
       modules: false,
       chunks: false,
       assets: false,
