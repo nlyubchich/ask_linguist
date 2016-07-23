@@ -1,5 +1,5 @@
 import { tanok } from 'tanok';
-import { init, update, Questionnaire } from './Questionnaire';
+import { init, QuestionnaireDispatcher, Questionnaire } from './Questionnaire';
 import { fetchGraphData } from './utils';
 
 
@@ -14,8 +14,6 @@ fetchGraphData(`
       :translatedText
     ]
   }]
-`)
-    .then((result) => {
-      const div = document.getElementById('test');
-      tanok(init(result), update, Questionnaire, { container: div });
-    });
+`).then((result) => {
+  tanok(init(result), (new QuestionnaireDispatcher).collect(), Questionnaire);
+});
