@@ -28,7 +28,8 @@ class Config:
 
     STATIC_ASSETS_HASH = "trunk"
 
-    # Logger configuration
+    LOGGER_HANDLER_POLICY = "debug"
+
     LOG_CONFIG = {
         'version': 1,
         'disable_existing_loggers': False,
@@ -95,6 +96,7 @@ class VaggaConfig(DevelopmentConfig):
 
 class VaggaTestingConfig(VaggaConfig):
     DEBUG = False
+    TESTING = True
 
 
 class TestingConfig(Config):

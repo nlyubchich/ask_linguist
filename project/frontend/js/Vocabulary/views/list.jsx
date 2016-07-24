@@ -41,7 +41,7 @@ export class PhraseList extends React.Component {
             {
               this.props.phrases.map(
                 (phrase, i) => <PhraseItem
-                  eventStream={this.props.eventStream}
+                  tanokStream={this.props.tanokStream}
                   key={phrase.phraseId}
                   isActive={this.props.activePhrase === i}
                   {...phrase}
@@ -56,7 +56,7 @@ export class PhraseList extends React.Component {
 }
 
 PhraseList.propTypes = {
-  eventStream: React.PropTypes.object.isRequired,
+  tanokStream: React.PropTypes.object.isRequired,
   phrases: React.PropTypes.array.isRequired,
   activePhrase: React.PropTypes.number,
   toggledAddNewPhrase: React.PropTypes.bool,

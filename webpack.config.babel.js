@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const StatsPlugin = require('stats-webpack-plugin');
-// const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
+const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const isProduction = process.env.NODE_ENV === 'production';
 
 
@@ -10,6 +10,7 @@ module.exports = {
   context: path.join(__dirname, 'project/frontend'),
   cache: true,
   entry: {
+    vendor: ['rx', 'react', 'tanok'],
     welcomeImg: './img/welcome.png',
     questionnaire: './js/questionnaire.js',
     vocabulary: './js/vocabulary.js',
@@ -68,6 +69,9 @@ module.exports = {
     }),
   ] : [], [
     new ExtractTextPlugin(isProduction ? '[name].[hash].css' : '[name].trunk.css'),
-    // new CommonsChunkPlugin('commons.chunk.js')
+    new CommonsChunkPlugin({
+      name: 'vendor',
+      filename: 'commons.trunk.js',
+    })
   ]),
 };

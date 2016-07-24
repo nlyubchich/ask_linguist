@@ -5,34 +5,39 @@ import * as Rx from 'rx';
 
 
 function ajaxFinishedQuestionnaire() {
-  return Rx.Observable.just(1).do(() => fetchGetJson('/questionnaire/mark_done'));
+  return () => {
+    fetchGetJson('/questionnaire/mark_done');
+    return Rx.Observable.empty();
+  };
 }
 
 
 function checkIsCorrectPhrase(isFail, enteredText, currentSourceText) {
-  return (eventStream) => Rx.Observable.just(1).do(() => {
+  return (stream) => {
     if (isFail) {
-      eventStream.send('toggleFail');
+      stream.send('toggleFail');
     } else if (enteredText === currentSourceText) {
-      eventStream.send('checkIsOk');
+      stream.send('checkIsOk');
     } else {
-      eventStream.send('checkIsNotOk');
+      stream.send('checkIsNotOk');
     }
-  });
+    return Rx.Observable.empty();
+  };
 }
 
 function checkIsFinishedQuestionnaire(phrases) {
-  return (eventStream) => Rx.Observable.just(1).do(() => {
+  return (stream) => {
     if (l.isEmpty(phrases)) {
-      eventStream.send('questionnaireFinished');
+      stream.send('questionnaireFinished');
     } else {
-      eventStream.send('nextPhrase');
+      stream.send('nextPhrase');
     }
-  });
+    return Rx.Observable.empty();
+  };
 }
 
 
-export default class AskerDispatcher extends TanokDispatcher {
+export class AskerDispatcher extends TanokDispatcher {
   @on('checkPhrase')
   checkPhrase(_, state) {
     return [
@@ -58,7 +63,8 @@ export default class AskerDispatcher extends TanokDispatcher {
   @on('questionnaireFinished')
   questionnaireFinished(_, state) {
     state.status = 'Finished!';
-    return [state, ajaxFinishedQuestionnaire];
+    state.isDone = true;
+    return [state, ajaxFinishedQuestionnaire()];
   }
 
   @on('checkIsNotOk')

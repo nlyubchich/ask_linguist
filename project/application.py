@@ -24,6 +24,10 @@ def create_app():
 
     logging.config.dictConfig(app.config["LOG_CONFIG"])
 
+    if app.config.get('TESTING'):
+        werkzeug_logger = logging.getLogger('werkzeug')
+        werkzeug_logger.setLevel(logging.ERROR)
+
     csrf.init_app(app)
     toolbar.init_app(app)
     db.init_app(app)

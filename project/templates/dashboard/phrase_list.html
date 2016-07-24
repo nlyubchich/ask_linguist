@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <script src="{{ url_for('static', filename='commons.%s.js' % config.STATIC_ASSETS_HASH) }}"></script>
     <script src="{{ url_for('static', filename='vocabulary.%s.js' % config.STATIC_ASSETS_HASH) }}"></script>
 {% endblock %}

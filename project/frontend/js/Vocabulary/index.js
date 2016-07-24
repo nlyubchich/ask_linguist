@@ -1,3 +1,3 @@
 export { init } from './model';
-export { PhraseListDispatcher } from './update';
+export { PhraseListDispatcher } from './state';
 export { PhraseList } from './views/list';

@@ -8,7 +8,7 @@ const ENTER_KEY = 'enter';
 
 
 @tanokComponent
-export default class Asker extends React.Component {
+export class Asker extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState);
   }
@@ -64,7 +64,7 @@ export default class Asker extends React.Component {
 }
 
 Asker.propTypes = {
-  eventStream: React.PropTypes.object.isRequired,
+  tanokStream: React.PropTypes.object.isRequired,
   phrases: React.PropTypes.array.isRequired,
   currentPhrase: React.PropTypes.object.isRequired,
   status: React.PropTypes.string.isRequired,

@@ -3,35 +3,40 @@ import * as Rx from 'rx';
 import { TanokDispatcher, on } from 'tanok';
 
 
-function checkChooserIsCorrectPhrase(i) {
-  return (state, stream) => Rx.Observable.just(1).do(() => {
-    if (state.isFail) {
+function checkChooserIsCorrectPhrase(i, translatedText, possibleAnswers, isFail) {
+  return (stream) => {
+    if (isFail) {
       stream.send('toggleChooserFail');
-    } else if (state.possibleAnswers[i] === state.currentPhrase.translatedText) {
+    } else if (possibleAnswers[i] === translatedText) {
       stream.send('checkChooserIsOk');
     } else {
       stream.send('checkChooserIsNotOk');
     }
-  });
+    return Rx.Observable.empty();
+  };
 }
 
 
 function checkChooserIsFinished(phrases) {
-  return (stream) => Rx.Observable.just(1).do(() => {
+  return (stream) => {
     if (l.isEmpty(phrases)) {
       stream.send('chooserFinished');
     } else {
       stream.send('chooserNextPhrase');
     }
-  });
+    return Rx.Observable.empty();
+  };
 }
 
-function chooserToggleNext(stream) {
-  return Rx.Observable.just(1).do(() => stream.send('chooserNextPhrase'));
+function chooserToggleNext() {
+  return (stream) => {
+    stream.send('chooserNextPhrase');
+    return Rx.Observable.empty();
+  };
 }
 
 
-export default class ChooserDispatcher extends TanokDispatcher {
+export class ChooserDispatcher extends TanokDispatcher {
   @on('init')
   init(_, state) {
     const currentTranslated = state.currentPhrase.translatedText;
@@ -47,7 +52,8 @@ export default class ChooserDispatcher extends TanokDispatcher {
 
   @on('checkChooserPhrase')
   checkChooserPhrase({ index }, state) {
-    return [state, checkChooserIsCorrectPhrase(index)];
+    return [state, checkChooserIsCorrectPhrase(
+      index, state.currentPhrase.translatedText, state.possibleAnswers, state.isFail)];
   }
 
   @on('checkChooserIsOk')
@@ -66,12 +72,12 @@ export default class ChooserDispatcher extends TanokDispatcher {
   toggleChooserFail(_, state) {
     state.isFail = false;
     state.status = '';
-    return [state, chooserToggleNext];
+    return [state, chooserToggleNext()];
   }
 
   @on('chooserFinished')
   chooserFinished(_, state) {
-    state.isChooser = false;
+    state.isDone = true;
     state.phrases = state.allPhrases;
     state.currentPhrase = l.sample(state.phrases);
     return [state];

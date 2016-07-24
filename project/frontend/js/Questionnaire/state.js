@@ -12,17 +12,24 @@ export class QuestionnaireDispatcher extends TanokDispatcher {
     ];
   }
 
-  @on('asker')
-  asker(payload, state) {
-    const [newState, ...effects] = payload(state.asker);
-    state.asker = newState;
-    return [state, ...effects.map((e) => effectWrapper(e, 'asker'))];
-  }
-
   @on('chooser')
   chooser(payload, state) {
     const [newState, ...effects] = payload(state.chooser);
     state.chooser = newState;
+    if (state.chooser.isDone) {
+      state.isChooser = false;
+    }
     return [state, ...effects.map((e) => effectWrapper(e, 'chooser'))];
   }
+
+  @on('asker')
+  asker(payload, state) {
+    const [newState, ...effects] = payload(state.asker);
+    state.asker = newState;
+    if (state.asker.isDone) {
+      state.isDone = true;
+    }
+    return [state, ...effects.map((e) => effectWrapper(e, 'asker'))];
+  }
+
 }

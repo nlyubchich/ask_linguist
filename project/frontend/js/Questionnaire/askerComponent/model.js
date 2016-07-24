@@ -1,21 +1,17 @@
 import * as l from 'lodash';
 
-class Model {
-  constructor(initialData) {
-    const phrases = initialData['phrases-for-test'];
+export class AskerModel {
+  constructor(phrases) {
     return {
-      phrases,
+      phrases: phrases.slice(),
       allPhrases: phrases.slice(),
       currentPhrase: l.sample(phrases),
       status: '',
       isFail: false,
+      isDone: false,
       enteredText: '',
       isChooser: true,
       possibleAnswers: [],
     };
   }
-}
-
-export function init(payload) {
-  return new Model(payload);
 }

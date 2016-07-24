@@ -7,7 +7,7 @@ fetchGraphData(`
   [{
     (
       :phrases-for-test {
-        :limit 50
+        :limit 3
       }
     ) [
       :sourceText

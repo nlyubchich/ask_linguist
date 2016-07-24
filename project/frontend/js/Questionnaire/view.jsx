@@ -8,7 +8,7 @@ import { Asker } from './askerComponent';
 @tanokComponent
 export class Questionnaire extends React.Component {
   render() {
-    if (l.isEmpty(this.props.phrases)) {
+    if (this.props.isDone || l.isEmpty(this.props.phrases)) {
       return (
         // TODO: Style it
         <div>There are no phrases for today. Well done!</div>
@@ -40,13 +40,14 @@ export class Questionnaire extends React.Component {
 
 Questionnaire.propTypes = {
   isChooser: React.PropTypes.bool.isRequired,
+  isDone: React.PropTypes.bool.isRequired,
   chooser: React.PropTypes.object.isRequired,
   asker: React.PropTypes.object.isRequired,
   phrases: React.PropTypes.array.isRequired,
 };
 
 // Questionnaire.propTypes = {
-//   eventStream: React.PropTypes.object.isRequired,
+//   tanokStream: React.PropTypes.object.isRequired,
 //   phrases: React.PropTypes.array.isRequired,
 //   currentPhrase: React.PropTypes.object.isRequired,
 //   status: React.PropTypes.string.isRequired,

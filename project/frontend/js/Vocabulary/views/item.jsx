@@ -180,7 +180,7 @@ export default class PhraseItem extends React.Component {
 }
 
 PhraseItem.propTypes = {
-  eventStream: React.PropTypes.object.isRequired,
+  tanokStream: React.PropTypes.object.isRequired,
   isActive: React.PropTypes.bool.isRequired,
   phraseId: React.PropTypes.number.isRequired,
   sourceLanguage: React.PropTypes.string.isRequired,

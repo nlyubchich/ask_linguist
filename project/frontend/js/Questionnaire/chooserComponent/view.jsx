@@ -28,7 +28,7 @@ export class Chooser extends React.Component {
                     'b-chooser__correct-answer': isCorrectAnswer && this.props.isFail,
                   })}
                   key={index}
-                  onClick={this.checkClick}
+                  onClick={() => this.checkClick(index)}
                 >
                   {answer}
                 </li>
@@ -46,7 +46,7 @@ export class Chooser extends React.Component {
 }
 
 Chooser.propTypes = {
-  eventStream: React.PropTypes.object.isRequired,
+  tanokStream: React.PropTypes.object.isRequired,
   phrases: React.PropTypes.array.isRequired,
   currentPhrase: React.PropTypes.object.isRequired,
   status: React.PropTypes.string.isRequired,

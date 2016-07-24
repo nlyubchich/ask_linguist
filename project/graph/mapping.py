@@ -51,6 +51,7 @@ def all_phrases(kwargs):
             Phrase.__table__.c.user_id == user_id,
             Phrase.__table__.c.status == Phrase.Status.visible.value,
         ))
+        .order_by(Phrase.__table__.c.id.desc())
     )
     rows = db.session.execute(query).fetchall()
     return [r.id for r in rows]

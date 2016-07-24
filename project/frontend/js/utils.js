@@ -12,9 +12,9 @@ export function fetchGetJson(url) {
   return fetch(url, {
     credentials: 'same-origin',
   })
-        .then(checkIsRequestSucceed)
-        .then((response) => response.json())
-        .catch(logError);  // eslint-disable-line
+  .then(checkIsRequestSucceed)
+  .then((response) => response.json())
+  .catch(logError);  // eslint-disable-line
 }
 
 export function fetchPostJson(url, payload) {
@@ -28,9 +28,9 @@ export function fetchPostJson(url, payload) {
     },
     body: JSON.stringify(payload),
   })
-        .then(checkIsRequestSucceed)
-        .then((response) => response.json())
-        .catch(logError);  // eslint-disable-line
+  .then(checkIsRequestSucceed)
+  .then((response) => response.json())
+  .catch(logError);  // eslint-disable-line
 }
 
 export function fetchGraphData(payload) {
@@ -44,7 +44,7 @@ export function fetchGraphData(payload) {
     },
     body: payload,
   })
-        .then(checkIsRequestSucceed)
-        .then((response) => response.json())
-        .catch(logError);  // eslint-disable-line
+  .then(checkIsRequestSucceed)
+  .then((response) => response.json())
+  .catch(logError);  // eslint-disable-line
 }
