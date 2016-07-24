@@ -71,7 +71,7 @@ module.exports = {
     new ExtractTextPlugin(isProduction ? '[name].[hash].css' : '[name].trunk.css'),
     new CommonsChunkPlugin({
       name: 'vendor',
-      filename: 'commons.trunk.js',
-    })
+      filename: 'commons.[hash].js',
+    }),
   ]),
 };
