@@ -39,5 +39,6 @@ six==1.10.0
 SQLAlchemy==1.1.0b2
 uritemplate==0.6
 Werkzeug==0.11.10
+whitenoise==3.2
 WTForms==2.1
 git+git://github.com/vmagamedov/hiku.git@729ca536bc24e659ecb7289184f7f561578f58fe
