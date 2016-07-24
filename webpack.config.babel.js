@@ -10,7 +10,7 @@ module.exports = {
   context: path.join(__dirname, 'project/frontend'),
   cache: true,
   entry: {
-    vendor: ['rx', 'react', 'tanok'],
+    vendor: ['rx', 'react', 'tanok', 'lodash'],
     welcomeImg: './img/welcome.png',
     questionnaire: './js/questionnaire.js',
     vocabulary: './js/vocabulary.js',
