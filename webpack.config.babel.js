@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const StatsPlugin = require('stats-webpack-plugin');
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 const isProduction = process.env.NODE_ENV === 'production';
 
 
@@ -71,7 +72,8 @@ module.exports = {
     new ExtractTextPlugin(isProduction ? '[name].[hash].css' : '[name].trunk.css'),
     new CommonsChunkPlugin({
       name: 'vendor',
-      filename: 'commons.[hash].js',
+      filename: isProduction ? 'commons.[hash].js' : 'commons.trunk.js',
     }),
+    new CompressionPlugin(),
   ]),
 };
