@@ -11,7 +11,7 @@ from project.oauth import google
 PHRASE_REDIS_KEY_TEMPLATE = "{user_id}-{language}"
 
 
-def questionnaire_done(user_id: int, language: str) -> list[Phrase]:
+def questionnaire_done(user_id: int, language: str) -> List[Phrase]:
     redis_key = PHRASE_REDIS_KEY_TEMPLATE.format(
         user_id=user_id,
         language=language,

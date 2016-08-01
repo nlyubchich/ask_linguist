@@ -14,7 +14,7 @@ class SeleniumTest(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome()
         self.driver.implicitly_wait(10)
-        self.base_url = "http://localhost:5000"
+        self.base_url = "http://localhost:8000"
         self.verificationErrors = []
         self.accept_next_alert = True
         self.user_id = generate_random_string()

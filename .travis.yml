@@ -53,5 +53,6 @@ before_script:
 
 script:
   - flake8 project/
+  - mypy --fast-parser --strict-optional --silent-imports project/
   - npm run lint
   - python3 -m unittest project.tests.functional
