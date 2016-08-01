@@ -74,7 +74,7 @@ def generate_phrases_for_practice(kwargs):
             language=language,
         ), start=0, end=-1
     )
-    phrase_ids = map(int, phrase_ids)
+    phrase_ids = [int(phrase_id) for phrase_id in phrase_ids]
 
     if not phrase_ids:
         phrase_ids = mark_available_phrases(user_id, language, limit)
