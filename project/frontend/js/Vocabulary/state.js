@@ -13,13 +13,12 @@ function ajaxRemovePhrase(phraseId) {
   };
 }
 
-function ajaxCreatePhraseEffect(phrase) {
+function ajaxCreatePhraseEffect(language, { sourceText, translatedText }) {
   return (stream) => {
     fetchPostJson('/dashboard/create/', {
-      source_language: phrase.sourceLanguage,
-      source_text: phrase.sourceText,
-      translated_language: phrase.translatedLanguage,
-      translated_text: phrase.translatedText,
+      language,
+      source_text: sourceText,
+      translated_text: translatedText,
     }).then((response) => {
       stream.send('savedNewPhrase', { phraseId: response.phrase_id });
     });
@@ -31,9 +30,7 @@ function ajaxEditPhraseEffect(phrase) {
   return () => {
     fetchPostJson('/dashboard/edit/', {
       phrase_id: phrase.phraseId,
-      source_language: phrase.sourceLanguage,
       source_text: phrase.sourceText,
-      translated_language: phrase.translatedLanguage,
       translated_text: phrase.translatedText,
     });
     return Rx.Observable.empty();
@@ -69,7 +66,9 @@ export class PhraseListDispatcher extends TanokDispatcher {
     const phrase = state.phrases[state.activePhrase];
     state.activePhrase = null;
     if (phrase.phraseId === 0) {
-      effect = ajaxCreatePhraseEffect(phrase);
+      effect = ajaxCreatePhraseEffect(
+        state.language, phrase.sourceText, phrase.translatedText
+      );
       state.toggledAddNewPhrase = false;
     } else {
       effect = ajaxEditPhraseEffect(phrase);
@@ -79,12 +78,9 @@ export class PhraseListDispatcher extends TanokDispatcher {
 
   @on('toggledAddNewPhrase')
   toggledAddNewPhrase(_, state) {
-    const lastPhrase = state.phrases[0];
     state.phrases.unshift({
       phraseId: 0,
-      sourceLanguage: lastPhrase ? lastPhrase.sourceLanguage : '',
       sourceText: '',
-      translatedLanguage: lastPhrase ? lastPhrase.translatedLanguage : '',
       translatedText: '',
       progressStatus: '0%',
     });
@@ -101,20 +97,9 @@ export class PhraseListDispatcher extends TanokDispatcher {
     return [state];
   }
 
-  // oh my...
-  @on('editedSourceLanguage')
-  editedSourceLanguage({ text }, state) {
-    state.phrases[state.activePhrase].sourceLanguage = text;
-    return [state];
-  }
   @on('editedSourceText')
   editedSourceText({ text }, state) {
     state.phrases[state.activePhrase].sourceText = text;
-    return [state];
-  }
-  @on('editedTranslatedLanguage')
-  editedTranslatedLanguage({ text }, state) {
-    state.phrases[state.activePhrase].translatedLanguage = text;
     return [state];
   }
   @on('editedTranslatedText')

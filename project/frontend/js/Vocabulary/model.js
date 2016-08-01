@@ -6,6 +6,7 @@ class Model {
       phrases: initialData.phrases || [],
       activePhrase: null,
       toggledAddNewPhrase: false,
+      language: 'French',
     };
   }
 }

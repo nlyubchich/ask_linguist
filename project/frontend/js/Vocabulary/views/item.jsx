@@ -11,23 +11,9 @@ export default class PhraseItem extends React.Component {
   }
 
   @autobind
-  editedSourceLanguage(e) {
-    this.send(
-      'editedSourceLanguage', { text: e.target.value }
-    );
-  }
-
-  @autobind
   editedSourceText(e) {
     this.send(
       'editedSourceText', { text: e.target.value }
-    );
-  }
-
-  @autobind
-  editedTranslatedLanguage(e) {
-    this.send(
-      'editedTranslatedLanguage', { text: e.target.value }
     );
   }
 
@@ -62,38 +48,15 @@ export default class PhraseItem extends React.Component {
   }
 
   renderActive() {
-    const {
-      sourceLanguage, sourceText,
-      translatedLanguage, translatedText,
-      progressStatus,
-    } = this.props;
+    const { sourceText, translatedText, progressStatus } = this.props;
     return (
       <tr className="b-vocabulary-table__row b-vocabulary-table__row--active">
-        <td>
-          <input
-            className="b-vocabulary-table__input" size="10"
-            placeholder="language"
-            onChange={this.editedSourceLanguage}
-            value={sourceLanguage}
-            onKeyPress={this.inputKeyPressHandler}
-          />
-        </td>
         <td>
           <input
             className="b-vocabulary-table__input" size="20"
             placeholder="phrase"
             onChange={this.editedSourceText}
             value={sourceText}
-            onKeyPress={this.inputKeyPressHandler}
-          />
-        </td>
-        <td>
-          <input
-            className="b-vocabulary-table__input"
-            size="10"
-            placeholder="language"
-            onChange={this.editedTranslatedLanguage}
-            value={translatedLanguage}
             onKeyPress={this.inputKeyPressHandler}
           />
         </td>
@@ -141,16 +104,10 @@ export default class PhraseItem extends React.Component {
   }
 
   renderNotActive() {
-    const {
-      sourceLanguage, sourceText,
-      translatedLanguage, translatedText,
-      progressStatus,
-    } = this.props;
+    const { sourceText, translatedText, progressStatus } = this.props;
     return (
       <tr className="b-vocabulary-table__row">
-        <td>{sourceLanguage}</td>
         <td>{sourceText}</td>
-        <td>{translatedLanguage}</td>
         <td>{translatedText}</td>
         <td>
           <div className="b-vocabulary-column__status--bar">
@@ -183,9 +140,7 @@ PhraseItem.propTypes = {
   tanokStream: React.PropTypes.object.isRequired,
   isActive: React.PropTypes.bool.isRequired,
   phraseId: React.PropTypes.number.isRequired,
-  sourceLanguage: React.PropTypes.string.isRequired,
   sourceText: React.PropTypes.string.isRequired,
-  translatedLanguage: React.PropTypes.string.isRequired,
   translatedText: React.PropTypes.string.isRequired,
   progressStatus: React.PropTypes.string.isRequired,
 };

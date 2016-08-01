@@ -1,3 +1,5 @@
+minimum-vagga: v0.6.1-47
+
 containers:
   python:
     setup:
@@ -88,7 +90,41 @@ containers:
     environ:
       LC_ALL: en_US.UTF-8
 
+
+  static-assets:
+    setup:
+    - !UbuntuRelease { codename: xenial }
+    - !UbuntuUniverse
+    # https://github.com/tailhook/vagga/issues/209
+    - !Install [ca-certificates, apt-transport-https, git, python]
+    - !AptTrust
+      keys: [1655A0AB68576280]
+    - !UbuntuRepo
+      url: https://deb.nodesource.com/node_6.x
+      suite: xenial
+      components: [main]
+    - !Install [nodejs]
+    - !NpmConfig
+      install-node: false
+    - !Install
+      - imagemagick
+      - graphicsmagick
+    - !NpmDependencies
+      package: true
+      dev: true
+      optional: true
+    - !Sh |
+        cd /usr/lib/node_modules/tanok
+        npm install --unsafe-perm
+        npm run build
+
+
 commands:
+  mk-node-modules-dir: !Command
+    container: uaprom-static
+    run: |
+      mkdir -p /work/node_modules
+
   redis: &redis !Command
     container: redis
     run: |
@@ -130,7 +166,7 @@ commands:
       sleep infinity
 
   migrate: !Supervise
-    description: Run app
+    description: Create a schema migration with Alembic
     children:
       postgres: *postgres
       service: !Command
@@ -139,6 +175,7 @@ commands:
             touch /work/.dbcreation # Create lock file
             while [ -f /work/.dbcreation ]; do sleep 0.2; done # Acquire lock
             python3 manage.py db migrate
+
 
   run: !Supervise
     description: Run app
@@ -168,7 +205,7 @@ commands:
     # then run next commands
     # xhost +
     # vagga -eDISPLAY -eDBUS_SESSION_BUS_ADDRESS test
-    #
+
     description: Run tests
     children:
       postgres-empty: *postgres
@@ -181,3 +218,37 @@ commands:
           touch /work/.startproject # Create lock file
           while [ -f /work/.startproject ]; do sleep 0.2; done # Acquire lock
           python3 -m unittest project.tests.functional
+
+  webpack-watch: &webpack-watch !Command
+#    prerequisites: [mk-node-modules-dir]
+    environ:
+      NODE_PATH: /usr/lib/node_modules
+    description: Run webpack in watch mode
+    container: static-assets
+    expect-inotify-limit: 65536
+    volumes:
+      /work/node_modules: !BindRW /vagga/root/usr/lib/node_modules
+    run: |
+        webpack --progress --colors --watch
+
+  run-dev: !Supervise
+    description: Run app
+    children:
+      postgres: *postgres
+      redis: *redis
+      webpack-watch: *webpack-watch
+      service: !Command
+        container: python
+        run: |
+          touch /work/.dbcreation # Create db lock file
+
+          # acquire db lock
+          while [ -f /work/.dbcreation ]; do sleep 0.2; done
+
+          python3 manage.py db upgrade
+
+          # release start project lock
+          if [ -f /work/.startproject ]; then rm /work/.startproject; fi
+
+          gunicorn project:whitenoise_app
+

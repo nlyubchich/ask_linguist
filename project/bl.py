@@ -1,22 +1,20 @@
 from datetime import datetime
-
+from typing import Optional, List
 from flask import session
-from flask_login import current_user
+from sqlalchemy.orm import Query
 from sqlalchemy.sql.expression import func
+
 from project.extensions import redis_store
 from project.models import Phrase, db, User
 from project.oauth import google
 
-PHRASE_REDIS_KEY_TEMPLATE = "{user_id}-{source_language}-{translated_language}"
-
-PHRASES_FOR_QUESTIONNAIRE_LIMIT = 50
+PHRASE_REDIS_KEY_TEMPLATE = "{user_id}-{language}"
 
 
-def questionnaire_done(user_id, source_language, translated_language):
+def questionnaire_done(user_id: int, language: str) -> list[Phrase]:
     redis_key = PHRASE_REDIS_KEY_TEMPLATE.format(
         user_id=user_id,
-        source_language=source_language,
-        translated_language=translated_language,
+        language=language,
     )
     ids = redis_store.lrange(
         redis_key,
@@ -28,7 +26,7 @@ def questionnaire_done(user_id, source_language, translated_language):
 
     phrases = Phrase.query.filter(Phrase.id.in_(ids))
 
-    statuses = [ps.value for ps in Phrase.ProgressStatus]
+    statuses = [ps.value for ps in Phrase.ProgressStatus]  # type: ignore
     for phrase in phrases:
         next_statuses = list(
             filter(lambda ns: phrase.progress_status < ns, statuses)
@@ -47,15 +45,13 @@ def questionnaire_done(user_id, source_language, translated_language):
 
 
 def mark_available_phrases(
-        user_id, source_language, translated_language,
-        limit=PHRASES_FOR_QUESTIONNAIRE_LIMIT
-):
+        user_id: int, language: str,
+        limit: int) -> List[int]:
     phrases = db.session.query(
         Phrase.id
     ).filter(
         Phrase.user_id == user_id,
-        Phrase.source_language == source_language,
-        Phrase.translated_language == translated_language,
+        Phrase.language == language,
         Phrase.status == Phrase.Status.visible.value,
         Phrase.date_available < datetime.now(),
         Phrase.progress_status < Phrase.ProgressStatus.after_two_week.value,
@@ -63,57 +59,72 @@ def mark_available_phrases(
         func.random()
     ).limit(limit)
     phrase_ids = [phrase.id for phrase in phrases]
+
     if not phrase_ids:
         return []
 
     redis_store.lpush(
         PHRASE_REDIS_KEY_TEMPLATE.format(
             user_id=user_id,
-            source_language=source_language,
-            translated_language=translated_language,
+            language=language,
         ),
         *phrase_ids
     )
     return phrase_ids
 
 
-def create_phrase(source_language, source_text,
-                  translated_language, translated_text):
+def create_phrase(user_id: int, language: str,
+                  source_text: str, translated_text: str) -> Phrase:
     phrase = Phrase()
-    phrase.user = current_user
-    phrase.source_language = source_language
+    phrase.user_id = user_id
+    phrase.language = language
     phrase.source_text = source_text
-    phrase.translated_language = translated_language
     phrase.translated_text = translated_text
     return phrase
 
 
-def get_phrases_by_user(user_id):
-    query = db.session.query(
-        Phrase
-    ).filter(
-        Phrase.user_id == user_id,
-        Phrase.status == Phrase.Status.visible.value,
+def get_phrases_by_user(user_id: int, language: str) -> Query:
+    query = (
+        db.session.query(
+            Phrase
+        )
+        .filter(
+            Phrase.user_id == user_id,
+            Phrase.status == Phrase.Status.visible.value,
+            Phrase.language == language
+        )
     )
     return query
 
 
-def delete_phrase(phrase_id):
-    word = Phrase.query.get_or_404(phrase_id)
-    word.status = Phrase.Status.deleted.value
+def delete_phrase(user_id: int, phrase_id: int) -> Optional[Phrase]:
+    phrase = Phrase.query.filter(
+        Phrase.id == phrase_id,
+        Phrase.user_id == user_id,
+    ).first()
 
+    if phrase:
+        phrase.status = Phrase.Status.deleted.value
 
-def edit_phrase(phrase_id, source_language, source_text,
-                translated_language, translated_text):
-    phrase = Phrase.query.get_or_404(phrase_id)
-    phrase.source_language = source_language
-    phrase.source_text = source_text
-    phrase.translated_language = translated_language
-    phrase.translated_text = translated_text
     return phrase
 
 
-def create_user(email, nick_name, first_name, last_name, register_type):
+def edit_phrase(user_id: int, phrase_id: int,
+                source_text: str, translated_text: str) -> Optional[Phrase]:
+    phrase = Phrase.query.filter(
+        Phrase.id == phrase_id,
+        Phrase.user_id == user_id,
+    ).first()
+
+    if phrase:
+        phrase.source_text = source_text
+        phrase.translated_text = translated_text
+
+    return phrase
+
+
+def create_user(email: str, nick_name: str,
+                first_name: str, last_name: str, register_type: int) -> User:
     user = User()
     user.email = email
     user.nick_name = nick_name
@@ -123,10 +134,10 @@ def create_user(email, nick_name, first_name, last_name, register_type):
     return user
 
 
-def load_user(user_email):
+def load_user(user_email: str) -> Optional[User]:
     return User.query.filter_by(email=user_email).first()
 
 
 @google.tokengetter
-def get_google_oauth_token():
+def get_google_oauth_token() -> str:
     return session.get('google_token')

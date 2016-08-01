@@ -12,15 +12,15 @@ from project.bl import mark_available_phrases, PHRASE_REDIS_KEY_TEMPLATE
 from project.extensions import redis_store
 from project.models import db, Phrase
 
+PHRASES_FOR_QUESTIONNAIRE_LIMIT = 50
 
 phrases_query = sa.FieldsQuery(db.session, Phrase.__table__)
 
 _GRAPH = Graph([
     Edge('phrase', [
         sa.Field('id', phrases_query),
-        sa.Field('source_language', phrases_query),
+        sa.Field('language', phrases_query),
         sa.Field('source_text', phrases_query),
-        sa.Field('translated_language', phrases_query),
         sa.Field('translated_text', phrases_query),
         sa.Field('date_created', phrases_query),
         sa.Field('date_available', phrases_query),
@@ -43,6 +43,8 @@ def all_phrases(kwargs):
     user = kwargs.get('user')
     assert user == 'me', "Phrase fetching supported " \
                          "only for current user's phrases"
+
+    language = kwargs.get('language')
     user_id = current_user.id
 
     query = (
@@ -50,6 +52,7 @@ def all_phrases(kwargs):
         .where(and_(
             Phrase.__table__.c.user_id == user_id,
             Phrase.__table__.c.status == Phrase.Status.visible.value,
+            Phrase.__table__.c.language == language,
         ))
         .order_by(Phrase.__table__.c.id.desc())
     )
@@ -58,27 +61,24 @@ def all_phrases(kwargs):
 
 
 def generate_phrases_for_practice(kwargs):
-    limit = kwargs.get('limit')
     user = kwargs.get('user')
     assert user == 'me', "Phrase fetching supported " \
                          "only for current user's phrases"
+    language = kwargs.get('language')
+    limit = kwargs.get('limit')
     user_id = current_user.id
-
-    source_language = kwargs.get('source_language')
-    translated_language = kwargs.get('translated_language')
 
     phrase_ids = redis_store.lrange(
         PHRASE_REDIS_KEY_TEMPLATE.format(
             user_id=user_id,
-            source_language=source_language,
-            translated_language=translated_language,
+            language=language,
         ), start=0, end=-1
     )
-    phrase_ids = [int(phrase_id) for phrase_id in phrase_ids]
+    phrase_ids = map(int, phrase_ids)
 
     if not phrase_ids:
-        phrase_ids = mark_available_phrases(
-            user_id, source_language, translated_language, limit)
+        phrase_ids = mark_available_phrases(user_id, language, limit)
+
     return phrase_ids
 
 
@@ -87,10 +87,9 @@ sg_phrase = SubGraph(_GRAPH, 'phrase')
 GRAPH = Graph([
     Edge('phrase', [
         Expr('phraseId', sg_phrase, IntegerType, S.this.id),
-        Expr('sourceLanguage', sg_phrase, StringType, S.this.source_language),
+        Expr('language', sg_phrase, StringType,
+             S.this.language),
         Expr('sourceText', sg_phrase, StringType, S.this.source_text),
-        Expr('translatedLanguage', sg_phrase, StringType,
-             S.this.translated_language),
         Expr('translatedText', sg_phrase, StringType, S.this.translated_text),
         Expr(
             'dateCreated',
@@ -111,7 +110,10 @@ GRAPH = Graph([
     Link(
         'phrases', all_phrases,
         edge='phrase', requires=None, to_list=True,
-        options=[Option('user', default='me')]
+        options=[
+            Option('user', default='me'),
+            Option('language', StringType, default='French'),
+        ]
     ),
     Link(
         'phrases-for-test', generate_phrases_for_practice,
@@ -119,8 +121,7 @@ GRAPH = Graph([
         options=[
             Option('user', default='me'),
             Option('limit', IntegerType, default=50),
-            Option('source_language', StringType, default='French'),
-            Option('translated_language', StringType, default='English'),
+            Option('language', StringType, default='French'),
         ]
     ),
 ])

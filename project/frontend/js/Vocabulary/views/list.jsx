@@ -31,9 +31,7 @@ export class PhraseList extends React.Component {
         <table className="b-vocabulary-table">
           <tbody>
             <tr className="b-vocabulary-table__head">
-              <th className="b-vocabulary-column__lang">Source language</th>
               <th className="b-vocabulary-column__word">Phrase</th>
-              <th className="b-vocabulary-column__lang">Language translated to</th>
               <th className="b-vocabulary-column__word">Translation</th>
               <th className="b-vocabulary-column__status">Status</th>
               <th className="b-vocabulary-column__actions">Actions</th>
@@ -56,7 +54,6 @@ export class PhraseList extends React.Component {
 }
 
 PhraseList.propTypes = {
-  tanokStream: React.PropTypes.object.isRequired,
   phrases: React.PropTypes.array.isRequired,
   activePhrase: React.PropTypes.number,
   toggledAddNewPhrase: React.PropTypes.bool,

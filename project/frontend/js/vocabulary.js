@@ -7,9 +7,7 @@ fetchGraphData(`
   [{
     :phrases [
       :phraseId 
-      :sourceLanguage 
       :sourceText 
-      :translatedLanguage 
       :translatedText 
       :dateCreated 
       :dateAvailable 

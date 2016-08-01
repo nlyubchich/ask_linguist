@@ -21,7 +21,7 @@ from project.bl import load_user
 from .forms import RegisterForm, LoginForm
 
 js_error_format = '''
-Javascript error occured: %(message)s
+Javascript error occurred: %(message)s
 Location:           %(url)s
 
 Stacktrace:

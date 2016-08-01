@@ -1,33 +1,11 @@
+from flask import abort
 from flask import jsonify, render_template
 from flask_login import current_user
 
 from project.blueprints import dashboard_app as app
 from project.extensions import db
-from project.models import Phrase
 from project import bl
 from .forms import EditPhraseForm, DeletePhraseForm, PhraseForm
-
-
-@app.route('/list')
-def phrase_list():
-    phrases = (
-        bl.get_phrases_by_user(current_user.id)
-        .order_by(Phrase.id.desc())
-    )
-    phrases = [{
-        "phraseId": phrase.id,
-        "sourceLanguage": phrase.source_language,
-        "sourceText": phrase.source_text,
-        "translatedLanguage": phrase.translated_language,
-        "translatedText": phrase.translated_text,
-        "dateCreated": phrase.date_created,
-        "dateAvailable": phrase.date_available,
-        "progressStatus": (
-            Phrase.ProgressStatus(phrase.progress_status)
-            .get_progress_percent()
-        )
-    } for phrase in phrases]
-    return jsonify(phrases=phrases)
 
 
 @app.route('/')
@@ -38,34 +16,55 @@ def dashboard():
 @app.route("/create/", methods=["POST"])
 def create_phrase():
     phrase_form = PhraseForm()
-    if phrase_form.validate_on_submit():
-        phrase = bl.create_phrase(**phrase_form.data)
-        db.session.add(phrase)
-        db.session.commit()
-        return jsonify(status="OK", phrase_id=phrase.id)
-    return jsonify(status="not OK", errors=phrase_form.errors)
+    if not phrase_form.validate_on_submit():
+        return jsonify(status="error", errors=phrase_form.errors)
+
+    phrase = bl.create_phrase(
+        user_id=current_user.id,
+        language=phrase_form.language.data,
+        source_text=phrase_form.source_text.data,
+        translated_text=phrase_form.translated_text.data
+    )
+    db.session.add(phrase)
+    db.session.commit()
+    return jsonify(status="success", phrase_id=phrase.id)
 
 
 @app.route("/edit/", methods=["POST"])
 def edit_phrase():
     form = EditPhraseForm()
-    if form.validate_on_submit():
-        # TODO: only owner can edit the phrase
-        phrase = bl.edit_phrase(**form.data)
-        db.session.add(phrase)
-        db.session.commit()
 
-        return jsonify(status="OK")
-    return jsonify(status="not OK", errors=form.errors)
+    if not form.validate_on_submit():
+        return jsonify(status="error", errors=form.errors)
+
+    phrase = bl.edit_phrase(
+        user_id=current_user.id,
+        phrase_id=form.phrase_id.data,
+        source_text=form.source_text.data,
+        translated_text=form.translated_text.data,
+    )
+
+    if not phrase:
+        abort(400)
+
+    db.session.add(phrase)
+    db.session.commit()
+
+    return jsonify(status="success")
 
 
 @app.route("/delete/", methods=["POST"])
 def delete_phrase():
     form = DeletePhraseForm()
-    if form.validate_on_submit():
-        # TODO: only owner can delete the phrase
-        bl.delete_phrase(form.phrase_id.data)
-        db.session.commit()
+    if not form.validate_on_submit():
+        return jsonify(status="error", errors=form.errors)
 
-        return jsonify(status="OK")
-    return jsonify(status="not OK", errors=form.errors)
+    phrase = bl.delete_phrase(
+        user_id=current_user.id,
+        phrase_id=form.phrase_id.data
+    )
+    if not phrase:
+        abort(400)
+
+    db.session.commit()
+    return jsonify(status="success")
