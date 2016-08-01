@@ -13,7 +13,7 @@ function ajaxRemovePhrase(phraseId) {
   };
 }
 
-function ajaxCreatePhraseEffect(language, { sourceText, translatedText }) {
+function ajaxCreatePhraseEffect(language, sourceText, translatedText) {
   return (stream) => {
     fetchPostJson('/dashboard/create/', {
       language,
