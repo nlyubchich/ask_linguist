@@ -195,7 +195,7 @@ commands:
           # release start project lock
           if [ -f /work/.startproject ]; then rm /work/.startproject; fi
 
-          gunicorn project:whitenoise_app
+          python3 run.py
 
   test: !Supervise
     # for run tests, run:

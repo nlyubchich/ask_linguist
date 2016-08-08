@@ -1,12 +1,12 @@
 import * as l from 'lodash';
 import { TanokDispatcher, on } from 'tanok';
-import { fetchGetJson } from '../../utils';
+import { fetchPostJson } from '../../utils';
 import * as Rx from 'rx';
 
 
-function ajaxFinishedQuestionnaire() {
+function ajaxFinishedQuestionnaire(language) {
   return () => {
-    fetchGetJson('/questionnaire/mark_done');
+    fetchPostJson('/questionnaire/mark_done', { language });
     return Rx.Observable.empty();
   };
 }
@@ -16,7 +16,7 @@ function checkIsCorrectPhrase(isFail, enteredText, currentSourceText) {
   return (stream) => {
     if (isFail) {
       stream.send('toggleFail');
-    } else if (enteredText === currentSourceText) {
+    } else if (enteredText.trim() === currentSourceText.trim()) {
       stream.send('checkIsOk');
     } else {
       stream.send('checkIsNotOk');
@@ -64,7 +64,7 @@ export class AskerDispatcher extends TanokDispatcher {
   questionnaireFinished(_, state) {
     state.status = 'Finished!';
     state.isDone = true;
-    return [state, ajaxFinishedQuestionnaire()];
+    return [state, ajaxFinishedQuestionnaire(state.language)];
   }
 
   @on('checkIsNotOk')

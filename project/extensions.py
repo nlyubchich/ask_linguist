@@ -1,3 +1,4 @@
+from flask_cache import Cache
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_login import LoginManager
 from flask_redis import FlaskRedis
@@ -14,3 +15,4 @@ login_manager = LoginManager()
 redis_store = FlaskRedis()
 oauth = OAuth()
 hiku_engine = Engine(SyncExecutor())
+cache = Cache()

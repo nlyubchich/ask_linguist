@@ -2,13 +2,15 @@ from datetime import datetime
 from typing import Optional, List
 from flask import session
 from sqlalchemy.orm import Query
-from sqlalchemy.sql.expression import func
+from sqlalchemy.sql.expression import func, distinct
 
-from project.extensions import redis_store
+from project.extensions import redis_store\
+    # , cache
 from project.models import Phrase, db, User
 from project.oauth import google
 
 PHRASE_REDIS_KEY_TEMPLATE = "{user_id}-{language}"
+# GET_USER_LANGUAGES_TIMEOUT = 10
 
 
 def questionnaire_done(user_id: int, language: str) -> List[Phrase]:
@@ -141,3 +143,16 @@ def load_user(user_email: str) -> Optional[User]:
 @google.tokengetter
 def get_google_oauth_token() -> str:
     return session.get('google_token')
+
+
+# @cache.memoize(timeout=GET_USER_LANGUAGES_TIMEOUT)
+def get_user_languages(user_id):
+    return ([
+        p for p, in (
+            db.session.query(distinct(Phrase.language))
+            .filter(
+                Phrase.user_id == user_id,
+                Phrase.status == Phrase.Status.visible.value,
+            )
+        )
+    ])

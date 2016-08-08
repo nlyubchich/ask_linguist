@@ -1,7 +1,11 @@
 from flask import abort
-from flask import jsonify, render_template
+from flask import jsonify
+from flask import render_template
+from flask import redirect
+from flask import url_for
 from flask_login import current_user
 
+from project.bl import get_user_languages
 from project.blueprints import dashboard_app as app
 from project.extensions import db
 from project import bl
@@ -9,8 +13,16 @@ from .forms import EditPhraseForm, DeletePhraseForm, PhraseForm
 
 
 @app.route('/')
-def dashboard():
-    return render_template('dashboard/phrase_list.html')
+def default_dashboard():
+    return redirect(url_for('.dashboard', language='French'))
+
+
+@app.route('/<language>')
+def dashboard(language):
+    return render_template(
+        'dashboard/phrase_list.html',
+        language=language,
+    )
 
 
 @app.route("/create/", methods=["POST"])
@@ -68,3 +80,8 @@ def delete_phrase():
 
     db.session.commit()
     return jsonify(status="success")
+
+
+@app.context_processor
+def utility_processor():
+    return dict(get_user_languages=get_user_languages)

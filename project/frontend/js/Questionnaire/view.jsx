@@ -19,20 +19,11 @@ export class Questionnaire extends React.Component {
       <Chooser
         {...this.props.chooser}
         tanokStream={this.sub('chooser')}
-//        phrases={this.props.phrases}
-//        currentPhrase={this.props.currentPhrase}
-//        status={this.props.status}
-//        possibleAnswers={this.props.possibleAnswers}
-//        isFail={this.props.isFail}
       />
     ) : (
       <Asker
         {...this.props.asker}
         tanokStream={this.sub('asker')}
-//        phrases={this.props.phrases}
-//        currentPhrase={this.props.currentPhrase}
-//        status={this.props.status}
-//        enteredText={this.props.enteredText}
       />
     );
   }

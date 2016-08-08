@@ -1,13 +1,13 @@
 import * as l from 'lodash';
 import * as Rx from 'rx';
-import { TanokDispatcher, on } from 'tanok';
+import { TanokDispatcher, on, rethrowFx } from 'tanok';
 
 
 function checkChooserIsCorrectPhrase(i, translatedText, possibleAnswers, isFail) {
   return (stream) => {
     if (isFail) {
       stream.send('toggleChooserFail');
-    } else if (possibleAnswers[i] === translatedText) {
+    } else if (possibleAnswers[i].trim() === translatedText.trim()) {
       stream.send('checkChooserIsOk');
     } else {
       stream.send('checkChooserIsNotOk');
@@ -24,13 +24,6 @@ function checkChooserIsFinished(phrases) {
     } else {
       stream.send('chooserNextPhrase');
     }
-    return Rx.Observable.empty();
-  };
-}
-
-function chooserToggleNext() {
-  return (stream) => {
-    stream.send('chooserNextPhrase');
     return Rx.Observable.empty();
   };
 }
@@ -72,7 +65,7 @@ export class ChooserDispatcher extends TanokDispatcher {
   toggleChooserFail(_, state) {
     state.isFail = false;
     state.status = '';
-    return [state, chooserToggleNext()];
+    return [state, rethrowFx('chooserNextPhrase')];
   }
 
   @on('chooserFinished')

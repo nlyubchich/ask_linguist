@@ -1,8 +1,9 @@
 import * as l from 'lodash';
 
 export class ChooserModel {
-  constructor(phrases) {
+  constructor(phrases, language) {
     return {
+      language,
       phrases: phrases.slice(),
       allPhrases: phrases.slice(),
       currentPhrase: l.sample(phrases),

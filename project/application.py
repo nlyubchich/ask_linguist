@@ -7,6 +7,7 @@ from project.blueprints import all_blueprints
 from project.bl import load_user
 from project.extensions import (
     csrf, db, toolbar, login_manager, redis_store, oauth,
+    cache,
 )
 
 
@@ -37,5 +38,6 @@ def create_app():
     login_manager.user_loader(load_user)
     redis_store.init_app(app)
     oauth.init_app(app)
+    cache.init_app(app, config={'CACHE_TYPE': 'redis'})
 
     return app

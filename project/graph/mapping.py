@@ -1,3 +1,6 @@
+from typing import Any, List
+from typing import Dict
+
 from flask_login import current_user
 from sqlalchemy import and_
 from sqlalchemy import select
@@ -60,7 +63,7 @@ def all_phrases(kwargs):
     return [r.id for r in rows]
 
 
-def generate_phrases_for_practice(kwargs):
+def generate_phrases_for_practice(kwargs: Dict[str, Any]) -> List[int]:
     user = kwargs.get('user')
     assert user == 'me', "Phrase fetching supported " \
                          "only for current user's phrases"

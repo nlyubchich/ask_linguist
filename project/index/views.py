@@ -17,7 +17,7 @@ from project.blueprints import index_app as app
 from project.extensions import db
 from project.models import User
 from project.oauth import google
-from project.bl import load_user
+from project.bl import load_user, get_user_languages
 from .forms import RegisterForm, LoginForm
 
 js_error_format = '''
@@ -32,7 +32,7 @@ Stacktrace:
 @login_required
 @app.route('/')
 def index():
-    return redirect(url_for('dashboard.dashboard'))
+    return redirect(url_for('dashboard.default_dashboard'))
 
 
 @login_required
@@ -47,7 +47,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         login_user(form.user, remember=True)
-        return redirect(url_for('dashboard.dashboard'))
+        return redirect(url_for('dashboard.default_dashboard'))
     return render_template('index/login.html', form=form)
 
 
@@ -67,7 +67,7 @@ def register():
         db.session.commit()
 
         login_user(user, remember=True)
-        return redirect(url_for('dashboard.dashboard'))
+        return redirect(url_for('dashboard.default_dashboard'))
     return render_template('index/register.html', form=form)
 
 
@@ -119,3 +119,8 @@ def js_errors():
     payload = json.loads(request.data.decode("utf-8"))
     current_app.logger.error(js_error_format % payload)
     return jsonify(status='ok')
+
+
+@app.context_processor
+def utility_processor():
+    return dict(get_user_languages=get_user_languages)

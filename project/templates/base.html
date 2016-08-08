@@ -41,6 +41,14 @@
         window.addEventListener('error', logError, true);
         window.addEventListener('unhandledrejection', logError, true)
     </script>
+    <script>
+        function goToNewDictionary() {
+            let language = prompt('Enter your new vocabulary title');
+            if (language) {
+                window.location = '/dashboard/'+language;
+            }
+        }
+    </script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.%s.css' % config.STATIC_ASSETS_HASH) }}">
 
     {% block scripts %}{% endblock %}
@@ -54,12 +62,19 @@
             <li class="b-top-panel__item b-top-panel__item--left">
                 <span>Vocabulary Lists</span>
                 <ul class="b-top-panel__item-dropdown">
-                    <li class="b-top-panel__item-dropdown-object"><a class="tdn" href="{{ url_for('dashboard.dashboard') }}">French</a></li>
-{#                    <li class=""><a class="tdn" href="">German</a></li>#}
-{#                    <li class=""><a class="tdn" href="">Add a new vocabulary list</a></li>#}
+                    {% if current_user.is_authenticated %}
+                        {% for lang in get_user_languages(current_user.id) %}
+                            <li class="b-top-panel__item-dropdown-object">
+                                <a class="tdn" href="{{ url_for('dashboard.dashboard', language=lang) }}">{{ lang }}</a>
+                            </li>
+                        {% endfor %}
+                        <li class="b-top-panel__item-dropdown-object" onclick="goToNewDictionary()"><a class="tdn">Add a new vocabulary</a></li>
+                    {% endif %}
                 </ul>
             </li>
-            <li class="b-top-panel__item b-top-panel__item--left"><a class="tdn" href="{{ url_for('questionnaire.words') }}">Practice</a></li>
+            <li class="b-top-panel__item b-top-panel__item--left">
+                <a class="tdn" href="{{ url_for('questionnaire.words', language=language) }}">Practice</a>
+            </li>
             <li class="b-top-panel__item b-top-panel__item--left">
                 <span>Progress</span>
                 <ul class="b-top-panel__item-dropdown">
