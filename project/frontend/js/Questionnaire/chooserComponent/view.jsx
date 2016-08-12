@@ -11,6 +11,11 @@ export class Chooser extends React.Component {
     this.send('checkChooserPhrase', { index });
   }
 
+  @autobind
+  speakText() {
+    this.send('trySpeakSourceText');
+  }
+
   render() {
     return (
       <div>
@@ -18,6 +23,9 @@ export class Chooser extends React.Component {
           <p className="b-current-phrase">
             {this.props.currentPhrase.sourceText}
           </p>
+          <div onClick={this.speakText}>
+            Listen
+          </div>
           <ul className="b-chooser__answers-list">
             {this.props.possibleAnswers.map((answer, index) => {
               const isCorrectAnswer = this.props.currentPhrase.translatedText === answer;

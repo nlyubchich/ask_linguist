@@ -28,6 +28,27 @@ function checkChooserIsFinished(phrases) {
   };
 }
 
+function speakSourceTextEffect() {
+  return (stream) => {
+    const synth = window.speechSynthesis;
+    const voices = synth.getVoices();
+
+    if (l.isEmpty(voices)) {
+      const oldCallback = synth.onvoiceschanged;
+      synth.onvoiceschanged = () => {
+        stream.send('speakSourceText');
+        synth.onvoiceschanged = oldCallback;
+        if (typeof oldCallback === 'function') {
+          oldCallback();
+        }
+      };
+    } else {
+      stream.send('speakSourceText');
+    }
+
+    return Rx.Observable.empty();
+  };
+}
 
 export class ChooserDispatcher extends TanokDispatcher {
   @on('init')
@@ -87,6 +108,21 @@ export class ChooserDispatcher extends TanokDispatcher {
         3
       )
     ));
+    return [state];
+  }
+  @on('trySpeakSourceText')
+  trySpeakSourceText(_, state) {
+    return [state, speakSourceTextEffect()];
+  }
+
+  @on('speakSourceText')
+  speakSourceText(_, state) {
+    const utterance = new SpeechSynthesisUtterance(
+      state.currentPhrase.sourceText
+    );
+    const voices = window.speechSynthesis.getVoices();
+    utterance.voice = voices.find(voice => voice.lang === 'fr-FR');
+    window.speechSynthesis.speak(utterance);
     return [state];
   }
 }
