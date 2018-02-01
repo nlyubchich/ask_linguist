@@ -5,7 +5,7 @@ pipeline:
       APP_SETTINGS: 'project.config.DroneCiConfig'
       SECRET_KEY: 'really secret'
       CSRF_SECRET: 'really secret'
-      DATABASE_URL: 'postgres://database/travis_ci_test'
+      DATABASE_URL: 'postgres://postgres@database/travis_ci_test'
       SELENIUM_REMOTE: 'http://selenium:4444/wd/hub'
       REDIS_URL: 'redis://redis:6379'
       
