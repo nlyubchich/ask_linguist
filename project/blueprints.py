@@ -27,6 +27,7 @@ def _factory(bp_name, url_prefix, restricted=False):
 
     return blueprint
 
+
 index_app = _factory("index", '')
 dashboard_app = _factory("dashboard", '/dashboard', True)
 questionnaire_app = _factory("questionnaire", '/questionnaire', True)
