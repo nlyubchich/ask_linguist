@@ -1,6 +1,7 @@
 import unittest
 import random
 import string
+import os
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
@@ -20,9 +21,9 @@ class SeleniumTest(unittest.TestCase):
                desired_capabilities=DesiredCapabilities.CHROME)
         else:
             self.driver = webdriver.Chrome()
-        
+
         self.driver.implicitly_wait(10)
-        
+
         self.base_url = "http://localhost:8000"
         self.verificationErrors = []
         self.accept_next_alert = True
