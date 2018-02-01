@@ -1,4 +1,9 @@
 pipeline:
+  frontend:
+    image: node:latest
+    commands:
+      - npm install
+      - npm run lint
   python_app:
     image: python:3.5.1-alpine
     environment:
@@ -21,11 +26,6 @@ pipeline:
       - flake8 project/
       - mypy --fast-parser --strict-optional --silent-imports project/
       - python3 -m unittest project.tests.functional
-  frontend:
-    image: node:latest
-    commands:
-      - npm install
-      - npm run lint
 
 services:
   database:
