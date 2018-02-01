@@ -99,6 +99,11 @@ class VaggaTestingConfig(VaggaConfig):
     TESTING = True
 
 
+class DroneCiConfig(VaggaConfig):
+    DEBUG = False
+    TESTING = True
+    REDIS_URL = os.getenv('REDIS_URL')
+
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
