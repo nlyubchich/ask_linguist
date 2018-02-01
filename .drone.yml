@@ -12,7 +12,7 @@ pipeline:
       - pip install --upgrade pip
       - pip3 install -r requirements.txt
       - pip3 install -r requirements-test.txt
-      - pip3 install flake8 --user `whoami`
+      - pip3 install flake8
       - sleep 10
       - python3 manage.py db upgrade
       - gunicorn project:whitenoise_app &
