@@ -4,6 +4,7 @@ import string
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 UPPERCASE_AND_DIGITS = string.ascii_uppercase + string.digits
 
@@ -12,8 +13,16 @@ class SeleniumTest(unittest.TestCase):
     page = None
 
     def setUp(self):
-        self.driver = webdriver.Chrome()
+        remote_selenium_addr = os.getenv("SELENIUM_REMOTE")
+        if remote_selenium_addr:
+            self.driver = webdriver.Remote(
+               command_executor=remote_selenium_addr,
+               desired_capabilities=DesiredCapabilities.CHROME)
+        else:
+            self.driver = webdriver.Chrome()
+        
         self.driver.implicitly_wait(10)
+        
         self.base_url = "http://localhost:8000"
         self.verificationErrors = []
         self.accept_next_alert = True
