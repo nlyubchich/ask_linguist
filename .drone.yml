@@ -2,10 +2,13 @@ pipeline:
   python_app:
     image: python:3.5.1-alpine
     environment:
-      APP_SETTINGS: 'project.config.VaggaTestingConfig'
+      APP_SETTINGS: 'project.config.DroneCiConfig'
       SECRET_KEY: 'really secret'
       CSRF_SECRET: 'really secret'
-      DATABASE_URL: 'postgres://localhost/travis_ci_test'
+      DATABASE_URL: 'postgres://database/travis_ci_test'
+      SELENIUM_REMOTE: 'http://selenium:4444/wd/hub'
+      REDIS_URL: 'redis://redis:6379'
+      
     commands:
       - apk update
       - apk add git postgresql-dev build-base
@@ -13,7 +16,6 @@ pipeline:
       - pip3 install -r requirements.txt
       - pip3 install -r requirements-test.txt
       - pip3 install flake8
-      - sleep 10
       - python3 manage.py db upgrade
       - gunicorn project:whitenoise_app &
       - flake8 project/
@@ -33,3 +35,5 @@ services:
       - POSTGRES_DB=travis_ci_test
   selenium:
     image: selenium/standalone-chrome
+  redis:
+    image: redis:3.0
