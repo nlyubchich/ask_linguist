@@ -10,8 +10,8 @@ pipeline:
       - apk update
       - apk add git
       - pip install --upgrade pip
-      - pip3 install -r requirements.txt --user `whoami`
-      - pip3 install -r requirements-test.txt --user `whoami`
+      - pip3 install -r requirements.txt
+      - pip3 install -r requirements-test.txt
       - pip3 install flake8 --user `whoami`
       - sleep 10
       - python3 manage.py db upgrade
