@@ -7,6 +7,7 @@ pipeline:
       CSRF_SECRET: 'really secret'
       DATABASE_URL: 'postgres://localhost/travis_ci_test'
     commands:
+      - apk add git
       - pip3 install -r requirements.txt --user `whoami`
       - pip3 install -r requirements-test.txt --user `whoami`
       - pip3 install flake8 --user `whoami`
