@@ -8,7 +8,7 @@ pipeline:
       DATABASE_URL: 'postgres://localhost/travis_ci_test'
     commands:
       - apk update
-      - apk add git
+      - apk add git postgresql-dev
       - pip install --upgrade pip
       - pip3 install -r requirements.txt
       - pip3 install -r requirements-test.txt
