@@ -1,0 +1,41 @@
+
+node_js:
+  - "6"
+
+services:
+  - redis-server
+  - postgresql
+
+
+pipeline:
+  python_app:
+    image: python:3.5.1-alpine
+    environment:
+      APP_SETTINGS: 'project.config.VaggaTestingConfig'
+      SECRET_KEY: 'really secret'
+      CSRF_SECRET: 'really secret'
+      DATABASE_URL: 'postgres://localhost/travis_ci_test'
+    commands:
+      - pip3 install -r requirements.txt --user `whoami`
+      - pip3 install -r requirements-test.txt --user `whoami`
+      - pip3 install flake8 --user `whoami`
+      - sleep 10
+      - python3 manage.py db upgrade
+      - gunicorn project:whitenoise_app &
+      - flake8 project/
+      - mypy --fast-parser --strict-optional --silent-imports project/
+      - python3 -m unittest project.tests.functional
+  frontend:
+    image: node
+    commands:
+      - npm install
+      - npm run lint
+
+services:
+  database:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=travis_ci_test
+  selenium:
+    image: selenium/standalone-chrome
