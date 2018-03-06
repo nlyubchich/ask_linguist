@@ -53,6 +53,6 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^2.1.1",
     "tanok": "github:brabadu/tanok",
-    "webpack": "^1.13.1"
+    "webpack": "^2.2.0"
   }
 }
